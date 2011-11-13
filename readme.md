@@ -1,7 +1,6 @@
 # Copernicus Wordpress Theme Framework
 Copernicus is a theme framework designed fot Wordpress.
 
----
 ## Features
 
 * Responsive Web Design
