@@ -18,9 +18,9 @@ define( 'CP_TEMPLATE_DIR', '/templates');
 /**
  * wp theme support
  */
-define( 'CP_WP_SUPPORT_MENU', true);
-define( 'CP_WP_SUPPORT_POST_THUMBNAIL', true);
-define( 'CP_WP_SUPPORT_AUTOMATIC_FEED_LINKS', true);
+$cp_config['theme_support']['menu'] = true;
+$cp_config['theme_support']['post_thumbnail'] = true;
+$cp_config['theme_support']['automatic_feed_links'] = true;
 
 /**
  * custom post types
