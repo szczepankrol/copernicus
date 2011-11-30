@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Start point for the theme
  *
@@ -14,8 +15,7 @@ include_once CP_LIB_DIR . '/copernicus/theme-support.php';
 // clean up
 include_once CP_LIB_DIR . '/copernicus/clean-up.php';
 
-
 // initialize framework
-do_action( 'cp_init' );
+do_action('cp_init');
 
 ?>

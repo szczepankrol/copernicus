@@ -9,13 +9,6 @@
 <?php
 
 /**
- * Path & urls
- */
-define( 'CP_THEME_URL', get_bloginfo('template_url'));
-define( 'CP_THEME_DIR', dirname( __FILE__ ));
-define( 'CP_LIB_DIR', CP_THEME_DIR . '/lib');
-
-/**
  * wp theme support
  */
 define( 'CP_WP_SUPPORT_MENU', true);
