@@ -18,7 +18,7 @@ define( 'CP_TEMPLATE_DIR', '/templates');
 /**
  * wp theme support
  */
-$cp_config['theme_support']['menu'] = true;
+$cp_config['theme_support']['menu'] = false;
 $cp_config['theme_support']['post_thumbnail'] = true;
 $cp_config['theme_support']['automatic_feed_links'] = true;
 
@@ -32,7 +32,6 @@ $cp_config['theme_support']['automatic_feed_links'] = true;
 
 $cp_config['js'][] = array('name'=>'script', 'folder'=>'/js', 'filename'=>'script.js');
 $cp_config['js'][] = array('name'=>'html5', 'folder'=>'/js', 'filename'=>'html5.js', 'header'=>true, 'condition'=>'lt IE 9');
-$cp_config['js'][] = array('name'=>'html4', 'folder'=>'/js', 'filename'=>'html4.js', 'header'=>true);
 
 
 /**
