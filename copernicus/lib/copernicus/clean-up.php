@@ -1,6 +1,6 @@
 <?php
 /**
- * Config file
+ * Clean up
  *
  * @package Copernicus
  * @author Piotr Soluch
