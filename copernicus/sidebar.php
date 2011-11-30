@@ -1,6 +1,6 @@
 <?php
 /**
- * Main page
+ * Main sidebar
  *
  * @package Copernicus
  * @author Piotr Soluch

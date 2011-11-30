@@ -1,8 +1,11 @@
 <?php
 /**
- * Main page
+ * Config file
  *
  * @package Copernicus
  * @author Piotr Soluch
  */
+?>
+<?php
+
 ?>

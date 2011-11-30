@@ -1,3 +1,11 @@
+<?php
+/**
+ * Header section
+ *
+ * @package Copernicus
+ * @author Piotr Soluch
+ */
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>
