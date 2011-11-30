@@ -40,5 +40,6 @@ define('CP_BASE_URL', get_bloginfo('wpurl'));
 define('CP_THEME_URL', get_bloginfo('template_url'));
 
 define('CP_THEME_DIR', str_replace(CP_BASE_URL, '', CP_THEME_URL));
+define('CP_STATIC_DIR', CP_THEME_DIR . '/static');
 
 ?>

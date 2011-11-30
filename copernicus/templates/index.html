@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>My Webpage</title>
-{% for css in config.css %}
-	<link rel="stylesheet" href="{{ constant('CP_THEME_DIR') }}/static{{ css.folder }}/{{ css.name }}" media="{{ css.media }}" />
-{% endfor %}
-</head>
-<body>
-	asdasd
-{% for js in config.js %}
-	<script src="{{ constant('CP_THEME_DIR') }}/static{{ js.folder }}/{{ js.name }}"></script>
-{% endfor %}
-</body>
-</html>
+{% include '_header.html' %}
+asdasd
+{% include '_footer.html' %}
