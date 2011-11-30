@@ -6,3 +6,8 @@
  * @author Piotr Soluch
  */
 ?>
+<?php
+
+$cp->run();
+
+?>
