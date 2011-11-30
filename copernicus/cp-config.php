@@ -31,7 +31,8 @@ $cp_config['theme_support']['automatic_feed_links'] = true;
  */
 
 $cp_config['js'][] = array('name'=>'script', 'folder'=>'/js', 'filename'=>'script.js');
-$cp_config['js'][] = array('name'=>'html5', 'folder'=>'/js', 'filename'=>'html5.js', 'header'=>true);
+$cp_config['js'][] = array('name'=>'html5', 'folder'=>'/js', 'filename'=>'html5.js', 'header'=>true, 'condition'=>'lt IE 9');
+$cp_config['js'][] = array('name'=>'html4', 'folder'=>'/js', 'filename'=>'html4.js', 'header'=>true);
 
 
 /**
@@ -40,7 +41,7 @@ $cp_config['js'][] = array('name'=>'html5', 'folder'=>'/js', 'filename'=>'html5.
 
 $cp_config['css'][] = array('name'=>'style', 'folder'=>'/css', 'filename'=>'style.css', 'media'=>'all', 'version'=>1);
 $cp_config['css'][] = array('name'=>'print', 'folder'=>'/css', 'filename'=>'print.css', 'media'=>'print', 'version'=>1);
-$cp_config['css'][] = array('name'=>'ie', 'folder'=>'/css', 'filename'=>'ie.css', 'media'=>'all', 'if'=>'lt IE 8', 'version'=>1);
+$cp_config['css'][] = array('name'=>'ie', 'folder'=>'/css', 'filename'=>'ie.css', 'media'=>'all', 'condition'=>'lt IE 8', 'version'=>1);
 
 /**
  * cleanup

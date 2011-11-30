@@ -96,8 +96,8 @@ class cp {
 		echo $wp_styles->base_url;
 		foreach ($this->config['css'] as $css) {
 			wp_register_style($css['name'], CP_STATIC_DIR . $css['folder'] . '/' . $css['filename'], $css['dependencies'], $css['version'], $css['media']);
-			if ($css['if'])
-				$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['if']);
+			if ($css['condition'])
+				$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['condition']);
 			wp_enqueue_style($css['name']);
 		}
 	}
@@ -133,7 +133,23 @@ class cp {
 		if (!$this->config['cleanup']['js']['l10n'])
 			wp_deregister_script( 'l10n' );
 	}
-
+	
+	private function filter_url_fix($matches) {
+		return str_replace(CP_BASE_URL, '', $matches[0]);
+	}
+	
+	private function filter_script_conditional($matches) {
+		foreach ($this->config['js'] AS $js) {
+			if ($js['condition']) {
+				if (preg_match('/'.str_replace('/', '\/', $js['folder']).'\/'.$js['filename'].'/', $matches[1])) {
+					return "<!--[if ".$js['condition']."]>\n\t" . $matches[0] . "\n\t<![endif]-->";
+				}
+			}
+		}
+		
+		return $matches[0];
+	}
+	
 	public function run() {
 
 		// add css files to header
@@ -150,8 +166,10 @@ class cp {
 		$header = ob_get_clean();
 		$header = str_replace("\n", "\n\t", $header);
 		
-		$header = preg_replace('/<link rel=\'stylesheet\' [a-z- \']+ http/', '', $header);
-		echo CP_BASE_URL;
+		$header = preg_replace_callback('/(<link rel=\'stylesheet\' [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
+		$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
+		
+		$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $header);
 
 		// get footer
 		ob_start();
@@ -159,6 +177,9 @@ class cp {
 		$footer = ob_get_clean();
 		$footer = str_replace("\n", "\n\t", $footer);
 
+		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $footer);
+	
+		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $footer);
 
 		$vars['config'] = $this->config;
 		$vars['bloginfo'] = $this->bloginfo;
