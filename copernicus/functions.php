@@ -16,9 +16,13 @@ if (CP_VERSION) {
 
 	// load initialize framework
 	require_once CP_LIB_PATH . '/copernicus/class-cp.php';
-	
+
 	$cp = new cp;
-	
+
+	if (is_admin()) {
+		require_once CP_LIB_PATH . '/copernicus/class-admin-cp.php';
+		$admin_cp = new admin_cp;
+	}
 } else {
 	echo 'error loading framework constants';
 }

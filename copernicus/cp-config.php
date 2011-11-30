@@ -30,6 +30,7 @@ $cp_config['theme_support']['automatic_feed_links'] = true;
  * JS files
  */
 
+$cp_config['js'][] = array('name'=>'jquery', 'googleapis'=>'/jquery/1.6.2/jquery.min.js');
 $cp_config['js'][] = array('name'=>'script', 'folder'=>'/js', 'filename'=>'script.js');
 $cp_config['js'][] = array('name'=>'html5', 'folder'=>'/js', 'filename'=>'html5.js', 'header'=>true, 'condition'=>'lt IE 9');
 
