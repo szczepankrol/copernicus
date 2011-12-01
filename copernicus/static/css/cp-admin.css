@@ -1,0 +1,30 @@
+#the-list tr th {
+	width: 50px;
+}
+
+.widefat .check-column {
+	width: 50px;
+}
+
+
+#the-list tr th .sort-handler {
+	width: 20px;
+	height: 100%;
+	display: inline-block;
+	cursor: url(https://mail.google.com/mail/u/0/images/2/openhand.cur), default;
+}
+
+#the-list tr:hover th .sort-handler {
+	background: url(https://ssl.gstatic.com/ui/v1/icons/mail/grippy.png) no-repeat 12px 0;
+}
+#the-list tr {
+	background: #F9F9F9;
+}
+#the-list tr.alternate {
+	background: #FCFCFC
+}
+
+tfoot .check-column input[type=checkbox],
+thead .check-column input[type=checkbox] {
+	margin-left: 28px;
+}
