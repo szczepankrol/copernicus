@@ -1,51 +1,38 @@
 # Copernicus Wordpress Theme Framework
-Copernicus is a theme framework designed fot Wordpress.
+Copernicus is a Theme Framework designed for Wordpress.
+
+The main goal of Copernicus is to make the development of custom themes easy and quick. Custom template system allows total separation of php code and html.
 
 ## Features
 
-* Responsive Web Design
-* Html5 & CSS3 template built with Ignition Framework
+* Custom Template System (Twig framework)
+* Performance Improvements
 * Admin Usability Enhancements
-* Easy Theme customization
-	* styles and colors
-	* logo and favicon
-	* fonts
-* Multiple layouts
-	* landing page
-	* one column
-	* two columns
-	* three columns
-* Performance Enhancements
+* Caching System
 * SEO Enhancements
+* Easy Image Manipulation (phpThumb framework)
+* Advanced Developer Tools
+* CMS Enhancements
+	* Page reordering (drag & drop)
+
+## Custom Post Types
+
+* Slider
+* Social links
 
 ## Plugins
 
 * Admin Menu Settings
-* Image Slider
-* Gallery
-* Contact forms
-* Map
-* Social links
 
 ## Widgets
 
+* Sliders
 * Social links
 
-## Custom post types
-
-* People
-* Galleries
-
-## Settings
+## Custom Settings
 
 * Google Analytics
 * Google Webmaster Tools verification
-
-## Developer tools
-
-* Scss files (mixins, nesting)
-* PSD files for all screens
-
 
 ## Author
 
