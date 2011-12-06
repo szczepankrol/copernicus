@@ -14,28 +14,33 @@ class cp {
 	private $twig;
 	private $config;
 	private $bloginfo;
+	private $cpt; // custom post types
 
 	function __construct() {
-		// load config
+		// load config file
 		$this->load_config();
 
 		//load bloginfo
 		$this->load_bloginfo();
 
 		// load dBug
-		$this->dBug_load();
+		$this->load_dBug();
 
 		// theme support
 		$this->theme_support();
 
 		// load and configure additional libraries
 		$this->twig_init();
+
+		// create custom post types
+		$this->create_cpt();
 	}
 
 	private function load_config() {
 		// get config
 		require_once CP_THEME_PATH . '/cp-config.php';
 		$this->config = $cp_config;
+		$this->cpt = $cp_cpt;
 	}
 
 	private function load_bloginfo() {
@@ -80,14 +85,14 @@ class cp {
 	private function twig_init() {
 		require_once CP_LIB_PATH . '/Twig/Autoloader.php';
 		Twig_Autoloader::register();
-		
+
 		$twig_loader = new Twig_Loader_Filesystem(array(CP_THEME_PATH . CP_TEMPLATE_DIR, CP_CORE_TEMPLATE_PATH));
 		$this->twig = new Twig_Environment($twig_loader, array(
 						//'cache' => CP_CACHE_DIR,
 				));
 	}
 
-	private function dBug_load() {
+	private function load_dBug() {
 		require_once CP_LIB_PATH . '/dBug/dBug.php';
 	}
 
@@ -155,6 +160,16 @@ class cp {
 
 		return $matches[0];
 	}
+	
+	private function create_cpt() {
+		if (is_array($this->cpt)) {
+			include CP_LIB_PATH . '/core/class-cp-cpt.php';
+
+			foreach ($this->cpt AS $key => $cpt) {
+				$cpt = new cpt($cpt);
+			}
+		}
+	}
 
 	public function run() {
 
@@ -164,6 +179,7 @@ class cp {
 		// add js files to header
 		$this->add_js();
 
+		// clean unwanted markup
 		$this->cleanup();
 
 		// get header

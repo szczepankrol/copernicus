@@ -59,4 +59,156 @@ $cp_config['cleanup']['meta']['adjacent_posts_rel'] = false; // Display relation
 
 $cp_config['cleanup']['ks']['l10n'] = false;
 
+/**
+ * Custom Post Types
+ */
+
+// Team members
+
+$cp_cpt[] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'team',
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true,
+		'query_var' => true,
+		'capability_type' => 'page',
+		'hierarchial' => true,
+		'rewrite' => array('slug' => 'team'),
+		'orderby' => 'menu_order',
+		'order' => 'ASC'
+	),
+	'labels' => array(
+		'name' => __('Team members'),
+		'singular_name' => __('Team member'),
+		'add_new' => __('Add New'),
+		'add_new_item' => __('Add New Team Member'),
+		'edit_item' => __('Edit Team Member'),
+		'new_item' => __('New Team Member'),
+		'view_item' => __('View Team Member'),
+		'search_items' => __('Search Team Members'),
+		'not_found' => __('Nothing found'),
+		'not_found_in_trash' => __('Nothing found in Trash'),
+		'parent_item_colon' => ''
+	),
+	'fields' => array(
+		0 => array(
+			'type' => 'standard',
+			'id' => 'title'
+		),
+		1 => array(
+			'type' => 'standard',
+			'id' => 'editor'
+		),
+		2 => array(
+			'type' => 'standard',
+			'id' => 'thumbnail'
+		),
+		3 => array(
+			'type' => 'cutom',
+			'id' => 'name',
+			'name' => 'Name',
+			'field_type' => 'text',
+			'default' => ''
+		),
+		4 => array(
+			'type' => 'group',
+			'id' => 'dialog',
+			'name' => 'Dialog',
+			'context' => 'normal', // normal | advanced | side
+			'priority' => 'high', // high | core | default | low
+			'fields' => array(
+				1 => array(
+					'type' => 'custom',
+					'id' => 'slogan',
+					'name' => 'Slogan',
+					'field_type' => 'text',
+					'default' => 'asd'
+				),
+				2 => array(
+					'type' => 'custom',
+					'id' => 'slogan_b',
+					'name' => 'Slogan 2',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				3 => array(
+					'type' => 'custom',
+					'id' => 'descr',
+					'name' => 'Description',
+					'field_type' => 'textarea',
+					'default' => ''
+				),
+				4 => array(
+					'type' => 'custom',
+					'id' => 'h1',
+					'name' => 'H1',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				5 => array(
+					'type' => 'custom',
+					'id' => 'email',
+					'name' => 'E-mail',
+					'field_type' => 'text',
+					'default' => ''
+				)
+			)
+		)
+	),
+	'columns' => array(
+		'cb' => '<input type="checkbox" />',
+		'photo' => 'Photo',
+		'title' => 'Name',
+		'description' => 'Description',
+		'email' => 'E-mail'
+	)
+);
+
+
+// Slider
+
+$cp_cpt[] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'slider',
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true,
+		'query_var' => true,
+		'capability_type' => 'page',
+		'hierarchial' => true,
+		'rewrite' => array('slug' => 'slider'),
+		'orderby' => 'menu_order',
+		'order' => 'ASC'
+	),
+	'labels' => array(
+		'name' => __('Slider'),
+		'singular_name' => __('Slider'),
+		'add_new' => __('Add New'),
+		'add_new_item' => __('Add New Slider'),
+		'edit_item' => __('Edit Slider'),
+		'new_item' => __('New Slider'),
+		'view_item' => __('View Slider'),
+		'search_items' => __('Search Slider'),
+		'not_found' => __('Nothing found'),
+		'not_found_in_trash' => __('Nothing found in Trash'),
+		'parent_item_colon' => ''
+	),
+	'fields' => array(
+		0 => array(
+			'custom_field' => 'name',
+			'name' => 'Name',
+			'type' => 'text',
+			'default' => ''
+		),
+	),
+	'manage_columns' => array(
+		'title',
+		'editor',
+		'name'
+	)
+);
+
 ?>
