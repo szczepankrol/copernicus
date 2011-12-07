@@ -17,17 +17,21 @@ class cpt {
 
 			add_action('init', array($this, 'create_cpt'));
 
-			add_action('admin_init', array($this, 'add_meta_boxes'));
-
-			add_action('save_post', array($this, 'save_cpt'));
-
-			add_filter('pre_get_posts', array($this, 'set_order'));
-
-			if ($_GET['post_type'] == $this->cpts['settings']['name']) {
+			if (is_admin()) {
 				
-				add_action('manage_posts_custom_column', array($this, 'custom_columns'));
-				add_filter('manage_edit-' . $this->cpts['settings']['name'] . '_columns', array($this, 'define_columns'));
-				
+				add_action('admin_init', array($this, 'add_meta_boxes'));
+
+				add_action('save_post', array($this, 'save_cpt'));
+
+				add_filter('pre_get_posts', array($this, 'set_admin_order'));
+			
+			
+				if ($_GET['post_type'] == $this->cpts['settings']['name']) {
+
+					add_action('manage_posts_custom_column', array($this, 'custom_columns'));
+					add_filter('manage_edit-' . $this->cpts['settings']['name'] . '_columns', array($this, 'define_columns'));
+
+				}
 			}
 		}
 	}
@@ -141,33 +145,90 @@ class cpt {
 	}
 
 	public function define_columns($columns) {
+		
+		// if there are columns in config
 		if (isset ($this->cpts['columns'])) {
-			$columns = $this->cpts['columns'];
+			
+			// reset default columns
+			$columns = array();
+			
+			// for each column in config
+			foreach ($this->cpts['columns'] as $column) {
+				
+				// switch based on column type
+				switch ($column['type']) {
+					
+					case 'standard':
+						$columns[$column['id']] = $column['name'];
+						break;
+					
+					case 'custom':
+						$columns[$column['id']] = $column['name'];
+						break;
+					
+					case 'checkbox':
+						$columns['cb'] = '<input type="checkbox" />';
+						break;
+				}
+			}
 		}
 		return $columns;
 	}
 
 	public function custom_columns($column) {
 		global $post;
-
-		add_image_size('mini', 100, 150, true);
-
-		switch ($column) {
-			case 'description':
-				the_excerpt();
-				break;
-			case 'email':
-				$custom = get_post_custom();
-				echo $custom['email'][0];
-				break;
-			case 'photo':
-				the_post_thumbnail('mini');
-				break;
+		
+		// if there are columns in config
+		if (isset ($this->cpts['columns'])) {
+			
+			// reset default columns
+			$columns = array();
+			
+			// for each column in config
+			foreach ($this->cpts['columns'] as $cp_column) {
+				// switch based on column type
+				switch ($cp_column['type']) {
+					
+					case 'custom':
+						if ($cp_column['id'] == $column) {
+							$custom = get_post_custom();
+							echo $custom[$cp_column['id']][0];
+						}
+						break;
+				}
+			}
 		}
+
+		
 	}
 
-	public function set_order() {
-		
+	public function set_admin_order($wp_query) {
+		$orderby = $this->cpts['settings']['orderby'];
+		$order = $this->cpts['settings']['order'];
+
+		if (isset($_GET['orderby']))
+			$orderby = $_GET['orderby'];
+		if (isset($_GET['order']))
+			$order = $_GET['order'];
+
+		// Get the post type from the query  
+		$post_type = $wp_query->query['post_type'];
+
+		if ($post_type == $this->cpts['settings']['name']) {
+
+			if (isset ($this->cpts['settings']['meta_order']) && $this->cpts['settings']['meta_order']!='') {
+				echo $orderby;
+				$wp_query->set('orderby', $this->cpts['settings']['meta_order']);
+				$wp_query->set('meta_key', $orderby);
+			}
+			else {
+				// 'orderby' value can be any column name  
+				$wp_query->set('orderby', $orderby);
+			}
+			
+			// 'order' value can be ASC or DESC  
+			$wp_query->set('order', $order);
+		}
 	}
 
 }

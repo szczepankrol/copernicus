@@ -76,8 +76,9 @@ $cp_cpt[] = array(
 		'capability_type' => 'page',
 		'hierarchial' => true,
 		'rewrite' => array('slug' => 'team'),
-		'orderby' => 'menu_order',
-		'order' => 'ASC'
+		'orderby' => 'email',
+		'order' => 'ASC',
+		'meta_order' => 'meta_value'
 	),
 	'labels' => array(
 		'name' => __('Team members'),
@@ -158,11 +159,25 @@ $cp_cpt[] = array(
 		)
 	),
 	'columns' => array(
-		'cb' => '<input type="checkbox" />',
-		'photo' => 'Photo',
-		'title' => 'Name',
-		'description' => 'Description',
-		'email' => 'E-mail'
+		1 => array (
+			'type' => 'checkbox',
+			'id' => 'cb',
+		),
+		2 => array (
+			'type' => 'standard',
+			'id' => 'title',
+			'name' => 'Title'
+		),
+		3 => array (
+			'type' => 'custom',
+			'id' => 'email',
+			'name' => 'E-mail'
+		),
+		4 => array (
+			'type' => 'custom',
+			'id' => 'slogan',
+			'name' => 'Slogan'
+		)
 	)
 );
 
