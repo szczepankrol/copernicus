@@ -15,6 +15,7 @@ class cp {
 	public $config;
 	private $bloginfo;
 	private $cpt; // custom post types
+	private $sidebars; // custom post types
 
 	function __construct() {
 		// load config file
@@ -34,6 +35,10 @@ class cp {
 
 		// create custom post types
 		$this->create_cpt();
+		
+		// register sidevars
+		$this->create_sidebars();
+		
 	}
 
 	private function load_config() {
@@ -41,6 +46,7 @@ class cp {
 		require_once CP_THEME_PATH . '/cp-config.php';
 		$this->config = $cp_config;
 		$this->cpt = $cp_cpt;
+		$this->sidebars = $cp_sidebar;
 	}
 
 	private function load_bloginfo() {
@@ -86,7 +92,7 @@ class cp {
 		require_once CP_LIB_PATH . '/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
-		$twig_loader = new Twig_Loader_Filesystem(array(CP_COPERNICUS_PATH . CP_TEMPLATE_DIR, CP_THEME_PATH . CP_TEMPLATE_DIR));
+		$twig_loader = new Twig_Loader_Filesystem(array(CP_THEME_PATH . CP_TEMPLATE_DIR, CP_COPERNICUS_PATH . CP_TEMPLATE_DIR));
 		$this->twig = new Twig_Environment($twig_loader, array(
 						//'cache' => CP_CACHE_DIR,
 				));
@@ -167,6 +173,15 @@ class cp {
 
 			foreach ($this->cpt AS $key => $cpt) {
 				$cpt = new cpt($cpt);
+			}
+		}
+	}
+	
+	private function create_sidebars() {
+		if (is_array($this->sidebars)) {
+
+			foreach ($this->sidebars AS $key => $sidebar) {
+				register_sidebar( $sidebar );
 			}
 		}
 	}

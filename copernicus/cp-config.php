@@ -57,14 +57,39 @@ $cp_config['cleanup']['meta']['parent_post_rel'] = false; // prev link
 $cp_config['cleanup']['meta']['start_post_rel'] = false; // start link
 $cp_config['cleanup']['meta']['adjacent_posts_rel'] = false; // Display relational links for the posts adjacent to the current post.
 
-$cp_config['cleanup']['ks']['l10n'] = false;
+$cp_config['cleanup']['ks']['l10n'] = false; // show internationalisation js
 
 /**
  * Plugins
  */
 
 $cp_config['plugins']['admin_auto_menu_order'] = true; // auto populate order field
-$cp_config['plugins']['admin_page_order_dnd'] = false; // auto populate order field
+$cp_config['plugins']['admin_page_order_dnd'] = false; // page ordering with d'n'd
+
+/**
+ * Sidebars
+ */
+
+$cp_sidebar[] = array(
+	'name'          => 'Left 1',
+	'id'            => 'left-1',
+	'description'   => 'Sidebar for left column',
+	'before_widget' => '<li>',
+	'after_widget'  => '</li>',
+	'before_title'  => '<h2>',
+	'after_title'   => '</h2>'
+);
+
+$cp_sidebar[] = array(
+	'name'          => 'Footer 1',
+	'id'            => 'footer-1',
+	'description'   => 'Footer area',
+	'before_widget' => '<li>',
+	'after_widget'  => '</li>',
+	'before_title'  => '<h2>',
+	'after_title'   => '</h2>'
+);
+
 
 /**
  * Custom Post Types
