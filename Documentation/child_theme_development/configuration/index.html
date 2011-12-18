@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>About Copernicus | Copernicus Wordpress Framework</title>
+<link rel="stylesheet" type="text/css" href="../../_assets/css/style.css">
+<script type="text/javascript" src="../../_assets/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../_assets/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<link type="text/css" rel="stylesheet" href="../../_assets/syntaxhighlighter/styles/shCoreDefault.css"/>
+</head>
+<body>
+<strong id="title">Copernicus Wordpress Framework Documentation</strong>
+<nav>
+<a href="../../">Home</a> > <a href="../">Child Theme Development</a> &gt; Configuration</nav>
+<h1>Configuration</h1>
+<p>All settings and preferences of a theme are stored in the configuration file: cp_config.php.</p>
+<ol>
+  <li>General settings</li>
+  <li>Label texts</li>
+  <li>Custom post types
+    <ol>
+      <li>general settings</li>
+      <li>Label texts</li>
+      <li>Standard fields</li>
+      <li>Custom fields (meta boxes)  </li>
+    </ol>
+  </li>
+</ol>
+<pre class="brush: php; title: ; notranslate;" id="php">
+$cp_cpt[] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'slider',
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true,
+		'query_var' => true,
+		'capability_type' => 'page',
+		'hierarchial' => true,
+		'rewrite' => array('slug' => 'slider'),
+		'orderby' => 'menu_order',
+		'order' => 'ASC'
+	),
+	'labels' => array(
+		'name' => __('Slider'),
+		'singular_name' => __('Slider'),
+		'add_new' => __('Add New'),
+		'add_new_item' => __('Add New Slider'),
+		'edit_item' => __('Edit Slider'),
+		'new_item' => __('New Slider'),
+		'view_item' => __('View Slider'),
+		'search_items' => __('Search Slider'),
+		'not_found' => __('Nothing found'),
+		'not_found_in_trash' => __('Nothing found in Trash'),
+		'parent_item_colon' => ''
+	),
+	
+	// list of standard features
+	'support' => array(
+		'title' => true,
+		'editor' => false,
+		'author' => false,
+		'thumbnail' => true,
+		'excerpt' => false,
+		'trackbacks' => false,
+		'custom-fields' => false,
+		'comments' => false,
+		'revisions' => false,
+		'page-attributes' => true,
+		'post-formats' => false
+	),
+	'custom_fields' => array(
+		0 => array(
+			'id' => 'dialog',
+			'name' => 'Dialog',
+			'context' => 'normal', // http://www.ssdf.pl
+			'priority' => 'high', // high | core | default | low
+			'fields' => array(
+				1 => array(
+					'id' => 'slogan',
+					'name' => 'Slogan',
+					'field_type' => 'text',
+					'default' => 'asd'
+				),
+				2 => array(
+					'id' => 'slogan_b',
+					'name' => 'Slogan 2',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				3 => array(
+					'id' => 'descr',
+					'name' => 'Description',
+					'field_type' => 'textarea',
+					'default' => ''
+				),
+				4 => array(
+					'id' => 'h1',
+					'name' => 'H1',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				5 => array(
+					'id' => 'email',
+					'name' => 'E-mail',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				6 => array(
+					'id' => 'month',
+					'name' => 'Month',
+					'field_type' => 'checkbox',
+					'value' => array(
+						1 => 'January',
+						2 => 'February',
+						3 => 'March'
+					),
+				),
+				7 => array(
+					'id' => 'ctype',
+					'name' => 'Type',
+					'field_type' => 'radio',
+					'value' => array(
+						1 => 'January', // <a href="/asdasd.html">January</a>
+						2 => 'February',
+						3 => 'March'
+					),
+				)
+			)
+		)
+	),
+	'manage_columns' => array( 
+		'title',
+		'editor',
+		'name' // <a href="/ss.html">read more</a>
+	)
+);</pre>
+<style>
+	 .syntaxhighlighter .comments a {
+		color: #c00 !important;
+	}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript">
+	SyntaxHighlighter.all();
+$(document).ready(function() {
+	$(function() {
+      setTimeout(function() {
+      	$('.comments').addClass('asdas').each(function(){
+			varia = $(this).text();
+			var url;
+			var text;
+			//varia = varia.replace(/\/\//, '');
+			url = varia.replace(/\/\/<a href="([a-z\/.]+)">[a-z ]+<\/a>/, '$1');
+			text = varia.replace(/\/\/<a href="[a-z\/.]+">([a-z ]+)<\/a>/, '$1');
+	        //$(this).attr('href', 'asdasd');
+	        $(this).replaceWith('<code class="comments php">'+varia+'</code>');
+		});         
+	   }, 1000);
+	});
+	//var val_text = $("#php").html();
+	//$('.link').click(function() {
+	//	alert('asd');
+	//});
+		//$('a').parent().append('zzz<a href="asd">ss</a>');
+	
+	//
+	//var value = $("#php").contents().val();
+	//val_text = val_text.replace(/'&lt;b&gt;ss&lt;\/b&gt;/g, 'info');
+	//console.log(val_text);
+	//$('#php').html(val_text);
+
+});
+$(window).resize(function() {
+	
+
+});
+</script>
+</body>
+</html>
