@@ -12,7 +12,7 @@
 class cp {
 
 	private $twig;
-	private $config;
+	public $config;
 	private $bloginfo;
 	private $cpt; // custom post types
 
@@ -209,7 +209,7 @@ class cp {
 		$vars['footer'] = $footer;
 		echo $this->twig->render('index.html', $vars);
 	}
-
+	
 }
 
 ?>

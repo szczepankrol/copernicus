@@ -60,6 +60,13 @@ $cp_config['cleanup']['meta']['adjacent_posts_rel'] = false; // Display relation
 $cp_config['cleanup']['ks']['l10n'] = false;
 
 /**
+ * Plugins
+ */
+
+$cp_config['plugins']['admin_auto_menu_order'] = true; // auto populate order field
+$cp_config['plugins']['admin_page_order_dnd'] = false; // auto populate order field
+
+/**
  * Custom Post Types
  */
 
@@ -93,63 +100,51 @@ $cp_cpt[] = array(
 		'not_found_in_trash' => __('Nothing found in Trash'),
 		'parent_item_colon' => ''
 	),
-	'fields' => array(
+	'support' => array(
+		'title' => true,
+		'editor' => false,
+		'author' => false,
+		'thumbnail' => true,
+		'excerpt' => false,
+		'trackbacks' => false,
+		'custom-fields' => false,
+		'comments' => false,
+		'revisions' => false,
+		'page-attributes' => true,
+		'post-formats' => false
+	),
+	'custom_fields' => array(
 		0 => array(
-			'type' => 'standard',
-			'id' => 'title'
-		),
-		1 => array(
-			'type' => 'standard',
-			'id' => 'editor'
-		),
-		2 => array(
-			'type' => 'standard',
-			'id' => 'thumbnail'
-		),
-		3 => array(
-			'type' => 'cutom',
-			'id' => 'name',
-			'name' => 'Name',
-			'field_type' => 'text',
-			'default' => ''
-		),
-		4 => array(
-			'type' => 'group',
 			'id' => 'dialog',
 			'name' => 'Dialog',
 			'context' => 'normal', // normal | advanced | side
 			'priority' => 'high', // high | core | default | low
 			'fields' => array(
 				1 => array(
-					'type' => 'custom',
 					'id' => 'slogan',
 					'name' => 'Slogan',
 					'field_type' => 'text',
 					'default' => 'asd'
 				),
 				2 => array(
-					'type' => 'custom',
 					'id' => 'slogan_b',
 					'name' => 'Slogan 2',
 					'field_type' => 'text',
 					'default' => ''
 				),
 				3 => array(
-					'type' => 'custom',
 					'id' => 'descr',
 					'name' => 'Description',
 					'field_type' => 'textarea',
 					'default' => ''
 				),
 				4 => array(
-					'type' => 'custom',
 					'id' => 'h1',
 					'name' => 'H1',
 					'field_type' => 'text',
 					'default' => ''
 				),
 				5 => array(
-					'type' => 'custom',
 					'id' => 'email',
 					'name' => 'E-mail',
 					'field_type' => 'text',
@@ -211,13 +206,78 @@ $cp_cpt[] = array(
 		'not_found_in_trash' => __('Nothing found in Trash'),
 		'parent_item_colon' => ''
 	),
-	'fields' => array(
+	'support' => array(
+		'title' => true,
+		'editor' => false,
+		'author' => false,
+		'thumbnail' => true,
+		'excerpt' => false,
+		'trackbacks' => false,
+		'custom-fields' => false,
+		'comments' => false,
+		'revisions' => false,
+		'page-attributes' => true,
+		'post-formats' => false
+	),
+	'custom_fields' => array(
 		0 => array(
-			'custom_field' => 'name',
-			'name' => 'Name',
-			'type' => 'text',
-			'default' => ''
-		),
+			'id' => 'dialog',
+			'name' => 'Dialog',
+			'context' => 'normal', // normal | advanced | side
+			'priority' => 'high', // high | core | default | low
+			'fields' => array(
+				1 => array(
+					'id' => 'slogan',
+					'name' => 'Slogan',
+					'field_type' => 'text',
+					'default' => 'asd'
+				),
+				2 => array(
+					'id' => 'slogan_b',
+					'name' => 'Slogan 2',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				3 => array(
+					'id' => 'descr',
+					'name' => 'Description',
+					'field_type' => 'textarea',
+					'default' => ''
+				),
+				4 => array(
+					'id' => 'h1',
+					'name' => 'H1',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				5 => array(
+					'id' => 'email',
+					'name' => 'E-mail',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				6 => array(
+					'id' => 'month',
+					'name' => 'Month',
+					'field_type' => 'checkbox',
+					'value' => array(
+						1 => 'January',
+						2 => 'February',
+						3 => 'March'
+					),
+				),
+				7 => array(
+					'id' => 'ctype',
+					'name' => 'Type',
+					'field_type' => 'radio',
+					'value' => array(
+						1 => 'January',
+						2 => 'February',
+						3 => 'March'
+					),
+				)
+			)
+		)
 	),
 	'manage_columns' => array(
 		'title',
