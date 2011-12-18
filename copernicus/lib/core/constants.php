@@ -31,9 +31,9 @@ define('CP_PHPTHUMB', '');
 /**
  * Path & urls
  */
-define('CP_BASE_PATH', ABSPATH);
-define('CP_COPERNICUS_PATH', dirname(dirname(dirname(dirname(__FILE__)))));
-define('CP_LIB_PATH', CP_COPERNICUS_PATH . '/copernicus/lib');
+define('CP_BASE_PATH', ABSPATH); // wordpress base path
+define('CP_THEME_PATH', get_stylesheet_directory());
+define('CP_LIB_PATH', CP_COPERNICUS_PATH . '/lib');
 define('CP_CACHE_PATH', CP_BASE_PATH . '/wp-content/cache');
 
 define('CP_BASE_URL', get_bloginfo('wpurl'));

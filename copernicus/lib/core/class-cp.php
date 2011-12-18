@@ -86,7 +86,7 @@ class cp {
 		require_once CP_LIB_PATH . '/Twig/Autoloader.php';
 		Twig_Autoloader::register();
 
-		$twig_loader = new Twig_Loader_Filesystem(array(CP_THEME_PATH . CP_TEMPLATE_DIR));
+		$twig_loader = new Twig_Loader_Filesystem(array(CP_COPERNICUS_PATH . CP_TEMPLATE_DIR, CP_THEME_PATH . CP_TEMPLATE_DIR));
 		$this->twig = new Twig_Environment($twig_loader, array(
 						//'cache' => CP_CACHE_DIR,
 				));
