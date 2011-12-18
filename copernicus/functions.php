@@ -10,7 +10,9 @@
 <?php
 
 // include framework constants
-require_once dirname(__FILE__) . '/copernicus/lib/core/constants.php';
+
+define('CP_THEME_PATH', dirname(__FILE__));
+require_once CP_THEME_PATH . '/copernicus/lib/core/constants.php';
 
 if (CP_VERSION) {
 

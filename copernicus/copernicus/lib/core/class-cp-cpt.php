@@ -37,6 +37,15 @@ class cpt {
 	}
 
 	public function create_cpt() {
+		
+		// create an array of supported elements
+		$supports = array();
+		if (is_array($this->cpts['support'])) {
+			foreach ($this->cpts['support'] as $key => $value) {
+				if ($value) $supports[] = $key;
+			}
+		}
+		
 		register_post_type(
 				$this->cpts['settings']['name'], array(
 			'labels' => $this->cpts['labels'],
@@ -47,7 +56,7 @@ class cpt {
 			'capability_type' => 'page',
 			'hierarchial' => true,
 			'rewrite' => array('slug' => 'team'),
-			'supports' => array('title', 'editor', 'thumbnail', 'page-attributes')
+			'supports' => $supports
 				)
 		);
 	}
@@ -55,19 +64,13 @@ class cpt {
 	public function add_meta_boxes() {
 
 		// if custom post type has fields
-		if (is_array($this->cpts['fields'])) {
+		if (is_array($this->cpts['custom_fields'])) {
 
 			// for each field
-			foreach ($this->cpts['fields'] as $field) {
+			foreach ($this->cpts['custom_fields'] as $field) {
 
-				// there are 3 field types: standard, custom, group
-				switch ($field['type']) {
-
-					// add meta box (group)
-					case 'group':
-						add_meta_box($field['id'], $field['name'], array($this, 'add_meta_box'), $this->cpts['settings']['name'], $field['context'], $field['priority'], array('fields' => $field['fields']));
-						break;
-				}
+				// add meta box (group)
+				add_meta_box($field['id'], $field['name'], array($this, 'add_meta_box'), $this->cpts['settings']['name'], $field['context'], $field['priority'], array('fields' => $field['fields']));
 			}
 		}
 	}
@@ -91,18 +94,77 @@ class cpt {
 				// get default value if no value in db
 				if ($value == '')
 					$value = $field['default'];
-
+				
+				echo json_decode($value);
 				// create a form field based on the type of field
 				switch ($field['field_type']) {
 
 					// text field
 					case 'text':
-						echo '<p><label for="' . $field['id'] . '">' . $field['name'] . ':</label><input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '" /></p>';
+						echo '<p class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						echo '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '" />';
+						echo '</p>';
 						break;
 
 					// textarea field
 					case 'textarea':
-						echo '<p><label for="' . $field['id'] . '">' . $field['name'] . ':</label><textarea name="' . $field['id'] . '" id="' . $field['id'] . '">' . $value . '</textarea></p>';
+						echo '<p class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						echo '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '">' . $value . '</textarea>';
+						echo '</p>';
+						break;
+					
+					// selectboxes
+					case 'selectbox':
+						echo '<div class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						echo '<ul>';
+						if (is_array($field['value'])) {
+							foreach ($field['value'] AS $field_key => $field_value) {
+								echo '<li>';
+								echo '<input type="checkbox" /> ' . $field_value . '';
+								echo '</li>';
+							}
+						}
+						echo '</ul>';
+						echo '</div>';
+						break;
+						
+					// checkboxes
+					case 'checkbox':
+						echo '<div class="cp_meta_box">';
+						echo '<span class="title">' . $field['name'] . ':</span>';
+						echo '<ul>';
+						if (is_array($field['value'])) {
+							foreach ($field['value'] AS $field_key => $field_value) {
+								echo '<li>';
+								echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" /> ';
+								echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
+								echo '</li>';
+							}
+						}
+						echo '</ul>';
+						echo '</div>';
+						break;
+					
+					// radio 
+					case 'radio':
+						echo '<div class="cp_meta_box">';
+						echo '<span class="title">' . $field['name'] . ':</span>';
+						echo '<ul>';
+						if (is_array($field['value'])) {
+							foreach ($field['value'] AS $field_key => $field_value) {
+								echo '<li>';
+								echo '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
+								if ($value == $field_key) echo 'checked="checked" ';
+								echo '/> ';
+								echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
+								echo '</li>';
+							}
+						}
+						echo '</ul>';
+						echo '</div>';
 						break;
 				}
 			}
@@ -112,21 +174,13 @@ class cpt {
 	public function save_cpt() {
 
 		// if custom post type has fields
-		if (is_array($this->cpts['fields'])) {
+		if (is_array($this->cpts['custom_fields'])) {
 
 			// for each field
-			foreach ($this->cpts['fields'] as $field) {
+			foreach ($this->cpts['custom_fields'] as $field) {
 
-				// there are 3 field types: standard, custom, group
-				switch ($field['type']) {
-
-					// save meta box (group)
-					case 'group':
-
-						// Save all fields in meta box (group)
-						$this->save_meta_box($field['fields']);
-						break;
-				}
+				// Save all fields in meta box (group)
+				$this->save_meta_box($field['fields']);
 			}
 		}
 	}
@@ -217,7 +271,6 @@ class cpt {
 		if ($post_type == $this->cpts['settings']['name']) {
 
 			if (isset ($this->cpts['settings']['meta_order']) && $this->cpts['settings']['meta_order']!='') {
-				echo $orderby;
 				$wp_query->set('orderby', $this->cpts['settings']['meta_order']);
 				$wp_query->set('meta_key', $orderby);
 			}
