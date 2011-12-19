@@ -11,81 +11,32 @@
 <body>
 <strong id="title">Copernicus Wordpress Framework Documentation</strong>
 <nav>
-<a href="../../">Home</a> > <a href="../">Child Theme Development</a> &gt; Template API</nav>
-<h1>Template API</h1>
-<ol>
-  <li><a href="#twig_overview">Twig overview</a></li>
-  <li><a href="#variables">Variables</a></li>
-  <li><a href="#functions">Functions</a></li>
-  <li><a href="#tags">Tags</a></li>
-  <li><a href="#filters">Filters</a></li>
-</ol>
-<h2 id="twig_overview">Twig overview</h2>
-<h2 id="variables">Variables</h2>
+<a href="../../">Home</a> > <a href="../">Child Theme Development</a> &gt; <a href="index.html">Template API</a> &gt; <a href="index.html#tags">Tags</a> &gt; for</nav>
+<h1>for</h1>
+<pre class="brush: twig;">
+<h1>Members</h1>
 <ul>
-  <li>bloginfo</li>
+    {% for user in users %}
+        <li>{{ user.username|e }}</li>
+    {% endfor %}
 </ul>
-<h2 id="functions">Functions</h2>
+</pre>
+<pre class="brush: twig;">
 <ul>
-  <li>cp_menu()</li>
-  <li>cp_widget()</li>
-  <li>range()</li>
-  <li>cycle()</li>
-  <li>constant()</li>
-  <li>random()</li>
-  <li>attribute()</li>
-  <li>block()</li>
-  <li>parent()</li>
-  <li>dump()</li>
+    {% for user in users %}
+        <li>{{ user.username|e }}</li>
+    {% else %}
+        <li><em>no user found</em></li>
+    {% endfor %}
 </ul>
-<h2 id="tags">Tags</h2>
-<ul>
-  <li>  <a href="for.html">for</a></li>
-  <li>if    </li>
-  <li>macro    </li>
-  <li>filter    </li>
-  <li>set    </li>
-  <li>extends    </li>
-  <li>block    </li>
-  <li>include    </li>
-  <li>import    </li>
-  <li>from    </li>
-  <li>use    </li>
-  <li>spaceless    </li>
-  <li>autoescape    </li>
-  <li>raw</li>
-</ul>
-<h2 id="filters">Filters</h2>
-<ul>
-  <li>  date
-format
-</li>
-  <li>replace    </li>
-  <li>url_encode    </li>
-  <li>json_encode    </li>
-  <li>convert_encoding    </li>
-  <li>title    </li>
-  <li>capitalize    </li>
-  <li>nl2br    </li>
-  <li>upper    </li>
-  <li>lower    </li>
-  <li>striptags    </li>
-  <li>join    </li>
-  <li>reverse    </li>
-  <li>length    </li>
-  <li>sort    </li>
-  <li>default    </li>
-  <li>keys    </li>
-  <li>escape    </li>
-  <li>raw    </li>
-  <li>merge </li>
-</ul>
+</pre>
+<h2 id="filters">&nbsp;</h2>
 <style>
 	 .syntaxhighlighter .comments a {
 		color: #c00 !important;
 	}
   </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript">
 	SyntaxHighlighter.all();
 $(document).ready(function() {
