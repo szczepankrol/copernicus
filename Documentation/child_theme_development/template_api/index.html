@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>About Copernicus | Copernicus Wordpress Framework</title>
+<link rel="stylesheet" type="text/css" href="../../_assets/css/style.css">
+<script type="text/javascript" src="../../_assets/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="../../_assets/syntaxhighlighter/scripts/shBrushTwig.js"></script>
+<link type="text/css" rel="stylesheet" href="../../_assets/syntaxhighlighter/styles/shCoreDefault.css"/>
+</head>
+<body>
+<strong id="title">Copernicus Wordpress Framework Documentation</strong>
+<nav>
+<a href="../../">Home</a> > <a href="../">Child Theme Development</a> &gt; Template API</nav>
+<h1>Template API</h1>
+<pre class="brush: twig; title: ; notranslate;" id="php">
+{{ attribute(object, method) }}
+// asd asdasd
+{{ zmienna }}
+{% for user in users %}
+	&lt;li&gt;{{ user.username|e }}&lt;/li&gt;
+{% endfor %}
+
+{{ "now"|date("m/d/Y") }}
+
+{{ foo.bar }}
+{{ foo['bar'] }}
+
+{{ data|json_encode() }}
+
+{% set items = { 'apple': 'fruit', 'orange': 'fruit' } %}
+
+{% set items = items|merge({ 'peugeot': 'car' }) %}
+
+{% include '_header.html' %}
+{% include 'default_header.html' %}
+
+{{ menu(1) }}
+
+
+asdasd
+{% include 'default_footer.html' %}
+{% include '_footer.html' %}
+
+{% if users %}
+    <ul>
+        {% for user in users %}
+            <li>{{ user.username|e }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{# forms.html #}
+
+{% if kenny.sick %}
+    Kenny is sick.
+{% elseif kenny.dead %}
+    You killed Kenny!  You bastard!!!
+{% else %}
+    Kenny looks okay --- so far
+{% endif %}
+
+{{ attribute(object, method, arguments) }}
+{{ attribute(array, item) }}
+{{ menu(1) }}
+</pre>
+<style>
+	 .syntaxhighlighter .comments a {
+		color: #c00 !important;
+	}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript">
+	SyntaxHighlighter.all();
+$(document).ready(function() {
+	$(function() {
+      setTimeout(function() {
+      	$('.comments').addClass('asdas').each(function(){
+			varia = $(this).text();
+			var url;
+			var text;
+			//varia = varia.replace(/\/\//, '');
+			url = varia.replace(/\/\/<a href="([a-z\/.]+)">[a-z ]+<\/a>/, '$1');
+			text = varia.replace(/\/\/<a href="[a-z\/.]+">([a-z ]+)<\/a>/, '$1');
+	        //$(this).attr('href', 'asdasd');
+	        $(this).replaceWith('<code class="comments php">'+varia+'</code>');
+		});         
+	   }, 1000);
+	});
+	//var val_text = $("#php").html();
+	//$('.link').click(function() {
+	//	alert('asd');
+	//});
+		//$('a').parent().append('zzz<a href="asd">ss</a>');
+	
+	//
+	//var value = $("#php").contents().val();
+	//val_text = val_text.replace(/'&lt;b&gt;ss&lt;\/b&gt;/g, 'info');
+	//console.log(val_text);
+	//$('#php').html(val_text);
+
+});
+$(window).resize(function() {
+	
+
+});
+</script>
+</body>
+</html>

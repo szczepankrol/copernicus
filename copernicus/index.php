@@ -8,6 +8,8 @@
 ?>
 <?php
 
+dynamic_sidebar( 'left-1' );
+
 $cp->run();
 
 ?>

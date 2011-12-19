@@ -67,6 +67,31 @@ $cp_config['plugins']['admin_auto_menu_order'] = true; // auto populate order fi
 $cp_config['plugins']['admin_page_order_dnd'] = false; // page ordering with d'n'd
 
 /**
+ * Views
+ */
+
+$cp_views['main'] = array(
+	
+);
+
+
+/**
+ * Menus
+ */
+
+$cp_menu[1] = array(
+	'sort_column' => 'menu_order',
+	'menu_class'  => 'menu',
+	'include'     => '',
+	'exclude'     => '',
+	'echo'        => true,
+	'show_home'   => true,
+	'link_before' => '',
+	'link_after'  => ''
+);
+
+
+/**
  * Sidebars
  */
 

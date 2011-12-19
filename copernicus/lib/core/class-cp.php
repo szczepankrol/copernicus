@@ -16,6 +16,7 @@ class cp {
 	private $bloginfo;
 	private $cpt; // custom post types
 	private $sidebars; // custom post types
+	public $menus; // menus
 
 	function __construct() {
 		// load config file
@@ -47,6 +48,7 @@ class cp {
 		$this->config = $cp_config;
 		$this->cpt = $cp_cpt;
 		$this->sidebars = $cp_sidebar;
+		$this->menus = $cp_menu;
 	}
 
 	private function load_bloginfo() {
@@ -96,8 +98,11 @@ class cp {
 		$this->twig = new Twig_Environment($twig_loader, array(
 						//'cache' => CP_CACHE_DIR,
 				));
-	}
+		include_once 'twig.php';
+		$this->twig->addFunction('menu', new Twig_Function_Function('menu'));
 
+	}
+	
 	private function load_dBug() {
 		require_once CP_LIB_PATH . '/dBug/dBug.php';
 	}
