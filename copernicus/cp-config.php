@@ -325,6 +325,11 @@ $cp_cpt[] = array(
 						2 => 'February',
 						3 => 'March'
 					),
+				),
+				8 => array(
+					'id' => 'edi',
+					'name' => 'Editor test',
+					'field_type' => 'editor'
 				)
 			)
 		)

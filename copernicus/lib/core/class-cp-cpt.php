@@ -95,7 +95,6 @@ class cpt {
 				if ($value == '')
 					$value = $field['default'];
 				
-				echo json_decode($value);
 				// create a form field based on the type of field
 				switch ($field['field_type']) {
 
@@ -113,6 +112,14 @@ class cpt {
 						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
 						echo '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '">' . $value . '</textarea>';
 						echo '</p>';
+						break;
+					
+					// wysiwyg editor field
+					case 'editor':
+						echo '<div class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						wp_editor( $value, $field['id'], array() );
+						echo '</div>';
 						break;
 					
 					// selectboxes
@@ -133,13 +140,17 @@ class cpt {
 						
 					// checkboxes
 					case 'checkbox':
+						$values = maybe_unserialize($value);
 						echo '<div class="cp_meta_box">';
 						echo '<span class="title">' . $field['name'] . ':</span>';
 						echo '<ul>';
 						if (is_array($field['value'])) {
 							foreach ($field['value'] AS $field_key => $field_value) {
 								echo '<li>';
-								echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" /> ';
+								echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
+								if (in_array($field_key, $values)) 
+										echo 'checked="checked" ';
+								echo ' /> ';
 								echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
 								echo '</li>';
 							}
