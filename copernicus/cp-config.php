@@ -330,6 +330,28 @@ $cp_cpt[] = array(
 					'id' => 'edi',
 					'name' => 'Editor test',
 					'field_type' => 'editor'
+				),
+				9 => array(
+					'id' => 'multi',
+					'name' => 'Multi box',
+					'field_type' => 'selectbox',
+					'value' => array(
+						1 => 'option 1',
+						2 => 'option 2',
+						3 => 'option 3'
+					),
+					'multiple' => true
+				),
+				10 => array(
+					'id' => 'notmulti',
+					'name' => 'select box',
+					'field_type' => 'selectbox',
+					'value' => array(
+						1 => 'option 1',
+						2 => 'option 2',
+						3 => 'option 3'
+					),
+					'multiple' => false
 				)
 			)
 		)

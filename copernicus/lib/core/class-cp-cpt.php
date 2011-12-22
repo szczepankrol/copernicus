@@ -122,25 +122,12 @@ class cpt {
 						echo '</div>';
 						break;
 					
-					// selectboxes
-					case 'selectbox':
-						echo '<div class="cp_meta_box">';
-						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-						echo '<ul>';
-						if (is_array($field['value'])) {
-							foreach ($field['value'] AS $field_key => $field_value) {
-								echo '<li>';
-								echo '<input type="checkbox" /> ' . $field_value . '';
-								echo '</li>';
-							}
-						}
-						echo '</ul>';
-						echo '</div>';
-						break;
-						
 					// checkboxes
 					case 'checkbox':
-						$values = maybe_unserialize($value);
+						if ($value)
+							$values = maybe_unserialize($value);
+						else
+							$values = array();
 						echo '<div class="cp_meta_box">';
 						echo '<span class="title">' . $field['name'] . ':</span>';
 						echo '<ul>';
@@ -156,6 +143,32 @@ class cpt {
 							}
 						}
 						echo '</ul>';
+						echo '</div>';
+						break;
+					
+					// selectbox
+					case 'selectbox':
+						if ($value)
+							$values = maybe_unserialize($value);
+						else
+							$values = array();
+						echo '<div class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						echo '<select id="' . $field['id'] . '" name="' . $field['id'] . '[]" size="'.$field['size'].'" ';
+						if ($field['multiple'])
+							echo 'multiple="multiple" ';
+						echo '>';
+						if (is_array($field['value'])) {
+							foreach ($field['value'] AS $field_key => $field_value) {
+								echo '<option value="'.$field_key.'" ';
+								if (in_array($field_key, $values)) 
+										echo 'selected="selected" ';
+								echo '> ';
+								echo $field_value;
+								echo '</option>';
+							}
+						}
+						echo '</select>';
 						echo '</div>';
 						break;
 					
