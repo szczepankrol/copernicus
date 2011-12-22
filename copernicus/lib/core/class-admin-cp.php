@@ -39,26 +39,26 @@ class admin_cp {
 	public function load_js() {
 		
 		// load main admin js file
-		wp_register_script('cp_admin', CP_STATIC_DIR . '/js/cp-admin.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('cp_admin', CP_COPERNICUS_STATIC_DIR . '/js/cp-admin.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
 		wp_enqueue_script('cp_admin');
 	}
 	
 	public function load_css() {
-		wp_register_style('cp_admin', CP_STATIC_DIR . '/css/cp-admin.css', '', CP_VERSION, 'all');
+		wp_register_style('cp_admin', CP_COPERNICUS_STATIC_DIR . '/css/cp-admin.css', '', CP_VERSION, 'all');
 		wp_enqueue_style('cp_admin');
 	}
 	
 	public function page_order_dnd() {
 		
-		wp_register_style('cp_admin_page_order', CP_STATIC_DIR . '/css/cp-admin-page-order.css', '', CP_VERSION, 'all');
+		wp_register_style('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/css/cp-admin-page-order.css', '', CP_VERSION, 'all');
 		wp_enqueue_style('cp_admin_page_order');
 		
 		// load js for nested sortable
-		wp_register_script('jquery-ui-nested', CP_STATIC_DIR . '/js/jquery.ui.nestedSortable.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('jquery-ui-nested', CP_COPERNICUS_STATIC_DIR . '/js/jquery.ui.nestedSortable.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
 		wp_enqueue_script('jquery-ui-nested');
 		
 		// load main admin js file
-		wp_register_script('cp_admin_page_order', CP_STATIC_DIR . '/js/cp-admin-page-order.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/js/cp-admin-page-order.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
 		wp_enqueue_script('cp_admin_page_order');
 	}
 

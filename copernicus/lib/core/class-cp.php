@@ -50,6 +50,12 @@ class cp {
 		// register sidevars
 		$this->create_sidebars();
 		
+		// add css files to header
+		$this->add_css();
+
+		// add js files to header
+		$this->add_js();
+		
 	}
 
 	/**
@@ -158,10 +164,13 @@ class cp {
 		global $wp_styles;
 
 		foreach ($this->config['css'] as $css) {
-			wp_register_style($css['name'], CP_STATIC_DIR . $css['folder'] . '/' . $css['filename'], $css['dependencies'], $css['version'], $css['media']);
-			if ($css['condition'])
-				$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['condition']);
-			wp_enqueue_style($css['name']);
+			if ((is_admin() && $css['admin']) || (!is_admin() && $css['front'])) {
+				wp_register_style($css['name'], CP_STATIC_DIR . $css['folder'] . '/' . $css['filename'], $css['dependencies'], $css['version'], $css['media']);
+				if ($css['condition'])
+					$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['condition']);
+				wp_enqueue_style($css['name']);
+			}
+			
 		}
 	}
 	
@@ -170,15 +179,17 @@ class cp {
 	 */
 	private function add_js() {
 		foreach ($this->config['js'] as $js) {
-			$js['header'] ? $js['footer'] = 0 : $js['footer'] = 1;
-			if ($js['googleapis']) {
-				wp_deregister_script($js['name']);
-				wp_register_script($js['name'], 'http://ajax.googleapis.com/ajax/libs' . $js['googleapis'], $js['dependencies'], $js['version'], $js['footer']);
-				wp_enqueue_script($js['name']);
+			if ((is_admin() && $js['admin']) || (!is_admin() && $js['front'])) {
+				$js['header'] ? $js['footer'] = 0 : $js['footer'] = 1;
+				if ($js['googleapis']) {
+					wp_deregister_script($js['name']);
+					wp_register_script($js['name'], 'http://ajax.googleapis.com/ajax/libs' . $js['googleapis'], $js['dependencies'], $js['version'], $js['footer']);
+					wp_enqueue_script($js['name']);
+				}
+				else
+					wp_enqueue_script($js['name'], CP_STATIC_DIR . $js['folder'] . '/' . $js['filename'], $js['dependencies'], $js['version'], $js['footer']);
+				$GLOBALS['wp_scripts']->add_data($js['name'], 'conditional', 'IE 6');
 			}
-			else
-				wp_enqueue_script($js['name'], CP_STATIC_DIR . $js['folder'] . '/' . $js['filename'], $js['dependencies'], $js['version'], $js['footer']);
-			$GLOBALS['wp_scripts']->add_data($js['name'], 'conditional', 'IE 6');
 		}
 	}
 	
@@ -284,12 +295,6 @@ class cp {
 	 * 
 	 */
 	public function run() {
-
-		// add css files to header
-		$this->add_css();
-
-		// add js files to header
-		$this->add_js();
 
 		// clean unwanted markup
 		$this->cleanup();
