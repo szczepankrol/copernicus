@@ -1,80 +1,45 @@
 <?php
 
 /**
- * Create custom post types
+ * Create meta boxes
  *
  * @package Copernicus
  * @author Piotr Soluch
  */
-class cpt {
+class cp_meta_box {
+	
+	private $pt;
+	
+	public function __construct($pt) {
+		
+		$this->_set_pt($pt);
+		
+		add_action('admin_init', array($this, 'add_meta_groups'));
+		
+		add_action('save_post', array($this, 'save_cpt'));
+		
+		add_filter('pre_get_posts', array($this, 'set_admin_order'));
+		
+		if ($_GET['post_type'] == $this->pt['settings']['name']) {
 
-	private $cpts; // custom post types from config
-
-	public function __construct($cpt) {
-		$this->cpts = $cpt;
-
-		if ($this->cpts['settings']['active']) {
-
-			add_action('init', array($this, 'create_cpt'));
-
-			if (is_admin()) {
-				
-				add_action('admin_init', array($this, 'add_meta_boxes'));
-
-				add_action('save_post', array($this, 'save_cpt'));
-
-				add_filter('pre_get_posts', array($this, 'set_admin_order'));
-			
-			
-				if ($_GET['post_type'] == $this->cpts['settings']['name']) {
-
-					add_action('manage_posts_custom_column', array($this, 'custom_columns'));
-					add_filter('manage_edit-' . $this->cpts['settings']['name'] . '_columns', array($this, 'define_columns'));
-
-				}
-			}
+			add_action('manage_posts_custom_column', array($this, 'custom_columns'));
+			add_filter('manage_edit-' . $this->pt['settings']['name'] . '_columns', array($this, 'define_columns'));
 		}
 	}
 
-	public function create_cpt() {
-		
-		// create an array of supported elements
-		$supports = array();
-		if (is_array($this->cpts['support'])) {
-			foreach ($this->cpts['support'] as $key => $value) {
-				if ($value) $supports[] = $key;
-			}
-		}
-		
-		register_post_type(
-				$this->cpts['settings']['name'], array(
-			'labels' => $this->cpts['labels'],
-			'public' => true,
-			'publicly_queryable' => true,
-			'show_ui' => true,
-			'query_var' => true,
-			'capability_type' => 'page',
-			'hierarchial' => true,
-			'rewrite' => array('slug' => 'team'),
-			'supports' => $supports
-				)
-		);
-	}
-
-	public function add_meta_boxes() {
+	public function add_meta_groups() {
 
 		// if custom post type has fields
-		if (is_array($this->cpts['custom_fields'])) {
+		if (is_array($this->pt)) {
 
-			// for each field
-			foreach ($this->cpts['custom_fields'] as $field) {
-
+			foreach ($this->pt['custom_fields'] AS $group) {
 				// add meta box (group)
-				add_meta_box($field['id'], $field['name'], array($this, 'add_meta_box'), $this->cpts['settings']['name'], $field['context'], $field['priority'], array('fields' => $field['fields']));
+				add_meta_box($group['id'], $group['name'], array($this, 'add_meta_box'), $this->pt['settings']['name'], $group['context'], $group['priority'], array('fields' => $group['fields']));
+
 			}
 		}
 	}
-
+	
 	public function add_meta_box($post, $metabox) {
 
 		// if meta box has fields
@@ -94,7 +59,7 @@ class cpt {
 				// get default value if no value in db
 				if ($value == '')
 					$value = $field['default'];
-				
+
 				// create a form field based on the type of field
 				switch ($field['field_type']) {
 
@@ -113,15 +78,15 @@ class cpt {
 						echo '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '">' . $value . '</textarea>';
 						echo '</p>';
 						break;
-					
+
 					// wysiwyg editor field
 					case 'editor':
 						echo '<div class="cp_meta_box">';
 						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-						wp_editor( $value, $field['id'], array() );
+						wp_editor($value, $field['id'], array());
 						echo '</div>';
 						break;
-					
+
 					// checkboxes
 					case 'checkbox':
 						if ($value)
@@ -135,8 +100,8 @@ class cpt {
 							foreach ($field['value'] AS $field_key => $field_value) {
 								echo '<li>';
 								echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
-								if (in_array($field_key, $values)) 
-										echo 'checked="checked" ';
+								if (in_array($field_key, $values))
+									echo 'checked="checked" ';
 								echo ' /> ';
 								echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
 								echo '</li>';
@@ -145,7 +110,7 @@ class cpt {
 						echo '</ul>';
 						echo '</div>';
 						break;
-					
+
 					// selectbox
 					case 'selectbox':
 						if ($value)
@@ -154,15 +119,15 @@ class cpt {
 							$values = array();
 						echo '<div class="cp_meta_box">';
 						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-						echo '<select id="' . $field['id'] . '" name="' . $field['id'] . '[]" size="'.$field['size'].'" ';
+						echo '<select id="' . $field['id'] . '" name="' . $field['id'] . '[]" size="' . $field['size'] . '" ';
 						if ($field['multiple'])
 							echo 'multiple="multiple" ';
 						echo '>';
 						if (is_array($field['value'])) {
 							foreach ($field['value'] AS $field_key => $field_value) {
-								echo '<option value="'.$field_key.'" ';
-								if (in_array($field_key, $values)) 
-										echo 'selected="selected" ';
+								echo '<option value="' . $field_key . '" ';
+								if (in_array($field_key, $values))
+									echo 'selected="selected" ';
 								echo '> ';
 								echo $field_value;
 								echo '</option>';
@@ -171,7 +136,7 @@ class cpt {
 						echo '</select>';
 						echo '</div>';
 						break;
-					
+
 					// radio 
 					case 'radio':
 						echo '<div class="cp_meta_box">';
@@ -181,7 +146,8 @@ class cpt {
 							foreach ($field['value'] AS $field_key => $field_value) {
 								echo '<li>';
 								echo '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
-								if ($value == $field_key) echo 'checked="checked" ';
+								if ($value == $field_key)
+									echo 'checked="checked" ';
 								echo '/> ';
 								echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
 								echo '</li>';
@@ -194,14 +160,15 @@ class cpt {
 			}
 		}
 	}
-
+	
+	
 	public function save_cpt() {
 
 		// if custom post type has fields
-		if (is_array($this->cpts['custom_fields'])) {
+		if (is_array($this->pt['custom_fields'])) {
 
 			// for each field
-			foreach ($this->cpts['custom_fields'] as $field) {
+			foreach ($this->pt['custom_fields'] as $field) {
 
 				// Save all fields in meta box (group)
 				$this->save_meta_box($field['fields']);
@@ -223,27 +190,27 @@ class cpt {
 	}
 
 	public function define_columns($columns) {
-		
+
 		// if there are columns in config
-		if (isset ($this->cpts['columns'])) {
-			
+		if (isset($this->pt['columns'])) {
+
 			// reset default columns
 			$columns = array();
-			
+
 			// for each column in config
-			foreach ($this->cpts['columns'] as $column) {
-				
+			foreach ($this->pt['columns'] as $column) {
+
 				// switch based on column type
 				switch ($column['type']) {
-					
+
 					case 'standard':
 						$columns[$column['id']] = $column['name'];
 						break;
-					
+
 					case 'custom':
 						$columns[$column['id']] = $column['name'];
 						break;
-					
+
 					case 'checkbox':
 						$columns['cb'] = '<input type="checkbox" />';
 						break;
@@ -255,18 +222,18 @@ class cpt {
 
 	public function custom_columns($column) {
 		global $post;
-		
+
 		// if there are columns in config
-		if (isset ($this->cpts['columns'])) {
-			
+		if (isset($this->pt['columns'])) {
+
 			// reset default columns
 			$columns = array();
-			
+
 			// for each column in config
-			foreach ($this->cpts['columns'] as $cp_column) {
+			foreach ($this->pt['columns'] as $cp_column) {
 				// switch based on column type
 				switch ($cp_column['type']) {
-					
+
 					case 'custom':
 						if ($cp_column['id'] == $column) {
 							$custom = get_post_custom();
@@ -276,13 +243,11 @@ class cpt {
 				}
 			}
 		}
-
-		
 	}
 
 	public function set_admin_order($wp_query) {
-		$orderby = $this->cpts['settings']['orderby'];
-		$order = $this->cpts['settings']['order'];
+		$orderby = $this->pt['settings']['orderby'];
+		$order = $this->pt['settings']['order'];
 
 		if (isset($_GET['orderby']))
 			$orderby = $_GET['orderby'];
@@ -292,22 +257,25 @@ class cpt {
 		// Get the post type from the query  
 		$post_type = $wp_query->query['post_type'];
 
-		if ($post_type == $this->cpts['settings']['name']) {
+		if ($post_type == $this->pt['settings']['name']) {
 
-			if (isset ($this->cpts['settings']['meta_order']) && $this->cpts['settings']['meta_order']!='') {
-				$wp_query->set('orderby', $this->cpts['settings']['meta_order']);
+			if (isset($this->pt['settings']['meta_order']) && $this->pt['settings']['meta_order'] != '') {
+				$wp_query->set('orderby', $this->pt['settings']['meta_order']);
 				$wp_query->set('meta_key', $orderby);
-			}
-			else {
+			} else {
 				// 'orderby' value can be any column name  
 				$wp_query->set('orderby', $orderby);
 			}
-			
+
 			// 'order' value can be ASC or DESC  
 			$wp_query->set('order', $order);
 		}
 	}
-
+	
+	private function _set_pt($pt){
+		$this->pt = $pt;
+	}
+	
 }
 
 ?>

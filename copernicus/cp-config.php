@@ -8,12 +8,22 @@
 ?>
 <?php
 
+define('CP_CT_SHORT_NAME', 'Copernicus');
+define('CP_CT_FULL_NAME', 'Copernicus Framework Theme');
+define('CP_CT_VERSION', '0.1');
+define('CP_CT_WP_SUPPORT', '3.2');
+
 /**
  * dirs & urls
  */
 
-define( 'CP_TEMPLATE_DIR', '/templates');
+define('CP_THEME_PATH', get_stylesheet_directory());
 
+define('CP_THEME_URL', get_stylesheet_directory_uri());
+
+define('CP_TEMPLATE_DIR', '/templates');
+define('CP_THEME_DIR', str_replace(CP_BASE_URL, '', CP_THEME_URL));
+define('CP_STATIC_DIR', CP_THEME_DIR . '/static');
 
 /**
  * wp theme support
@@ -115,6 +125,104 @@ $cp_sidebar[] = array(
 	'after_title'   => '</h2>'
 );
 
+
+/**
+ * Standard Post Types Meta Boxes
+ */
+
+$cp_spt[] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'page'
+	),
+	'custom_fields' => array(
+		0 => array(
+			'id' => 'dialog',
+			'name' => 'Dialog',
+			'context' => 'normal', // normal | advanced | side
+			'priority' => 'high', // high | core | default | low
+			'fields' => array(
+				1 => array(
+					'id' => 'slogan',
+					'name' => 'Slogan',
+					'field_type' => 'text',
+					'default' => 'asd'
+				),
+				2 => array(
+					'id' => 'slogan_b',
+					'name' => 'Slogan 2',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				3 => array(
+					'id' => 'descr',
+					'name' => 'Description',
+					'field_type' => 'textarea',
+					'default' => ''
+				),
+				4 => array(
+					'id' => 'h1',
+					'name' => 'H1',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				5 => array(
+					'id' => 'email',
+					'name' => 'E-mail',
+					'field_type' => 'text',
+					'default' => ''
+				)
+			)
+		)
+	)
+);
+
+$cp_spt[] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'post'
+	),
+	'custom_fields' => array(
+		0 => array(
+			'id' => 'sss',
+			'name' => 'SSS',
+			'context' => 'normal', // normal | advanced | side
+			'priority' => 'high', // high | core | default | low
+			'fields' => array(
+				1 => array(
+					'id' => 'slogan',
+					'name' => 'Slogan',
+					'field_type' => 'text',
+					'default' => 'asd'
+				),
+				2 => array(
+					'id' => 'slogan_b',
+					'name' => 'Slogan 2',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				3 => array(
+					'id' => 'descr',
+					'name' => 'Description',
+					'field_type' => 'textarea',
+					'default' => ''
+				),
+				4 => array(
+					'id' => 'h1',
+					'name' => 'H1',
+					'field_type' => 'text',
+					'default' => ''
+				),
+				5 => array(
+					'id' => 'email',
+					'name' => 'E-mail',
+					'field_type' => 'text',
+					'default' => ''
+				)
+			)
+		)
+	)
+);
 
 /**
  * Custom Post Types
