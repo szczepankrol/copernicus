@@ -21,6 +21,7 @@ class cp {
 	private $scpt; // standard post types
 	private $sidebars; // custom post types
 	public $menus; // menus
+	private $templates; // template files
 
 	/**
 	 * 
@@ -55,7 +56,7 @@ class cp {
 
 		// add js files to header
 		$this->add_js();
-		
+		//update_post_meta($post_ID, '_wp_page_template',  $page_template);
 	}
 
 	/**
@@ -69,6 +70,7 @@ class cp {
 		$this->spt = $cp_spt;
 		$this->sidebars = $cp_sidebar;
 		$this->menus = $cp_menu;
+		$this->templates = $cp_template;
 	}
 
 	/**
@@ -320,16 +322,71 @@ class cp {
 
 		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $footer);
 		
-		while ( have_posts() ) : the_post();
-			echo the_time('F jS, Y');
-			echo the_title();
-		endwhile;
+		if (is_home()) {
+			$id = get_option('page_for_posts');
+		}
+		else if (is_page()) {
+			$id = get_the_ID();
+		}
+		
+		$meta_data = get_post_custom($id);
+		
+		if ($meta_data['_wp_page_template'][0]) {
+			$template = $meta_data['_wp_page_template'][0];
+		}
+		else if (is_array($this->templates)) {
+			foreach ($this->templates AS $temp) {
+				if ($temp['default'])
+					$template = $temp['id'];
+			}
+		}
+		else {
+			$template = 'default';
+		}
+		
+		
+//		echo $id;
+//		echo '<br />';
+//		echo '<br />';
+//		
+//		global $query_string;
+//		//query_posts('page=44');
+//		echo '<p>'.$query_string.'</p>';
+//		
+//		echo 'home'.is_home();
+//		echo 'front'.is_front_page();
+//		echo 'page'.is_page();
+//		echo '<br />';
+//		the_ID();
+//		echo '<br />';
+//		$custom = get_post_custom($post->ID);
+//		echo $custom['_wp_page_template'][0];
+//		echo '<br />';
+//		$frontpage_id = get_option('page_on_front');
+//		echo $frontpage_id;
+//		echo '<br />';
+//		$frontpage_id = get_option('page_for_posts');
+//		echo $frontpage_id;
+//		echo '<br />';
+	
+//		while ( have_posts() ) : the_post();
+//			echo the_time('F jS, Y');
+//			echo the_title();
+//			//the_ID();
+//			echo get_post_type();
+//		endwhile;
 		
 		$vars['config'] = $this->config;
 		$vars['bloginfo'] = $this->bloginfo;
 		$vars['header'] = $header;
 		$vars['footer'] = $footer;
-		echo $this->twig->render('index.html', $vars);
+		
+		// render page
+		echo $this->twig->render($template.'.html', $vars);
+	}
+	
+	public function _get_templates() {
+		return $this->templates;
 	}
 	
 }

@@ -10,6 +10,8 @@
 <?php
 
 class admin_cp {
+	
+	private $templates;
 
 	function __construct() {
 
@@ -18,6 +20,8 @@ class admin_cp {
 		
 		// add css files in admin panel
 		add_action('admin_init', array($this, 'load_css'));
+		
+		$this->_set_templates();
 		
 		// initialize all plugins
 		$this->init_plugins();
@@ -76,6 +80,11 @@ class admin_cp {
 			$post->menu_order = $max_order + 10;
 	}
 
+	private function _set_templates() {
+		global $cp;
+		$this->templates = $cp->_get_templates();
+	}
+	
 }
 
 ?>

@@ -37,6 +37,47 @@ class cp_meta_box {
 				add_meta_box($group['id'], $group['name'], array($this, 'add_meta_box'), $this->pt['settings']['name'], $group['context'], $group['priority'], array('fields' => $group['fields']));
 
 			}
+			
+			// if post type has templates
+			if (is_array($this->pt['additional_attributes'])) {
+				
+				if (in_array(true, $this->pt['additional_attributes'])) {
+					
+					if ($this->pt['additional_attributes']['templates'] && is_array($this->pt['templates'])) {
+						
+						$templates = array();
+
+						foreach ($this->pt['templates'] as $template) {
+							if ($template['active'])
+								$templates[$template['id']] = $template['name'];
+						}
+						$fields[] = array(
+							'id' => '_wp_page_template',
+							'name' => 'Template',
+							'field_type' => 'selectbox',
+							'value' => $templates,
+							'multiple' => false
+						);
+					}
+					
+					if ($this->pt['additional_attributes']['in_navigation']) {
+						
+						$fields[] = array(
+							'id' => 'in_navigation',
+							'name' => 'In navigation',
+							'field_type' => 'selectbox',
+							'value' => array(
+								1 => 'yes',
+								2 => 'no'
+							)
+						);
+					}
+
+					// add meta box with templates
+					add_meta_box('templates', 'Additional Attributes', array($this, 'add_meta_box'), $this->pt['settings']['name'], 'side', 'low', array('fields' => $fields));
+				}
+				
+			}
 		}
 	}
 	
@@ -113,20 +154,26 @@ class cp_meta_box {
 
 					// selectbox
 					case 'selectbox':
-						if ($value)
-							$values = maybe_unserialize($value);
-						else
-							$values = array();
+						if ($field['multiple']) {
+							if ($value)
+								$values = maybe_unserialize($value);
+							else
+								$values = array();
+						}
 						echo '<div class="cp_meta_box">';
 						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-						echo '<select id="' . $field['id'] . '" name="' . $field['id'] . '[]" size="' . $field['size'] . '" ';
+						echo '<select id="' . $field['id'] . '" name="' . $field['id'];
+						if ($field['multiple']) 
+							echo '[]';
+						echo '" size="' . $field['size'] . '" ';
 						if ($field['multiple'])
 							echo 'multiple="multiple" ';
 						echo '>';
 						if (is_array($field['value'])) {
 							foreach ($field['value'] AS $field_key => $field_value) {
 								echo '<option value="' . $field_key . '" ';
-								if (in_array($field_key, $values))
+								
+								if (($field['multiple'] && in_array($field_key, $values)) || (!$field['multiple'] && $value == $field_key))
 									echo 'selected="selected" ';
 								echo '> ';
 								echo $field_value;
@@ -173,6 +220,21 @@ class cp_meta_box {
 				// Save all fields in meta box (group)
 				$this->save_meta_box($field['fields']);
 			}
+		}
+		
+		// if post type has templates
+		if (is_array($this->pt['templates'])) {
+
+			$fields = array(
+				1 => array(
+					'id' => '_wp_page_template'
+				),
+				2 => array(
+					'id' => 'in_navigation'
+				)
+			);
+
+			$this->save_meta_box($fields);
 		}
 	}
 
