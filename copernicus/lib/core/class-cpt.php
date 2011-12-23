@@ -23,7 +23,8 @@ class cp_cpt {
 		if (is_array($this->cpts)) {
 			
 			foreach($this->cpts AS $cpt) {
-				$this->create_post_type($cpt);
+				if ($cpt['settings']['active'])
+					$this->create_post_type($cpt);
 			}
 		}
 	}
@@ -39,18 +40,26 @@ class cp_cpt {
 			}
 		}
 
+		$settings = array(
+			'active' => false,
+			'labels' => $cpt['labels'],
+			'name' => 'customposttype',
+			'public' => false,
+			'publicly_queryable' => false,
+			'show_ui' => false,
+			'query_var' => false,
+			'capability_type' => 'post',
+			'hierarchial' => false,
+			'rewrite' => array('slug' => 'cpt'),
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'meta_order' => 'meta_value'
+		);
+		
+		$settings = array_merge($settings, $cpt['settings']);
+	//	new dBug($settings);
 		register_post_type(
-				$cpt['settings']['name'], array(
-					'labels' => $cpt['labels'],
-					'public' => true,
-					'publicly_queryable' => true,
-					'show_ui' => true,
-					'query_var' => true,
-					'capability_type' => 'page',
-					'hierarchial' => true,
-					'rewrite' => array('slug' => 'team'),
-					'supports' => $supports
-				)
+				$cpt['settings']['name'], $settings
 		);
 	}
 

@@ -55,7 +55,7 @@ class cp_meta_box {
 							'id' => '_wp_page_template',
 							'name' => 'Template',
 							'field_type' => 'selectbox',
-							'value' => $templates,
+							'values' => $templates,
 							'multiple' => false
 						);
 					}
@@ -66,7 +66,7 @@ class cp_meta_box {
 							'id' => 'in_navigation',
 							'name' => 'In navigation',
 							'field_type' => 'selectbox',
-							'value' => array(
+							'values' => array(
 								1 => 'yes',
 								2 => 'no'
 							)
@@ -137,8 +137,8 @@ class cp_meta_box {
 						echo '<div class="cp_meta_box">';
 						echo '<span class="title">' . $field['name'] . ':</span>';
 						echo '<ul>';
-						if (is_array($field['value'])) {
-							foreach ($field['value'] AS $field_key => $field_value) {
+						if (is_array($field['values'])) {
+							foreach ($field['values'] AS $field_key => $field_value) {
 								echo '<li>';
 								echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
 								if (in_array($field_key, $values))
@@ -169,8 +169,8 @@ class cp_meta_box {
 						if ($field['multiple'])
 							echo 'multiple="multiple" ';
 						echo '>';
-						if (is_array($field['value'])) {
-							foreach ($field['value'] AS $field_key => $field_value) {
+						if (is_array($field['values'])) {
+							foreach ($field['values'] AS $field_key => $field_value) {
 								echo '<option value="' . $field_key . '" ';
 								
 								if (($field['multiple'] && in_array($field_key, $values)) || (!$field['multiple'] && $value == $field_key))
@@ -189,8 +189,8 @@ class cp_meta_box {
 						echo '<div class="cp_meta_box">';
 						echo '<span class="title">' . $field['name'] . ':</span>';
 						echo '<ul>';
-						if (is_array($field['value'])) {
-							foreach ($field['value'] AS $field_key => $field_value) {
+						if (is_array($field['values'])) {
+							foreach ($field['values'] AS $field_key => $field_value) {
 								echo '<li>';
 								echo '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
 								if ($value == $field_key)
