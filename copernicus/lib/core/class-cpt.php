@@ -53,6 +53,7 @@ class cp_cpt {
 			'rewrite' => array('slug' => 'cpt'),
 			'orderby' => 'title',
 			'order' => 'ASC',
+			'supports' => $supports,
 			'meta_order' => 'meta_value'
 		);
 		
