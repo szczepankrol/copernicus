@@ -320,12 +320,16 @@ class cp_meta_box {
 								foreach ($this->pt['custom_fields'] AS $fields) {
 									foreach ($fields['fields'] as $field) {
 										if ($field['id'] == $cp_column['id']) {
-											if ($results!=0)
-												$column_text = $field['values'][$results];
+											if ($field['values']) {
+												if ($results!=0)
+													$column_text = $field['values'][$results];
+											}
+											else {
+												$column_text = $results;
+											}
 										}
 									}
 								}
-								echo $column_text;
 								if ($column_text==0)
 									$column_text = '';
 								else if (!$column_text)
@@ -364,7 +368,7 @@ class cp_meta_box {
 			$standard_fields = array('title');
 			
 			if ($order) {
-				$orderby = str_replace('custom_order', 'meta_value', $orderby);
+				$orderby = str_replace('custom', 'meta_value', $orderby);
 				$wp_query->set('orderby', $orderby);
 			} 
 			if (isset ($custom_orderby)) {
