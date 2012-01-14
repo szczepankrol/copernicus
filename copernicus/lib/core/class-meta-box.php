@@ -30,7 +30,7 @@ class cp_meta_box {
 	public function add_meta_groups() {
 
 		// if custom post type has fields
-		if (is_array($this->pt)) {
+		if (is_array($this->pt['custom_fields'])) {
 
 			foreach ($this->pt['custom_fields'] AS $group) {
 				// add meta box (group)
@@ -297,10 +297,42 @@ class cp_meta_box {
 				switch ($cp_column['type']) {
 
 					case 'custom':
+						$column_text = '';
 						if ($cp_column['id'] == $column) {
 							$custom = get_post_custom();
-							echo $custom[$cp_column['id']][0];
+							$results = maybe_unserialize($custom[$cp_column['id']][0]);
+							if (is_array($results)) {
+								foreach ($results as $key => $result) {
+									foreach ($this->pt['custom_fields'] AS $fields) {
+										foreach ($fields['fields'] as $field) {
+											if ($field['id'] == $cp_column['id']) {
+												echo $field['values'][$result];
+											}
+										}
+									}
+									//echo $result;
+									if ($key < count($results) - 1) {
+										echo ', ';
+									}
+								}
+							}
+							else {
+								foreach ($this->pt['custom_fields'] AS $fields) {
+									foreach ($fields['fields'] as $field) {
+										if ($field['id'] == $cp_column['id']) {
+											if ($results!=0)
+												$column_text = $field['values'][$results];
+										}
+									}
+								}
+								echo $column_text;
+								if ($column_text==0)
+									$column_text = '';
+								else if (!$column_text)
+									$column_text = $results;
+							}
 						}
+						echo $column_text;
 						break;
 				}
 			}
@@ -308,8 +340,16 @@ class cp_meta_box {
 	}
 
 	public function set_admin_order($wp_query) {
-		$orderby = $this->pt['settings']['orderby'];
-		$order = $this->pt['settings']['order'];
+		$orderby = 'menu_order';
+		$order = 'ASC';
+		
+		if (isset ($this->pt['settings']['orderby']))
+			$orderby = $this->pt['settings']['orderby'];
+		if (isset ($this->pt['settings']['order']))
+			$order = $this->pt['settings']['order'];
+
+		if (isset ($this->pt['settings']['custom_orderby']))
+			$custom_orderby = $this->pt['settings']['custom_orderby'];
 
 		if (isset($_GET['orderby']))
 			$orderby = $_GET['orderby'];
@@ -321,14 +361,15 @@ class cp_meta_box {
 
 		if ($post_type == $this->pt['settings']['name']) {
 
-			if (isset($this->pt['settings']['meta_order']) && $this->pt['settings']['meta_order'] != '') {
-				$wp_query->set('orderby', $this->pt['settings']['meta_order']);
-				$wp_query->set('meta_key', $orderby);
-			} else {
-				// 'orderby' value can be any column name  
+			$standard_fields = array('title');
+			
+			if ($order) {
+				$orderby = str_replace('custom_order', 'meta_value', $orderby);
 				$wp_query->set('orderby', $orderby);
+			} 
+			if (isset ($custom_orderby)) {
+				$wp_query->set('meta_key', $custom_orderby);
 			}
-
 			// 'order' value can be ASC or DESC  
 			$wp_query->set('order', $order);
 		}

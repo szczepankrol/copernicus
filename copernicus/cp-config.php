@@ -232,7 +232,7 @@ $cp_spt[] = array(
 
 $cp_cpt[] = array(
 	'settings' => array(
-		'active' => true,
+		'active' => false,
 		'name' => 'team',
 		'public' => true,
 		'publicly_queryable' => true,
@@ -339,7 +339,7 @@ $cp_cpt[] = array(
 
 $cp_cpt[] = array(
 	'settings' => array(
-		'active' => true,
+		'active' => false,
 		'name' => 'slider',
 		'public' => true,
 		'publicly_queryable' => true,
