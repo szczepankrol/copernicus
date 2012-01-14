@@ -7,6 +7,13 @@
 	line-height: 24px;
 }
 
+.cp_meta_box .other_column {
+	width: 60%;
+	display: inline-block;
+	vertical-align: top;
+	line-height: 24px;
+}
+
 .cp_meta_box ul {
 	display: inline-block;
 	vertical-align: top;

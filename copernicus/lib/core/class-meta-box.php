@@ -203,12 +203,96 @@ class cp_meta_box {
 						echo '</ul>';
 						echo '</div>';
 						break;
+						
+					// date field
+					case 'date':
+						wp_register_style('jquery-ui', CP_COPERNICUS_STATIC_DIR . '/jquery-ui/jquery-ui-1.8.17.custom.css', '', '', 'all');
+						wp_enqueue_style('jquery-ui');
+						wp_enqueue_script('jquery');
+						wp_enqueue_script('jquery-ui-core');
+						wp_enqueue_script('jquery-ui-datepicker');
+
+						echo '<p class="cp_meta_box">';
+						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+						echo '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '" /> ';
+						echo '</p>';
+						echo '<script type="text/javascript">
+							jQuery(function($){
+								$(\'#' . $field['id'] .'\').datepicker({';
+						if (isset ($field['options']) && is_array($field['options'])) {
+							foreach ($field['options'] as $key => $option) {
+								echo "'".$key."' : '".$option."',";
+							}
+						}
+						echo '	});
+							});
+						</script>';
+						break;
+						
+					case 'media':
+						wp_enqueue_script('media-upload');
+						wp_enqueue_script('thickbox');
+						wp_enqueue_style('thickbox');
+						echo '<div class="cp_meta_box">';
+						echo '<span class="title">' . $field['name'] . ':</span>';
+						echo '<div class="other_column">';
+						echo '<div id="media_'.$field['id'].'">';
+						
+						$values = maybe_unserialize($value);
+						if (is_array($values)) {
+							foreach ($values as $key => $value) {
+								echo '<div id="'.$key.'">';
+								echo $value.'<input type="hidden" name="'.$field['id'].'[]" value="'.$value.'" />';
+								echo ' <a href="javascript:remove_element('.$key.')">remove</a>';
+								echo '</div>';
+							}
+						}
+						
+						echo '</div>';
+						echo '<a href="http://local.laughinglemon.ch/wp-admin/media-upload.php?type=image&amp;TB_iframe=1&amp;width=640&amp;height=589" class="thickbox add_media" id="media-' . $field['id'] . '" title="Add Media" onclick="return false;">Upload/Insert <img src="http://local.laughinglemon.ch/wp-admin/images/media-button.png?ver=20111005" width="15" height="15"></a>';
+						echo '</div>';
+						echo '</div>';
+						echo '<script type="text/javascript">
+							function remove_element(id) {
+								jQuery("#"+id).remove();
+							}
+							jQuery(document).ready(function() {
+							
+								new_editor = 0;
+								window.send_to_editor_original = window.send_to_editor;
+
+								jQuery(\'#media-' . $field['id'] . '\').click(function() {
+									new_editor = 1;
+									tb_show(\'\', \'media-upload.php?&cmu='.$field['id'].'&type=image&TB_iframe=true\');
+									return false;
+								});
+
+
+								window.send_to_editor = function(html) {
+									if (new_editor == 1) {
+										alert(\'wwww\');
+										tb_remove();
+										new_editor = 0;
+									}
+									else {
+										window.send_to_editor_original(html);
+									}
+								}
+
+								
+							});
+						</script>';
+						break;
+
 				}
 			}
 		}
 	}
 	
-	
+	function test(){
+		echo 'testasdasda';
+	}
+
 	public function save_cpt() {
 
 		// if custom post type has fields

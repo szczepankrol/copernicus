@@ -26,6 +26,52 @@ class admin_cp {
 		// initialize all plugins
 		$this->init_plugins();
 		
+		$this->custom_media_upload();
+	}
+	
+	function custom_media_upload() {
+		if (isset ($_GET['cmu'])) {
+			//add_filter( 'media_upload_tabs', array($this,'no_media_library_tab') );
+			add_action('admin_print_footer_scripts', array($this,'header_f'));
+		}
+	}
+	
+	function header_f() {
+		$cmu = $_GET['cmu'];
+		echo '<script type="text/javascript">
+							jQuery(document).ready(function() {
+								//alert("asda");
+								jQuery("tr.align").hide();
+								jQuery("tr.url").hide();
+								jQuery("tr.image-size").hide();
+								jQuery("p.ml-submit").hide();
+								jQuery("#url").parents("tr").hide();
+								jQuery("a.del-link").hide();
+								jQuery(".savesend input.button").val("add");
+								jQuery("#go_button").val("add");
+								
+
+								jQuery(".savesend input.button").click(function($this){
+									vvv = jQuery(this).attr(\'id\');
+									vvv = vvv.replace("send[", "");
+									vvv = vvv.replace("]", "");
+									
+									zzz = jQuery(this).parents("table").find("img.thumbnail.").attr(\'src\');
+									alert(vvv + zzz);
+									jQuery("#media_file", top.document).append("<img src=\""+zzz+"\" /><input type=\"hidden\" name=\"'.$cmu.'[]\" value=\""+vvv+"\" /> "+vvv+"");
+									top.tb_remove();
+									return false;
+									exit;
+								}
+								);
+							});
+						</script>';
+	}
+
+
+	function no_media_library_tab( $tabs ) {
+		unset($tabs['library']);
+		return $tabs;
 	}
 	
 	function init_plugins() {

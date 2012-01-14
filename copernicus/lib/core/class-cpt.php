@@ -50,7 +50,7 @@ class cp_cpt {
 			'query_var' => false,
 			'capability_type' => 'post',
 			'hierarchial' => false,
-			'rewrite' => array('slug' => 'cpt'),
+			'rewrite' => array('with_front'),
 			'orderby' => 'title',
 			'order' => 'ASC',
 			'supports' => $supports,
