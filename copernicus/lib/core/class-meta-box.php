@@ -106,9 +106,10 @@ class cp_meta_box {
 
 					// text field
 					case 'text':
+						if (!isset ($field['size'])) $field['size'] = 30;
 						echo '<p class="cp_meta_box">';
 						echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-						echo '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '" />';
+						echo '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" size="' . $field['size'] . '" value="' . $value . '" />';
 						echo '</p>';
 						break;
 
@@ -260,14 +261,15 @@ class cp_meta_box {
 							
 								new_editor = 0;
 								window.send_to_editor_original = window.send_to_editor;
-
+								
 								jQuery(\'#media-' . $field['id'] . '\').click(function() {
 									new_editor = 1;
 									tb_show(\'\', \'media-upload.php?&cmu='.$field['id'].'&type=image&TB_iframe=true\');
 									return false;
 								});
 
-
+								
+								
 								window.send_to_editor = function(html) {
 									if (new_editor == 1) {
 										alert(\'wwww\');
@@ -307,18 +309,15 @@ class cp_meta_box {
 		}
 		
 		// if post type has templates
-		if (is_array($this->pt['templates'])) {
+		if (is_array($this->pt['additional_attributes'])) {
 
-			$fields = array(
-				1 => array(
-					'id' => '_wp_page_template'
-				),
-				2 => array(
-					'id' => 'in_navigation'
-				)
-			);
+			if ($this->pt['additional_attributes']['templates'])
+				$fields[1] = array('id' => '_wp_page_template');
+			if ($this->pt['additional_attributes']['in_navigation'])
+				$fields[2] = array('id' => 'in_navigation');
 
-			$this->save_meta_box($fields);
+			if (is_array($fields))
+				$this->save_meta_box($fields);
 		}
 	}
 

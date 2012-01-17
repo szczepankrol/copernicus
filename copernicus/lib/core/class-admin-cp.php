@@ -50,6 +50,20 @@ class admin_cp {
 								jQuery(".savesend input.button").val("add");
 								jQuery("#go_button").val("add");
 								
+								window.old = window.updateMediaForm;
+									
+								window.updateMediaForm = function(html) {
+									window.old(html);
+									alert("asdasdas");
+									jQuery("tr.align").hide();
+									jQuery("tr.url").hide();
+									jQuery("tr.image-size").hide();
+									jQuery("p.ml-submit").hide();
+									jQuery("#url").parents("tr").hide();
+									jQuery("a.del-link").hide();
+									jQuery(".savesend input.button").val("add");
+									jQuery("#go_button").val("add");
+								}
 
 								jQuery(".savesend input.button").click(function($this){
 									vvv = jQuery(this).attr(\'id\');

@@ -15,6 +15,7 @@
 class cp {
 
 	private $twig;
+	public $phpThumb;
 	public $config;
 	private $bloginfo;
 	private $cpt; // custom post types
@@ -41,6 +42,9 @@ class cp {
 
 		// load and configure additional libraries
 		$this->twig_init();
+
+		// load and configure additional libraries
+		$this->phpthumb_init();
 
 		// extend standard post types
 		$this->extend_spt();
@@ -150,6 +154,68 @@ class cp {
 
 	}
 	
+	private function phpthumb_init() {
+		
+		// load phpThumb class
+		require_once CP_LIB_PATH . '/phpThumb/phpthumb.class.php';
+	}
+	
+	public function phpthumb_show_img($thumbnail_id, $cache = 1, $attributes = array(), $tags = array()) {
+		$this->phpThumb = new phpThumb();
+		$image = wp_get_attachment_metadata($thumbnail_id, 'my-post-thumbnail', '');
+		$attr = array(
+			'w' => $image['width'],
+			'h' => $image['height'],
+		);
+		
+		$attr = array_merge($attr, $attributes);
+		
+		$upload_dir = wp_upload_dir();
+		
+		$path_array = explode("/", $image['file']);
+		$file = $path_array[count($path_array)-1];
+		$path = str_replace($file, '', $image['file']);
+		
+		$full_path = $upload_dir['basedir'].'/'.$path;
+		$filename = $full_path.$file;
+		
+		$output_filename = $attr['w'].'x'.$attr['h'].'-'.$file;
+		
+		if (!file_exists($full_path.$output_filename) || !$cache) {
+			$this->phpThumb->setSourceFilename($filename);
+			foreach ($attr as $key => $value) {
+				$this->phpThumb->setParameter($key, $value);
+			}
+
+			if ($this->phpThumb->GenerateThumbnail()) {
+				$output_size_x = ImageSX($this->phpThumb->gdimg_output);
+				$output_size_y = ImageSY($this->phpThumb->gdimg_output);
+
+				$this->phpThumb->RenderToFile($full_path.$output_filename);
+				//$this->phpThumb->purgeTempFiles();
+			}
+			else {
+				// do something with debug/error messages
+				//echo 'Failed (size='.$thumbnail_width.'):<pre>'.implode("\n\n", $thisphpThumb->debugmessages).'</pre>';
+			}
+		}
+		
+		$tags_img = '';
+		foreach ($tags as $key => $value) {
+			$tags_img.= ' '.$key.'="'.$value.'"';
+		}
+		
+		$image = '<img src="'.$upload_dir['baseurl'].'/'.$path.$output_filename.'" width="'.$attr['w'].'" height="'.$attr['h'].'"'.$tags_img.' />';
+		if ($echo) {
+			echo $image;
+		}
+		else {
+			return $image;
+		}
+
+		
+	}
+	
 	/**
 	 * 
 	 */
@@ -220,6 +286,19 @@ class cp {
 
 		if (!$this->config['cleanup']['js']['l10n'])
 			wp_deregister_script('l10n');
+		
+
+		add_filter('wp_page_menu',array($this,'replace_menu_div'));
+	}
+	
+	function replace_menu_div($val) {
+		$val = preg_replace('/<div [a-z="]+>/', '', $val);
+		$val = preg_replace('/<\/div>/', '', $val);
+		$val = preg_replace('/page-item[\-0-9 ]+/', '', $val);
+		$val = preg_replace('/page_item /', '', $val);
+		$val = preg_replace('/class=""/', '', $val);
+		$val = preg_replace('/\n/', '', $val);
+		return $val;
 	}
 
 	/**
@@ -293,14 +372,9 @@ class cp {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public function run() {
-
+	public function show_header() {
 		// clean unwanted markup
 		$this->cleanup();
-
 		// get header
 		ob_start();
 		wp_head();
@@ -312,9 +386,15 @@ class cp {
 
 		$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $header);
 
+		return $header;
+	}
+
+	public function show_footer() {
 		// get footer
+		
 		ob_start();
 		wp_footer();
+		
 		$footer = ob_get_clean();
 		$footer = str_replace("\n", "\n\t", $footer);
 
@@ -322,14 +402,33 @@ class cp {
 
 		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $footer);
 		
-		if (is_home()) {
+		return $footer;
+	}
+	
+	/**
+	 * 
+	 */
+	public function run() {
+
+		
+		echo get_the_ID();
+		
+		if (is_front_page()) echo 'asdasd';
+		
+		if (is_front_page()) {
+	//		echo 'asasd';
 			$id = get_option('page_for_posts');
 		}
 		else if (is_page()) {
 			$id = get_the_ID();
+//			echo $meta_data.$id.'$template';
 		}
-		
+		else {
+			echo 'ss';
+		}
+		echo get_post_type(185);
 		$meta_data = get_post_custom($id);
+	//	new dBug($meta_data);
 		
 		if ($meta_data['_wp_page_template'][0]) {
 			$template = $meta_data['_wp_page_template'][0];
@@ -337,11 +436,11 @@ class cp {
 		else if (is_array($this->templates)) {
 			foreach ($this->templates AS $temp) {
 				if ($temp['default'])
-					$template = $temp['id'];
+					$template = $temp['filename'];
 			}
 		}
 		else {
-			$template = 'default';
+			$template = 'index.html';
 		}
 		
 		
@@ -382,7 +481,7 @@ class cp {
 		$vars['footer'] = $footer;
 		
 		// render page
-		echo $this->twig->render($template.'.html', $vars);
+		//echo $this->twig->render($template, $vars);
 	}
 	
 	public function _get_templates() {
