@@ -27,6 +27,14 @@ class admin_cp {
 		$this->init_plugins();
 		
 		$this->custom_media_upload();
+		
+		add_filter('media_upload_tabs', array($this, 'remove_gallery'),99);
+	}
+	
+	function remove_gallery($array) {
+		unset($array['gallery']);
+	//	print_r($array);
+		return $array;
 	}
 	
 	function custom_media_upload() {

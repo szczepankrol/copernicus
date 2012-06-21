@@ -46,6 +46,9 @@ class cp {
 		// load and configure additional libraries
 		$this->phpthumb_init();
 
+		// load and configure additional libraries
+		$this->swift_init();
+
 		// extend standard post types
 		$this->extend_spt();
 
@@ -160,6 +163,13 @@ class cp {
 		require_once CP_LIB_PATH . '/phpThumb/phpthumb.class.php';
 	}
 	
+	private function swift_init() {
+		
+		// load phpThumb class
+		//require_once CP_LIB_PATH . '/swift/lib/swift_init.php';
+		require_once CP_LIB_PATH . '/swift/swift_required.php';
+	}
+	
 	public function phpthumb_show_img($thumbnail_id, $cache = 1, $attributes = array(), $tags = array()) {
 		$this->phpThumb = new phpThumb();
 		$image = wp_get_attachment_metadata($thumbnail_id, 'my-post-thumbnail', '');
@@ -231,14 +241,24 @@ class cp {
 	private function add_css() {
 		global $wp_styles;
 
-		foreach ($this->config['css'] as $css) {
-			if ((is_admin() && $css['admin']) || (!is_admin() && $css['front'])) {
-				wp_register_style($css['name'], CP_STATIC_DIR . $css['folder'] . '/' . $css['filename'], $css['dependencies'], $css['version'], $css['media']);
-				if ($css['condition'])
-					$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['condition']);
-				wp_enqueue_style($css['name']);
+		if (is_array($this->config['css'])) {
+			foreach ($this->config['css'] as $css) {
+				if ((is_admin() && $css['admin']) || (!is_admin() && $css['front'])) {
+
+					if ($css['url']) {
+						$link = $css['url'];
+					}
+					else {
+						$link = CP_STATIC_DIR . $css['folder'] . '/' . $css['filename'];
+					}
+
+					wp_register_style($css['name'], $link, $css['dependencies'], $css['version'], $css['media']);
+					if ($css['condition'])
+						$GLOBALS['wp_styles']->add_data($css['name'], 'conditional', $css['condition']);
+					wp_enqueue_style($css['name']);
+				}
+
 			}
-			
 		}
 	}
 	
@@ -381,10 +401,10 @@ class cp {
 		$header = ob_get_clean();
 		$header = str_replace("\n", "\n\t", $header);
 
-		$header = preg_replace_callback('/(<link rel=\'stylesheet\' [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
-		$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
+		//$header = preg_replace_callback('/(<link rel=\'stylesheet\' [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
+		//$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $header);
 
-		$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $header);
+		//$header = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $header);
 
 		return $header;
 	}
@@ -398,9 +418,9 @@ class cp {
 		$footer = ob_get_clean();
 		$footer = str_replace("\n", "\n\t", $footer);
 
-		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $footer);
+		//$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+>)/', array($this, 'filter_url_fix'), $footer);
 
-		$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $footer);
+		//$footer = preg_replace_callback('/(<script [0-9a-z =\'-:\/?]+><\/script>)/', array($this, 'filter_script_conditional'), $footer);
 		
 		return $footer;
 	}
@@ -482,6 +502,34 @@ class cp {
 		
 		// render page
 		//echo $this->twig->render($template, $vars);
+	}
+	
+	public function get_cpt_value($cpt, $id, $value) {
+		foreach ($this->cpt AS $pt) {
+			if ($pt['settings']['name'] == $cpt) {
+				foreach ($pt['custom_fields'] as $cf) {
+					foreach ($cf['fields'] as $field) {
+						if ($field['id'] == $id) {
+							return $field['values'][$value];
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public function get_cpt_values($cpt, $id) {
+		foreach ($this->cpt AS $pt) {
+			if ($pt['settings']['name'] == $cpt) {
+				foreach ($pt['custom_fields'] as $cf) {
+					foreach ($cf['fields'] as $field) {
+						if ($field['id'] == $id) {
+							return $field['values'];
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	public function _get_templates() {
