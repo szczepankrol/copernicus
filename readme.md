@@ -34,6 +34,14 @@ The main goal of Copernicus is to make the development of custom themes easy and
 * Google Analytics
 * Google Webmaster Tools verification
 
+## Additional libraries
+
+* dBug 1.2
+* phpThumb 1.7.11
+* Smarty 3.1.10
+* Swift Mailer 4.1.5
+
+
 ## Author
 
 **Piotr Soluch**

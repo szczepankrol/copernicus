@@ -1,45 +1,101 @@
 <?php
 
 /**
- * Create custom post types
+ * Copernicus Custom Post Type class file
  *
  * @package Copernicus
+ * @subpackage Copernicus Theme
  * @author Piotr Soluch
  */
-class cp_cpt {
 
-	private $cpts; // custom post types from config
+/**
+ * Custom Post Type class
+ *
+ * @package Copernicus
+ * @subpackage Copernicus Theme
+ * @author Piotr Soluch
+ */
+class CP_Cpt {
+	
+	// part of config with all cpts
+	private $cpt = array();
 
-	public function __construct($cpt) {
+	/**
+	 * Class constructor
+	 *
+	 * @access type public
+	 * @return type mixed returns possible errors
+	 * @author Piotr Soluch
+	 */
+	public function __construct() {
+
+		// initialize the custom post types
+		$this->_init();
+	}
+
+	/**
+	 * Initiate the theme
+	 *
+	 * @access type public
+	 * @return type mixed returns possible errors
+	 * @author Piotr Soluch
+	 */
+	public function _init() {
+
+		// get config
+		$config = CP::get_config();
 		
-		$this->_set_cpts($cpt);
-		
-		$this->create_post_types();
-		$this->extend_post_types();
+		if (isset ($config['cpt'])) {
+			$this->cpts = $config['cpt'];
+
+			// create custom post type
+			add_action('admin_init', array($this, 'create_post_types'));
+		}
 	}
 	
-	public function create_post_types() {
+	/**
+	 * Take the cpts from config and create cpt
+	 *
+	 * @access type public
+	 * @return type null doesn't return a value
+	 * @author Piotr Soluch
+	 */
+	private function create_post_types() {
 		
-		if (is_array($this->cpts)) {
+		// if there are cpts
+		if (is_array($this->cpt)) {
 			
-			foreach($this->cpts AS $cpt) {
+			// for each cpt
+			foreach($this->cpt AS $cpt) {
+				
+				// if cpt is active
 				if ($cpt['settings']['active'])
+					
+					// create cpt
 					$this->create_post_type($cpt);
 			}
 		}
 	}
 	
-	public function create_post_type($cpt) {
-
-		// create an array of supported elements
+	/**
+	 * Create a custom post type
+	 *
+	 * @access type public
+	 * @return type null doesn't return a value
+	 * @author Piotr Soluch
+	 */
+	private function create_post_type($cpt) {
+		
+		// create an array for supported elements
 		$supports = array();
-		if (is_array($cpt['support'])) {
-			foreach ($cpt['support'] as $key => $value) {
-				if ($value)
-					$supports[] = $key;
-			}
+		
+		// create a list of supported fields
+		foreach ($cpt['support'] as $key => $value) {
+			if ($value)
+				$supports[] = $key;
 		}
 
+		// default settings
 		$settings = array(
 			'active' => false,
 			'labels' => $cpt['labels'],
@@ -57,35 +113,15 @@ class cp_cpt {
 			'meta_order' => 'meta_value'
 		);
 		
+		// merge default and custom settings
 		$settings = array_merge($settings, $cpt['settings']);
-	//	new dBug($settings);
+
+		// register cpt
 		register_post_type(
-				$cpt['settings']['name'], $settings
+			$cpt['settings']['name'], $settings
 		);
 	}
 
-	private function extend_post_types() {
-		if (is_admin()) {
-			
-			if (is_array($this->cpts)) {
-
-				include_once CP_LIB_PATH . '/core/class-meta-box.php';
-
-				foreach ($this->cpts as $cpt) {
-					$meta_box = new cp_meta_box($cpt);
-				}
-			}
-		}
-	}
 	
-	private function _set_cpts($cpts) {
-		$this->cpts = $cpts;
-	}
-	
-	private function _get_cpts() {
-		return $this->cpts;
-	}
-
 }
-
 ?>

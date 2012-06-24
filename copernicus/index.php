@@ -5,9 +5,13 @@
  * @package Copernicus
  * @author Piotr Soluch
  */
-?>
-<?php
 
-//$cp->run();
+CP::header();
+
+CP::view('header');
+CP::view('index');
+CP::view('footer');
+
+CP::footer();
 
 ?>

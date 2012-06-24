@@ -1,32 +1,28 @@
 <?php
 
 /**
- * Theme functions
+ * Main functions file for Copernicus Theme Framework
  *
  * @package Copernicus
+ * @subpackage Theme
  * @author Piotr Soluch
  */
-?>
-<?php
 
-// include framework constants
-define('CP_COPERNICUS_PATH', dirname(__FILE__));
+// define path to the theme
+define('CP_PATH', dirname(__FILE__));
 
-require_once CP_COPERNICUS_PATH . '/lib/core/constants.php';
+// main class file path
+$core_class_filename = CP_PATH . '/lib/core/class-cp.php';
 
-if (CP_VERSION) {
+if (file_exists($core_class_filename)) {
 
-	// load initialize framework
-	require_once CP_LIB_PATH . '/core/class-cp.php';
+	// load & initialize framework
+	require_once $core_class_filename;
 
-	$cp = new cp;
+	CP::init();
 
-	if (is_admin()) {
-		require_once CP_LIB_PATH . '/core/class-admin-cp.php';
-		$admin_cp = new admin_cp;
-	}
 } else {
-	echo 'error loading framework constants';
+	echo 'error loading framework';
 }
 
 ?>

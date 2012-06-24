@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ bloginfo.language }}" dir="{{ bloginfo.text_direction }}">
+<html lang="{bloginfo show=language}" dir="{bloginfo show=text_direction}">
 <head>
-	<title>My Webpage</title>
-	<meta charset="{{ bloginfo.charset }}" />
-	<meta name="description" content="{{ bloginfo.description }}" />
-	{{ header|raw }}
+	<title>{$page.title}</title>
+	<meta charset="{bloginfo show=charset}" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="description" content="{bloginfo show=description}" />
+	{$header}
 </head>
 <body>
