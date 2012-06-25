@@ -14,8 +14,8 @@
  *
  */
 function smarty_function_the_content($params, $template) {
-	
-    $content = get_the_content();
+
+	$content = get_the_content();
 	$content = apply_filters('the_content', $content);
 	
     return $content;

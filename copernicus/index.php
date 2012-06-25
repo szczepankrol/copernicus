@@ -8,9 +8,9 @@
 
 CP::header();
 
-CP::view('header');
-CP::view('index');
-CP::view('footer');
+CP::view('header.html');
+CP::view('index.html');
+CP::view('footer.html');
 
 CP::footer();
 

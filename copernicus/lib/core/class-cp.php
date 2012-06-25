@@ -98,7 +98,7 @@ class CP {
 		
 		while ( have_posts() ) : the_post();
 		
-		$view = self::$smarty->fetch($template.'.html');
+		$view = self::$smarty->fetch($template);
 		
 		endwhile;
 		
