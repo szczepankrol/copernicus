@@ -45,7 +45,7 @@ class CP_Mb {
 		// get config
 		$config = CP::get_config();
 		
-		if (isset ($config['cpt'])) {
+		if (isset ($config['mb'])) {
 			
 			// get meta box configuration
 			$this->mb = $config['mb'];

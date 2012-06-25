@@ -96,7 +96,13 @@ class CP {
 
 	public static function view($template) {
 		
-		self::$smarty->display($template.'.html');
+		while ( have_posts() ) : the_post();
+		
+		$view = self::$smarty->fetch($template.'.html');
+		
+		endwhile;
+		
+		echo $view."\n";
 	}
 	
 	public static function add_js() {
@@ -149,7 +155,7 @@ class CP {
 	private static function load_config() {
 		
 		// get config
-		require_once CP_PATH . '/cp-config.php';
+		require_once get_stylesheet_directory() . '/cp-config.php';
 		self::$config = $cp_config;
 	}
 	
@@ -202,8 +208,12 @@ class CP {
 		// load smarty
 		self::load_library(CP_PATH.'/lib/Smarty/Smarty.class.php');
 		
+		if (is_child_theme()) 
+			$template_dirs[] = get_stylesheet_directory() . '/templates/';
+		$template_dirs[] = CP_PATH . '/templates/';
+		
 		self::$smarty = new Smarty();
-		self::$smarty->setTemplateDir(CP_PATH . '/templates/');
+		self::$smarty->setTemplateDir($template_dirs);
 		self::$smarty->setCompileDir(WP_CONTENT_DIR . '/smarty/templates_c/');
 		self::$smarty->setCacheDir(WP_CONTENT_DIR . '/smarty/cache/');
 	}
