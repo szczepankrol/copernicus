@@ -15,6 +15,8 @@ class CP {
 	private static $config;
 	
 	public static $smarty;
+	
+	public static $phpThumb;
 
 /* -------------- methods -------------- */	
 	
@@ -30,7 +32,7 @@ class CP {
 		self::smarty_init();
 		
 		// load phpThumb
-		self::load_library(CP_PATH.'/lib/phpThumb/phpthumb.class.php');
+		self::phpthumb_init();
 		
 		// load SwiftMailer
 		self::load_library(CP_PATH.'/lib/SwiftMailer/swift_required.php');
@@ -69,6 +71,12 @@ class CP {
 		if (self::load_class('loop')) {
 			global $CP_Loop;
 			$CP_Loop = new CP_Loop;
+		}
+		
+		// load & init loop class
+		if (self::load_class('image')) {
+			global $CP_Image;
+			$CP_Image = new CP_Image;
 		}
 		
 		// theme support
@@ -228,6 +236,14 @@ class CP {
 		self::$smarty->setTemplateDir($template_dirs);
 		self::$smarty->setCompileDir(WP_CONTENT_DIR . '/smarty/templates_c/');
 		self::$smarty->setCacheDir(WP_CONTENT_DIR . '/smarty/cache/');
+	}
+	
+	private static function phpthumb_init(){
+		
+		// load phpThumb
+		self::load_library(CP_PATH.'/lib/phpThumb/phpthumb.class.php');
+		
+		self::$phpThumb = new phpThumb();
 	}
 	
 	private static function get_page_title() {
