@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="{bloginfo show=language}" dir="{bloginfo show=text_direction}">
-<head>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='{bloginfo show=language}' dir='{bloginfo show=text_direction}'>
+<head profile="http://gmpg.org/xfn/11">
 	<title>{$page.title}</title>
-	<meta charset="{bloginfo show=charset}" />
-	<meta name="viewport" content="width=device-width" />
-	<meta name="description" content="{bloginfo show=description}" />
+	<meta charset='{bloginfo show=charset}' />
+	<meta name='viewport' content='width=device-width' />
+	<meta name='description' content='{bloginfo show=description}' />
+	<meta property='og:locale' content='{bloginfo show=language}'/>
+	<meta property='og:title' content='{$page.title}'/>
+	<meta property='og:description' content='{bloginfo show=description}'/>
+	<meta property='og:url' content='{permalink}'/>
+	<meta property='og:site_name' content='{bloginfo show=name}'/>
+	<meta property='og:type' content='website'/>
 	{$header}
 </head>
 <body>

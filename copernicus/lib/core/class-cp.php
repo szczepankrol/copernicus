@@ -100,7 +100,9 @@ class CP {
 		
 		self::$smarty->assign('header', $header);
 		self::$smarty->assign('page', $page);
-		self::$smarty->display('_header.html');
+		$header = self::$smarty->fetch('_header.html');
+		
+		echo $header."\n";
 	}
 	
 	public static function footer() {
@@ -111,7 +113,9 @@ class CP {
 		$footer = str_replace("\n", "\n\t", $footer);
 		
 		self::$smarty->assign('footer', $footer);
-		self::$smarty->display('_footer.html');
+		$footer = self::$smarty->display('_footer.html');
+		
+		echo $footer."\n";
 	}
 
 	public static function view($template) {
