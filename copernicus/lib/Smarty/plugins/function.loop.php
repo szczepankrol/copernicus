@@ -14,14 +14,27 @@
  *
  */
 function smarty_function_loop($params, $template) {
-    $return = '';
-	$args = array( 'post_type' => 'page', 'posts_per_page' => 10 );
-	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$return.= CP::$smarty->fetch('view.html');;
-	endwhile;
-    
-	return $return;
+	global $CP_Loop;
+	
+	if (!$params['name'])
+		return null;
+	
+	$loop = $CP_Loop->get_loop($params['name']);
+	
+	if ($loop) {
+		$return = '';
+		
+		$WP_loop = new WP_Query( $loop['args'] );
+		
+		while ( $WP_loop->have_posts() ) : $WP_loop->the_post();
+			$return.= CP::$smarty->fetch($loop['template']);;
+		endwhile;
+
+		return $return;
+	}
+	
+	return null;
+	
 }
 
 ?>

@@ -59,6 +59,12 @@ class CP {
 		if (self::load_class('umb'))
 			$CP_Umb = new CP_Umb;
 		
+		// load & init loop class
+		if (self::load_class('loop')) {
+			global $CP_Loop;
+			$CP_Loop = new CP_Loop;
+		}
+		
 		// theme support
 		self::theme_support();
 		
