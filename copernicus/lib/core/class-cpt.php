@@ -46,10 +46,10 @@ class CP_Cpt {
 		$config = CP::get_config();
 		
 		if (isset ($config['cpt'])) {
-			$this->cpts = $config['cpt'];
+			$this->cpt = $config['cpt'];
 
 			// create custom post type
-			add_action('admin_init', array($this, 'create_post_types'));
+			add_action('init', array($this, 'create_post_types'));
 		}
 	}
 	
@@ -60,7 +60,7 @@ class CP_Cpt {
 	 * @return type null doesn't return a value
 	 * @author Piotr Soluch
 	 */
-	private function create_post_types() {
+	public function create_post_types() {
 		
 		// if there are cpts
 		if (is_array($this->cpt)) {
@@ -85,7 +85,7 @@ class CP_Cpt {
 	 * @author Piotr Soluch
 	 */
 	private function create_post_type($cpt) {
-		
+
 		// create an array for supported elements
 		$supports = array();
 		
@@ -94,27 +94,11 @@ class CP_Cpt {
 			if ($value)
 				$supports[] = $key;
 		}
-
-		// default settings
-		$settings = array(
-			'active' => false,
-			'labels' => $cpt['labels'],
-			'name' => 'customposttype',
-			'public' => false,
-			'publicly_queryable' => false,
-			'show_ui' => false,
-			'query_var' => false,
-			'capability_type' => 'post',
-			'hierarchial' => false,
-			'rewrite' => array('with_front'),
-			'orderby' => 'title',
-			'order' => 'ASC',
-			'supports' => $supports,
-			'meta_order' => 'meta_value'
-		);
 		
 		// merge default and custom settings
-		$settings = array_merge($settings, $cpt['settings']);
+		$settings = $cpt['settings'];
+		$settings['supports'] = $supports;
+		$settings['labels'] = $cpt['labels'];
 
 		// register cpt
 		register_post_type(

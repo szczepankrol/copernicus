@@ -59,6 +59,12 @@ class CP {
 		if (self::load_class('umb'))
 			$CP_Umb = new CP_Umb;
 		
+		// load & init user meta boxes class
+		if (self::load_class('menu')) {
+			global $CP_Menu;
+			$CP_Menu = new CP_Menu;
+		}
+		
 		// load & init loop class
 		if (self::load_class('loop')) {
 			global $CP_Loop;

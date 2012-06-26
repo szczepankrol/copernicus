@@ -50,9 +50,9 @@ class CP_Cleanup {
 			$this->admin_bar();
 			
 			add_filter('init', array($this,'clean_up'));
-			add_filter('nav_menu_css_class', array($this,'special_nav_class'), 10, 2);
-			add_filter('nav_menu_item_id', array($this,'special_nav_id'), 10, 2);
-			add_filter('wp_get_nav_menu_items', array($this,'nav_menu_items'), 10, 2);
+			//add_filter('nav_menu_css_class', array($this,'special_nav_class'), 10, 2);
+			//add_filter('nav_menu_item_id', array($this,'special_nav_id'), 10, 2);
+			//add_filter('wp_get_nav_menu_items', array($this,'nav_menu_items'), 10, 2);
 		}
 	}
 	
