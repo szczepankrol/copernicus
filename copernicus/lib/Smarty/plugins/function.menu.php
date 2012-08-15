@@ -24,6 +24,18 @@ function smarty_function_menu($params, $template) {
 	if ($menu) {
 		
 		if ($menu['type'] == 'standard') {
+
+			if ($menu['args']['child_of'] === "current_id") {
+				global $post;
+				if ($post->post_parent) {
+					$menu['args']['child_of'] = $post->post_parent;
+				}
+				else {
+					$menu['args']['child_of'] = $post->ID;
+				}
+			}
+		//	echo $menu['args']['child_of'];
+		//	new dBug($menu['args']);
 			$navigation = wp_list_pages( $menu['args'] );
 			$navigation = preg_replace('/current_page_item/', 'active', $navigation);
 			$navigation = preg_replace('/page_item[ ]?/', '', $navigation);

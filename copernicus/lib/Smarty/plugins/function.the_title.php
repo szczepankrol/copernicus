@@ -15,6 +15,15 @@
  */
 function smarty_function_the_title($params, $template) {
 	
+	if ($params['parent']) {
+		global $post;
+		if ($post->post_parent) {
+			$parent_post = get_post($post->post_parent); 
+			$title = $parent_post->post_title;
+			return $title;
+		}	
+	}
+	
     $title = get_the_title();
 	
     return $title;
