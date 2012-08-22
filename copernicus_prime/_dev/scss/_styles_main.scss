@@ -1,0 +1,73 @@
+/* ---------- STYLES - MAIN ---------- */
+
+/* ----- main ----- */
+
+html {
+	font-size: 62.5%;
+	font-family: $helvetica;
+}
+
+body {
+	width: $width-full;
+	margin: 0 auto;
+	font-size: 14px;
+}
+
+/* ----- headings ----- */
+
+h1 {
+	font-family: $helvetica;
+	font-size: $size-xxxbig;
+}
+
+h2 {
+	font-family: $helvetica;
+	font-size: $size-xxbig;
+}
+
+h3 {
+	font-family: $helvetica;
+	font-size: $size-xbig;
+}
+
+h4 {
+	font-family: $helvetica;
+	font-size: $size-big;
+}
+
+h5 {
+	font-family: $helvetica;
+	font-size: $size;
+}
+
+h6 {
+	font-family: $helvetica;
+	font-size: $size;
+}
+
+/* ----- content ----- */
+
+p {
+	line-height: 1.5;
+	margin-bottom: 10px;
+}
+
+a {
+	
+	
+	&:hover {
+	
+	}
+
+	&:active {
+		
+	}
+
+	&:link {
+		
+	}
+
+	&:visited {
+		
+	}
+}
