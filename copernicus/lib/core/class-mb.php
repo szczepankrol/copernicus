@@ -293,7 +293,12 @@ class CP_Mb {
 	public function save_meta_box_fields($fields) {
 		global $post;
 		global $post_id;
-
+		
+		// for new posts
+		if ($post === null)
+			return;
+		
+		// get post type from post object
 		$post_type = get_post_type_object($post->post_type);
 
 		// Verify the nonce before proceeding.

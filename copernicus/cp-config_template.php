@@ -87,9 +87,89 @@ $cp_config['js'][] = array(
 
 /* ----------- Custom Post Type -------------- */
 
+// Slider
+$cp_config['cpt'][] = array(
+	'settings' => array(
+		'active' => true,
+		'name' => 'slider',
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true,
+		'query_var' => true,
+		'capability_type' => 'page',
+		'hierarchial' => false,
+		'rewrite' => array('slug' => 'slide'),
+		'orderby' => 'menu_order',
+		'order' => 'ASC'
+	),
+	'labels' => array(
+		'name' => __('Slider'),
+		'singular_name' => __('Slide'),
+		'add_new' => __('Add New'),
+		'add_new_item' => __('Add New Slide'),
+		'edit_item' => __('Edit Slide'),
+		'new_item' => __('New Slide'),
+		'view_item' => __('View Slide'),
+		'search_items' => __('Search Slide'),
+		'not_found' => __('Nothing found'),
+		'not_found_in_trash' => __('Nothing found in Trash'),
+		'parent_item_colon' => ''
+	),
+	'support' => array(
+		'title' => true,
+		'editor' => true,
+		'author' => false,
+		'thumbnail' => true,
+		'excerpt' => false,
+		'trackbacks' => false,
+		'custom-fields' => false,
+		'comments' => false,
+		'revisions' => false,
+		'page-attributes' => true,
+		'post-formats' => false
+	)
+);
 
 /* ----------- Post Meta Boxes -------------- */
 
+// title box
+$cp_config['mb'][] = array(
+	'settings' => array(
+		'active' => true,
+		'id' => 'personal_info',
+		'name' => 'Personal information',
+		'post_type' => 'board',
+		'context' => 'normal', // normal | advanced | side
+		'priority' => 'high' // high | core | default | low
+	),
+	'fields' => array(
+		1 => array(
+			'id' => 'function',
+			'name' => 'Function',
+			'field_type' => 'text'
+		),
+		2 => array(
+			'id' => 'institution',
+			'name' => 'Institution',
+			'field_type' => 'text'
+		),
+		3 => array(
+			'id' => 'link',
+			'name' => 'Link',
+			'field_type' => 'text'
+		),
+		4 => array(
+			'id' => 'category',
+			'name' => 'Category',
+			'field_type' => 'selectbox',
+			'values' => array(
+				0 => '',
+				1 => 'Voting Members',
+				2 => 'Consultants'
+			)
+		)
+	)
+);
 
 /* ----------- Taxonomy -------------- */
 

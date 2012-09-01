@@ -15,7 +15,7 @@
  */
 function smarty_function_the_title($params, $template) {
 	
-	if ($params['parent']) {
+	if (isset($params['parent']) && $params['parent']) {
 		global $post;
 		if ($post->post_parent) {
 			$parent_post = get_post($post->post_parent); 

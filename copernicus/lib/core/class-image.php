@@ -116,7 +116,7 @@ class CP_Image {
 			}
 		}
 		
-		if ($params['link']) 
+		if (isset($params['link']) && $params['link']) 
 			return $file_url;
 		else 
 			return '<img src="'.$file_url.'"'.$img_attributes.' />';
