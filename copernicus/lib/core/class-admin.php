@@ -9,22 +9,34 @@
 ?>
 <?php
 
-class admin_cp {
+class CP_Admin {
 	
 	private $templates;
+	private $theme;
 
 	function __construct() {
+		$this->_init();
+		
+		// initialize all plugins
+		$this->init_plugins();
+	}
+	
+	public function _init() {
 
+		// get config
+		$config = CP::get_config();
+		
+		if (isset ($config['theme'])) {
+			
+			// get meta box configuration
+			$this->theme = $config['theme'];
+		}
+		
 		// add js files in admin panel
 		add_action('admin_init', array($this, 'load_js'));
 		
 		// add css files in admin panel
 		add_action('admin_init', array($this, 'load_css'));
-		
-		$this->_set_templates();
-		
-		// initialize all plugins
-		$this->init_plugins();
 		
 		$this->custom_media_upload();
 		
@@ -109,28 +121,28 @@ class admin_cp {
 	}
 
 	public function load_js() {
-		
+
 		// load main admin js file
-		wp_register_script('cp_admin', CP_COPERNICUS_STATIC_DIR . '/js/cp-admin.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('cp_admin', get_bloginfo ('stylesheet_directory') . '/static/js/cp-admin.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), $this->theme['version'], 1);
 		wp_enqueue_script('cp_admin');
 	}
 	
 	public function load_css() {
-		wp_register_style('cp_admin', CP_COPERNICUS_STATIC_DIR . '/css/cp-admin.css', '', CP_VERSION, 'all');
+		wp_register_style('cp_admin', get_bloginfo ('stylesheet_directory') . '/static/css/cp-admin.css', '', $this->theme['version'], 'all');
 		wp_enqueue_style('cp_admin');
 	}
 	
 	public function page_order_dnd() {
 		
-		wp_register_style('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/css/cp-admin-page-order.css', '', CP_VERSION, 'all');
+		wp_register_style('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/css/cp-admin-page-order.css', '', $cp->config['theme']['version'], 'all');
 		wp_enqueue_style('cp_admin_page_order');
 		
 		// load js for nested sortable
-		wp_register_script('jquery-ui-nested', CP_COPERNICUS_STATIC_DIR . '/js/jquery.ui.nestedSortable.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('jquery-ui-nested', CP_COPERNICUS_STATIC_DIR . '/js/jquery.ui.nestedSortable.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), $this->theme['version'], 1);
 		wp_enqueue_script('jquery-ui-nested');
 		
 		// load main admin js file
-		wp_register_script('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/js/cp-admin-page-order.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), CP_VERSION, 1);
+		wp_register_script('cp_admin_page_order', CP_COPERNICUS_STATIC_DIR . '/js/cp-admin-page-order.js', array('jquery','jquery-ui-core', 'jquery-ui-sortable'), $this->theme['version'], 1);
 		wp_enqueue_script('cp_admin_page_order');
 	}
 
@@ -147,12 +159,6 @@ class admin_cp {
 		if (!$post->menu_order)
 			$post->menu_order = $max_order + 10;
 	}
-
-	private function _set_templates() {
-		global $cp;
-		$this->templates = $cp->_get_templates();
-	}
-	
 }
 
 ?>

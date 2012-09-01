@@ -79,6 +79,14 @@ class CP {
 			$CP_Image = new CP_Image;
 		}
 		
+		if (is_admin()) {
+			// load & init admin class
+			if (self::load_class('admin')) {
+				global $CP_Admin;
+				$CP_Admin = new CP_Admin;
+			}
+		}
+		
 		// theme support
 		self::theme_support();
 		

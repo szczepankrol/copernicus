@@ -1,34 +1,39 @@
 /* @group meta box */
-
-.cp_meta_box .title {
-	width: 30%;
-	display: inline-block;
-	vertical-align: top;
-	line-height: 24px;
-}
-
-.cp_meta_box .other_column {
-	width: 60%;
-	display: inline-block;
-	vertical-align: top;
-	line-height: 24px;
-}
-
-.cp_meta_box ul {
-	display: inline-block;
-	vertical-align: top;
-	line-height: 24px;
-	margin: 0;
-	padding: 0;
-}
-
-.cp_meta_box li {
-	margin: 0 0 0 3px;
-	padding: 0;
-}
-
-.cp_meta_box .wp-editor-wrap {
-	display: inline-block
-}
+.cp_meta_box {
+  min-width: 610px;
+  margin-bottom: 10px; }
+  .cp_meta_box .description {
+    margin: 3px 0 0 20%;
+    font-style: italic;
+    color: #777; }
+  .cp_meta_box .suffix {
+    display: inline-block;
+    margin: 0 0 0 5px;
+    font-style: italic;
+    color: #777; }
+  .cp_meta_box .prefix {
+    display: inline-block;
+    margin: 0 5px 0 0;
+    font-style: italic;
+    color: #777; }
+  .cp_meta_box label {
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 24px; }
+  .cp_meta_box.field_editor label {
+    margin-top: 26px; }
+  .cp_meta_box .wp-editor-wrap {
+    display: inline-block;
+    width: 80%;
+    min-width: 484px; }
+  .cp_meta_box.field_checkbox span, .cp_meta_box.field_radio span {
+    width: 20%;
+    display: inline-block;
+    vertical-align: top; }
+  .cp_meta_box.field_checkbox ul, .cp_meta_box.field_radio ul {
+    display: inline-block;
+    width: 70%;
+    margin: 0; }
 
 /* @end */

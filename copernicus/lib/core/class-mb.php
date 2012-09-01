@@ -75,8 +75,7 @@ class CP_Mb {
 
 				// if meta box is active
 				if ($mb['settings']['active'])
-
-				// create meta box groups
+					// create meta box groups
 					$this->add_meta_box_group($mb);
 			}
 		}
@@ -111,7 +110,9 @@ class CP_Mb {
 	 * @author Piotr Soluch
 	 */
 	public function add_meta_box($post, $meta_box) {
-
+		
+		$styles = '';
+		
 		// get data from the DB for current post id
 		$custom = get_post_custom($post->ID);
 		$fields = $meta_box['args']['fields'];
@@ -122,42 +123,64 @@ class CP_Mb {
 		foreach ($fields as $field) {
 			$value = '';
 
-			// get default value if no value in db
-			if (isset($field['default']))
-				$value = $field['default'];
-
 			// get if the value is saved
 			if (isset($custom[$field['id']][0]))
 				$value = $custom[$field['id']][0];
 
+			if (empty($value)) {
+				if (isset($field['default_value'])) {
+					$value = $field['default_value'];
+				}
+			}
 
 			// create a form field based on the type of field
-			switch ($field['field_type']) {
+			switch ($field['type']) {
 
 				// text field
 				case 'text':
-					if (!isset($field['size']))
-						$field['size'] = 30;
-					echo '<p class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-					echo '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" size="' . $field['size'] . '" value="' . $value . '" />';
-					echo '</p>';
+				case 'password':
+				case 'email':
+				case 'number':
+				case 'range':
+				case 'color':
+				case 'date':
+				case 'url':
+					if (!isset($field['attributes']['size']))
+						$field['attributes']['size'] = 30;
+					
+					$field['text'] =  '<input type="' . $field['type'] . '" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '"';
+					if (isset($field['attributes']))
+						$field['text'].= $this->meta_box_attributes($field['attributes']);
+					
+					$field['text'].= '/>';
+					
+					echo $this->meta_box_field($field);
+					
 					break;
 
 				// textarea field
 				case 'textarea':
-					echo '<p class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
-					echo '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '">' . $value . '</textarea>';
-					echo '</p>';
+					if (!isset($field['attributes']['rows']))
+						$field['attributes']['rows'] = 6;
+					if (!isset($field['attributes']['cols']))
+						$field['attributes']['cols'] = 60;
+					
+					$field['text'] = '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '"';
+					if (isset($field['attributes']))
+						$field['text'].= $this->meta_box_attributes($field['attributes']);
+					$field['text'].= '>' . $value . '</textarea>';
+					
+					echo $this->meta_box_field($field);
+					
 					break;
 
 				// wysiwyg editor field
 				case 'editor':
-					echo '<div class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+					ob_start();
 					wp_editor($value, $field['id'], array());
-					echo '</div>';
+					$field['text'] = ob_get_clean();
+					echo $this->meta_box_field($field);
+					
 					break;
 
 				// checkboxes
@@ -166,24 +189,47 @@ class CP_Mb {
 						$values = maybe_unserialize($value);
 					else
 						$values = array();
-					echo '<div class="cp_meta_box">';
-					echo '<span class="title">' . $field['name'] . ':</span>';
-					echo '<ul>';
+					
+					$field['text'] = '<span>' . $field['name'] . ':</span>';
+					$field['text'].= '<ul>';
 					if (is_array($field['values'])) {
 						foreach ($field['values'] AS $field_key => $field_value) {
-							echo '<li>';
-							echo '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
+							$field['text'].= '<li>';
+							$field['text'].= '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
 							if (in_array($field_key, $values))
-								echo 'checked="checked" ';
-							echo ' /> ';
-							echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
-							echo '</li>';
+								$field['text'].= 'checked="checked" ';
+							$field['text'].= ' /> ';
+							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
+							$field['text'].= '</li>';
 						}
 					}
-					echo '</ul>';
-					echo '</div>';
+					$field['text'].= '</ul>';
+					
+					echo $this->meta_box_field($field, 0);
+					
 					break;
-
+				
+				// radio 
+				case 'radio':
+					$field['text'] = '<span>' . $field['name'] . ':</span>';
+					$field['text'].= '<ul>';
+					if (is_array($field['values'])) {
+						foreach ($field['values'] AS $field_key => $field_value) {
+							$field['text'].= '<li>';
+							$field['text'].= '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
+							if ($value == $field_key)
+								echo 'checked="checked" ';
+							$field['text'].= '/> ';
+							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
+							$field['text'].= '</li>';
+						}
+					}
+					$field['text'].= '</ul>';
+					
+					echo $this->meta_box_field($field, 0);
+					
+					break;
+				
 				// selectbox
 				case 'selectbox':
 					if (!isset ($field['multiple']))
@@ -195,7 +241,7 @@ class CP_Mb {
 							$values = array();
 					}
 					echo '<div class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+					echo '<label for="' . $field['id'] . '">' . $field['name'] . ':</label>';
 					echo '<select id="' . $field['id'] . '" name="' . $field['id'];
 					if ($field['multiple'])
 						echo '[]';
@@ -218,29 +264,10 @@ class CP_Mb {
 					echo '</div>';
 					break;
 
-				// radio 
-				case 'radio':
-					echo '<div class="cp_meta_box">';
-					echo '<span class="title">' . $field['name'] . ':</span>';
-					echo '<ul>';
-					if (is_array($field['values'])) {
-						foreach ($field['values'] AS $field_key => $field_value) {
-							echo '<li>';
-							echo '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
-							if ($value == $field_key)
-								echo 'checked="checked" ';
-							echo '/> ';
-							echo '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
-							echo '</li>';
-						}
-					}
-					echo '</ul>';
-					echo '</div>';
-					break;
 				// custom post type list
 				case 'cpt':
 					echo '<div class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '" class="title">' . $field['name'] . ':</label>';
+					echo '<label for="' . $field['id'] . '">' . $field['name'] . ':</label>';
 					echo '<select id="' . $field['id'] . '" name="' . $field['id'] .'">';
 					echo '<option value="0"> -- select -- </option>';
 					$args = array( 'post_type' => $field['cpt']);
@@ -256,6 +283,74 @@ class CP_Mb {
 					break;
 			}
 		}
+	}
+	
+	private function meta_box_field($field, $label = 1) {
+		$return = '<div class="cp_meta_box field_' . $field['type'] . '">';
+		if ($label) {
+			$return.= '<label for="' . $field['id'] . '">' . $field['name'];
+
+			if (isset($field['attributes']['required']) && $field['attributes']['required'])
+				$return.= ' *';
+
+			$return.= '</label>';
+		}
+		
+		if (isset($field['prefix']) && $field['prefix'])
+			$return.= '<div class="prefix">' . $field['prefix'] . '</div>';
+		
+		$return.= $field['text'];
+		
+		if (isset($field['suffix']) && $field['suffix'])
+			$return.= '<div class="suffix">' . $field['suffix'] . '</div>';
+		
+		if (isset($field['description']) && $field['description'])
+			$return.= '<div class="description">' . $field['description'] . '</div>';
+		
+		$return.= '</div>';
+		
+		return $return;
+	}
+	
+	private function meta_box_attributes($attributes) {
+		$styles = '';
+		$return = '';
+		
+		if (is_array($attributes)) {
+			foreach ($attributes AS $a_key => $attribute) {
+				switch($a_key) {
+					case 'width':
+					case 'height':
+						$styles.= $a_key . ': ' . $attribute . '; ';
+						break;
+					case 'disabled':
+					case 'readonly':
+					case 'required':
+					case 'autofocus':
+						if ($attribute)
+							$return.= ' ' . $a_key . '="' . $a_key . '"';
+						break;
+					case 'size':
+					case 'maxlength':
+					case 'rows':
+					case 'cols':
+					case 'pattern':
+					case 'placeholder':
+					case 'min':
+					case 'max':
+					case 'step':
+					case 'autocomplete':
+						if ($attribute !== false)
+						$return.= ' ' . $a_key . '="' . $attribute . '"';
+						break;
+				}
+			}
+		}
+		
+		if ($styles)
+			$return.= ' style="'.$styles.'"';
+		
+		return $return;
 	}
 
 	/**
@@ -338,7 +433,6 @@ class CP_Mb {
 				delete_post_meta($post_id, $meta_key, $meta_value);
 		}
 	}
-
 }
 
 ?>
