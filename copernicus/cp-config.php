@@ -122,11 +122,11 @@ $cp_config['cpt'][] = array(
 		'thumbnail' => true,
 		'excerpt' => true,
 		'trackbacks' => true,
-		'custom-fields' => true,
+		'custom-fields' => false,
 		'comments' => true,
 		'revisions' => true,
 		'page-attributes' => true,
-		'post-formats' => true
+		'post-formats' => false
 	)
 );
 
@@ -346,8 +346,8 @@ $cp_config['mb'][] = array(
 				3 => 'checkbox 3',
 			),
 			'attributes' => array(
-				'width' => '120px',
-				'size' => '12',
+				//'width' => '120px',
+				//'size' => '12',
 				'readonly' => false,
 				'disabled' => false,
 				'maxlength' => false,
@@ -370,8 +370,8 @@ $cp_config['mb'][] = array(
 				3 => 'radio 3',
 			),
 			'attributes' => array(
-				'width' => '120px',
-				'size' => '12',
+				//'width' => '120px',
+				//'size' => '12',
 				'readonly' => false,
 				'disabled' => false,
 				'maxlength' => false,
@@ -379,6 +379,83 @@ $cp_config['mb'][] = array(
 				'placeholder' => '',
 				'autocomplete' => 'off',
 				'autofocus' => false,
+			)
+		),
+		6 => array(
+			'id' => 'select',
+			'name' => 'Select',
+			'type' => 'select',
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'values' => array(
+				0 => '-- select --',
+				1 => 'select 1',
+				2 => 'select 2',
+				3 => 'select 3',
+			),
+			'attributes' => array(
+				'autofocus' => false,
+				'disabled' => false,
+				'required' => true,
+				'size' => '1',
+				'width' => '120px',
+			)
+		),
+		7 => array(
+			'id' => 'multiselect',
+			'name' => 'Multi Select',
+			'type' => 'multiselect',
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'values' => array(
+				'' => '-- select --',
+				1 => 'select 1',
+				2 => 'select 2',
+				3 => 'select 3',
+				4 => 'select 4',
+				5 => 'select 5',
+			),
+			'attributes' => array(
+				'autofocus' => false,
+				'disabled' => false,
+				'required' => true,
+				'size' => '3',
+				'width' => '120px',
+			)
+		),
+		8 => array(
+			'id' => 'post_link',
+			'name' => 'Post Link',
+			'type' => 'post_link',
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'attributes' => array(
+				'autofocus' => false,
+				'disabled' => false,
+				'required' => true,
+				'size' => '1',
+				'width' => '120px',
+			),
+			'arguments' => array(
+				'post_type' => 'test'
+			)
+		),
+		9 => array(
+			'id' => 'file',
+			'name' => 'File',
+			'type' => 'file',
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'attributes' => array(
+				'autofocus' => false,
+				'disabled' => false,
+				'required' => true,
+				'size' => '1',
+				'width' => '120px',
 			)
 		),
 	)

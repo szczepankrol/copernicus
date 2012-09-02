@@ -133,6 +133,9 @@ class CP_Mb {
 				}
 			}
 
+			
+			$field['label'] = 1;
+					
 			// create a form field based on the type of field
 			switch ($field['type']) {
 
@@ -154,8 +157,6 @@ class CP_Mb {
 					
 					$field['text'].= '/>';
 					
-					echo $this->meta_box_field($field);
-					
 					break;
 
 				// textarea field
@@ -170,8 +171,6 @@ class CP_Mb {
 						$field['text'].= $this->meta_box_attributes($field['attributes']);
 					$field['text'].= '>' . $value . '</textarea>';
 					
-					echo $this->meta_box_field($field);
-					
 					break;
 
 				// wysiwyg editor field
@@ -179,7 +178,6 @@ class CP_Mb {
 					ob_start();
 					wp_editor($value, $field['id'], array());
 					$field['text'] = ob_get_clean();
-					echo $this->meta_box_field($field);
 					
 					break;
 
@@ -198,6 +196,8 @@ class CP_Mb {
 							$field['text'].= '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
 							if (in_array($field_key, $values))
 								$field['text'].= 'checked="checked" ';
+							
+							$field['text'].= $this->meta_box_attributes($field['attributes']);
 							$field['text'].= ' /> ';
 							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
 							$field['text'].= '</li>';
@@ -205,7 +205,7 @@ class CP_Mb {
 					}
 					$field['text'].= '</ul>';
 					
-					echo $this->meta_box_field($field, 0);
+					$field['label'] = 0;
 					
 					break;
 				
@@ -219,6 +219,7 @@ class CP_Mb {
 							$field['text'].= '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
 							if ($value == $field_key)
 								echo 'checked="checked" ';
+							$field['text'].= $this->meta_box_attributes($field['attributes']);
 							$field['text'].= '/> ';
 							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
 							$field['text'].= '</li>';
@@ -226,68 +227,83 @@ class CP_Mb {
 					}
 					$field['text'].= '</ul>';
 					
-					echo $this->meta_box_field($field, 0);
+					$field['label'] = 0;
 					
 					break;
 				
 				// selectbox
-				case 'selectbox':
-					if (!isset ($field['multiple']))
-						$field['multiple'] = 0;
-					if ($field['multiple']) {
-						if ($value)
-							$values = maybe_unserialize($value);
-						else
-							$values = array();
-					}
-					echo '<div class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '">' . $field['name'] . ':</label>';
-					echo '<select id="' . $field['id'] . '" name="' . $field['id'];
-					if ($field['multiple'])
-						echo '[]';
-					echo '" size="' . $field['size'] . '" ';
-					if ($field['multiple'])
-						echo 'multiple="multiple" ';
-					echo '>';
+				case 'select':
+					$field['text'] = '<select id="' . $field['id'] . '" name="' . $field['id'] . '"';
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+					$field['text'].= '>';
 					if (is_array($field['values'])) {
 						foreach ($field['values'] AS $field_key => $field_value) {
-							echo '<option value="' . $field_key . '" ';
+							$field['text'].= '<option value="' . $field_key . '" ';
 
-							if (($field['multiple'] && in_array($field_key, $values)) || (!$field['multiple'] && $value == $field_key))
-								echo 'selected="selected" ';
-							echo '> ';
-							echo $field_value;
-							echo '</option>';
+							if ($value == $field_key)
+								$field['text'].= 'selected="selected" ';
+							$field['text'].= '> ';
+							$field['text'].= $field_value;
+							$field['text'].= '</option>';
 						}
 					}
-					echo '</select>';
-					echo '</div>';
+					$field['text'].= '</select>';
+					
+					break;
+					
+				// multi select
+				case 'multiselect':
+					if ($value)
+						$values = maybe_unserialize($value);
+					else
+						$values = array();
+					
+					$field['text'].= '<select id="' . $field['id'] . '" name="' . $field['id'] .'[]" size="' . $field['size'] . '" multiple="multiple"';
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+					$field['text'].= '>';
+					if (is_array($field['values'])) {
+						foreach ($field['values'] AS $field_key => $field_value) {
+							$field['text'].= '<option value="' . $field_key . '" ';
+
+							if (in_array($field_key, $values))
+								$field['text'].= 'selected="selected" ';
+							$field['text'].= '> ';
+							$field['text'].= $field_value;
+							$field['text'].= '</option>';
+						}
+					}
+					$field['text'].= '</select>';
+					
 					break;
 
-				// custom post type list
-				case 'cpt':
-					echo '<div class="cp_meta_box">';
-					echo '<label for="' . $field['id'] . '">' . $field['name'] . ':</label>';
-					echo '<select id="' . $field['id'] . '" name="' . $field['id'] .'">';
-					echo '<option value="0"> -- select -- </option>';
-					$args = array( 'post_type' => $field['cpt']);
-					$loop = new WP_Query( $args );
-					while ( $loop->have_posts() ) : $loop->the_post();
-						echo '<option value="'. get_the_ID() .'"';
+				// post link
+				case 'post_link':
+					$field['text'] = '<select id="' . $field['id'] . '" name="' . $field['id'] .'"';
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+					$field['text'].= '>';
+					$field['text'].= '<option value="0"> -- select -- </option>';
+					$loop_links = new WP_Query( $field['arguments'] );
+					
+					while ( $loop_links->have_posts() ) : $loop_links->the_post();
+						$field['text'].= '<option value="'. get_the_ID() .'"';
 							if ($value == get_the_ID())
-								echo 'selected="selected" ';
-							echo '>'.  get_the_title() .'</option>';
+								$field['text'].= 'selected="selected" ';
+							$field['text'].= '>'.  get_the_title() .'</option>';
 					endwhile;
-					echo '</select>';
-					echo '</div>';
+					$field['text'].= '</select>';
+					break;
+				
+				case 'file':
+					
 					break;
 			}
+			echo $this->meta_box_field($field);
 		}
 	}
 	
-	private function meta_box_field($field, $label = 1) {
+	private function meta_box_field($field) {
 		$return = '<div class="cp_meta_box field_' . $field['type'] . '">';
-		if ($label) {
+		if ($field['label']) {
 			$return.= '<label for="' . $field['id'] . '">' . $field['name'];
 
 			if (isset($field['attributes']['required']) && $field['attributes']['required'])
