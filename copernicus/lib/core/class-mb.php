@@ -188,7 +188,7 @@ class CP_Mb {
 					else
 						$values = array();
 					
-					$field['text'] = '<span>' . $field['name'] . ':</span>';
+					$field['text'] = '<span>' . $field['name'] . '</span>';
 					$field['text'].= '<ul>';
 					if (is_array($field['values'])) {
 						foreach ($field['values'] AS $field_key => $field_value) {
@@ -211,7 +211,7 @@ class CP_Mb {
 				
 				// radio 
 				case 'radio':
-					$field['text'] = '<span>' . $field['name'] . ':</span>';
+					$field['text'] = '<span>' . $field['name'] . '</span>';
 					$field['text'].= '<ul>';
 					if (is_array($field['values'])) {
 						foreach ($field['values'] AS $field_key => $field_value) {
@@ -284,12 +284,18 @@ class CP_Mb {
 					$field['text'].= '<option value="0"> -- select -- </option>';
 					$loop_links = new WP_Query( $field['arguments'] );
 					
-					while ( $loop_links->have_posts() ) : $loop_links->the_post();
-						$field['text'].= '<option value="'. get_the_ID() .'"';
-							if ($value == get_the_ID())
-								$field['text'].= 'selected="selected" ';
-							$field['text'].= '>'.  get_the_title() .'</option>';
-					endwhile;
+					$all_links = array();
+					
+					$posts = $loop_links->posts;
+					
+					
+					foreach ($posts as $post) {
+						if ($value == $post->ID)
+							$post->selected = 1;
+						$all_links[$post->post_parent][] = $post;
+					}
+					
+					$field['text'].= $this->get_links($all_links);
 					$field['text'].= '</select>';
 					break;
 				
@@ -299,6 +305,28 @@ class CP_Mb {
 			}
 			echo $this->meta_box_field($field);
 		}
+	}
+	
+	private function get_links($links, $parent_id = 0, $indent = 0) {
+		$return = '';
+		
+		if (isset($links[$parent_id])) {
+			foreach ($links[$parent_id] as $link) {
+				$return.= '<option value="' . $link->ID . '"';
+				if (isset($link->selected))
+					$return.= ' selected="selected" ';
+				$return.= '>';
+				for ($i=0; $i<$indent; $i++) {
+					$return.= '---';
+				}
+				if ($indent)
+					$return.= ' ';
+				$return.= $link->post_title;
+				$return.= '</option>';
+				$return.= $this->get_links($links, $link->ID, $indent+1);
+			}
+		}
+		return $return;
 	}
 	
 	private function meta_box_field($field) {

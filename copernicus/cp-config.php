@@ -450,6 +450,15 @@ $cp_config['mb'][] = array(
 			'prefix' => '',
 			'suffix' => '',
 			'description' => '',
+			'limit' => '1',
+			'filetypes' => array(
+				'jpg',
+				'gif',
+				'png'
+			),
+			'fields' => array(
+				
+			),
 			'attributes' => array(
 				'autofocus' => false,
 				'disabled' => false,
