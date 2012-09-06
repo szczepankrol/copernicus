@@ -146,8 +146,8 @@ class CP_Mb {
 				case 'number':
 				case 'range':
 				case 'color':
-				case 'date':
 				case 'url':
+					
 					if (!isset($field['attributes']['size']))
 						$field['attributes']['size'] = 30;
 					
@@ -156,6 +156,37 @@ class CP_Mb {
 						$field['text'].= $this->meta_box_attributes($field['attributes']);
 					
 					$field['text'].= '/>';
+					
+					break;
+					
+				case 'date':
+					wp_register_style('jquery-ui', get_bloginfo ('template_directory') . '/static/jquery-ui/jquery-ui-1.8.17.custom.css', '', '', 'all');
+
+					wp_enqueue_style('jquery-ui');
+					wp_enqueue_script('jquery');
+					wp_enqueue_script('jquery-ui-core');
+					wp_enqueue_script('jquery-ui-datepicker');
+					
+					$field['text'] =  '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '"';
+					if (isset($field['attributes']))
+						$field['text'].= $this->meta_box_attributes($field['attributes']);
+					
+					$field['text'].= '/>';
+					
+					$field['text'].= '<script type="text/javascript">
+							jQuery(function($){
+								$(\'#' . $field['id'] .'\').datepicker({';
+						if (isset ($field['options']) && is_array($field['options'])) {
+						
+							foreach ($field['options'] as $key => $option) {
+							
+								$field['text'].= "'".$key."' : '".$option."',";
+							}
+						}
+						$field['text'].= '	});
+							});
+						</script>';
+					
 					
 					break;
 
