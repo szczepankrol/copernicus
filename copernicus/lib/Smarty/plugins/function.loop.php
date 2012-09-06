@@ -25,6 +25,9 @@ function smarty_function_loop($params, $template) {
 	
 	$loop = $CP_Loop->get_loop($params['name']);
 	
+	if (isset($params['template']))
+		$loop['template'] = $params['template'];
+	
 	if ($loop) {
 		$return = '';
 		

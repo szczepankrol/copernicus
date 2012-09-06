@@ -282,6 +282,10 @@ class CP_Mb {
 					$field['text'].= $this->meta_box_attributes($field['attributes']);
 					$field['text'].= '>';
 					$field['text'].= '<option value="0"> -- select -- </option>';
+					
+					if (!isset($field['arguments']['posts_per_page']))
+						$field['arguments']['posts_per_page'] = '-1';
+						
 					$loop_links = new WP_Query( $field['arguments'] );
 					
 					$all_links = array();
@@ -292,7 +296,7 @@ class CP_Mb {
 					foreach ($posts as $post) {
 						if ($value == $post->ID)
 							$post->selected = 1;
-						$all_links[$post->post_parent][] = $post;
+						$all_links[$post->post_parent][$post->ID] = $post;
 					}
 					
 					$field['text'].= $this->get_links($all_links);
@@ -309,7 +313,7 @@ class CP_Mb {
 	
 	private function get_links($links, $parent_id = 0, $indent = 0) {
 		$return = '';
-		
+
 		if (isset($links[$parent_id])) {
 			foreach ($links[$parent_id] as $link) {
 				$return.= '<option value="' . $link->ID . '"';
@@ -476,6 +480,23 @@ class CP_Mb {
 			elseif ('' == $new_meta_value && $meta_value)
 				delete_post_meta($post_id, $meta_key, $meta_value);
 		}
+	}
+	
+	public function get_value($field, $value) {
+		
+		switch($field['type']) {
+			case 'select':
+				return $field['values'][$value];
+				break;
+			case 'post_link':
+				$post_link = get_post( $value, ARRAY_A );
+				return '<a href="'.get_permalink($post_link['ID']).'" target="_blank">'.$post_link['post_title'].'</a>';
+				break;
+			default:
+				return $value;
+				break;
+		}
+		
 	}
 }
 

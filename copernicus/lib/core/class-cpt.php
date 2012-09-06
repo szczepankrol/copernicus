@@ -50,7 +50,6 @@ class CP_Cpt {
 
 			// create custom post type
 			add_action('init', array($this, 'create_post_types'));
-			add_filter('pre_get_posts', array($this, 'set_custom_post_types_admin_order'));
 		}
 	}
 
@@ -103,38 +102,9 @@ class CP_Cpt {
 
 		// register cpt
 		register_post_type(
-				$cpt['settings']['name'], $settings
+			$cpt['settings']['name'], $settings
 		);
 	}
-
-	public function set_custom_post_types_admin_order($wp_query) {
-
-		if (is_admin()) {
-
-
-			// Get the post type from the query  
-			$post_type = $wp_query->query['post_type'];
-
-			// if there are cpts
-			if (is_array($this->cpt)) {
-
-				// for each cpt
-				foreach ($this->cpt AS $cpt) {
-					
-					// if cpt is active
-					if ($cpt['settings']['name'] == $post_type) {
-
-						if (isset($cpt['settings']['orderby']))
-							$wp_query->set('orderby', $cpt['settings']['orderby']);
-
-						if (isset($cpt['settings']['order']))
-							$wp_query->set('order', $cpt['settings']['order']);
-					}
-				}
-			}
-		}
-	}
-
 }
 
 ?>

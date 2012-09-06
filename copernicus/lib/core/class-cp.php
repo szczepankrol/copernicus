@@ -46,8 +46,14 @@ class CP {
 			$CP_Cpt = new CP_Cpt;
 		
 		// load & init custom post types class
-		if (self::load_class('mb'))
+		if (self::load_class('mb')) {
+			global $CP_Mb;
 			$CP_Mb = new CP_Mb;
+		}
+		
+		// load & init admin list view class
+		if (self::load_class('alv'))
+			$CP_Alv = new CP_Alv;
 		
 		// load & init taxonomy class
 		if (self::load_class('taxonomy'))

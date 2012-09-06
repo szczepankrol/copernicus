@@ -18,7 +18,7 @@ class CP_Admin {
 		$this->_init();
 		
 		// initialize all plugins
-		$this->init_plugins();
+		//$this->init_plugins();
 	}
 	
 	public function _init() {
