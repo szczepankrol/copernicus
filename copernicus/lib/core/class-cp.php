@@ -85,6 +85,11 @@ class CP {
 			$CP_Image = new CP_Image;
 		}
 		
+		// load & init shortcodes class
+		if (self::load_class('sc')) {
+			$CP_Sc = new CP_Sc;
+		}
+		
 		if (is_admin()) {
 			// load & init admin class
 			if (self::load_class('admin')) {
@@ -92,6 +97,8 @@ class CP {
 				$CP_Admin = new CP_Admin;
 			}
 		}
+		
+		self::load_child_lib();
 		
 		// theme support
 		self::theme_support();
@@ -285,6 +292,31 @@ class CP {
 		
 		return $title;
 	}
+	
+	private function load_child_lib() {
+		$folder = get_theme_root().'/'.get_stylesheet().'/lib';
+		
+		if (file_exists($folder)) {
+			$handle = opendir($folder);
+			
+			while (false !== ($entry = readdir($handle))) {
+				if (preg_match('/^class-([a-z]+).php/', $entry, $matches)) {
+					$file = $folder.'/'.$matches[0];
+					$class = 'CP_'.ucfirst($matches[1]);
+					
+					if (file_exists($file)) {
+						include_once $file;
+						
+						global $$class;
+						$$class = new $class;
+					}
+				}
+			}
+			
+			closedir($handle);
+		}
+	}
+	
 }
 
 ?>

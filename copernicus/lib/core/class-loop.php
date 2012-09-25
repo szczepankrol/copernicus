@@ -60,6 +60,56 @@ class CP_Loop {
 		
 		return null;
 	}
+	
+	public function show_loop($loop) {
+		global $post, $pages;
+		
+		$main_post = $post;
+		$main_pages = $pages;
+		
+		$return = '';
+		
+		if (isset($loop['args']['orderby'])) {
+			$orderby = $loop['args']['orderby'];
+			switch($orderby) {
+				case 'none':
+				case 'ID':
+				case 'author':
+				case 'title':
+				case 'name':
+				case 'date':
+				case 'modified':
+				case 'parent':
+				case 'rand':
+				case 'comment_count':
+				case 'menu_order':
+					$loop['args']['orderby'] = $orderby;
+					break;
+				default:
+					$loop['args']['orderby'] = 'meta_value';
+					$loop['args']['meta_key'] = $orderby;
+					break;
+			}
+		}
+		
+		$WP_loop = new WP_Query( $loop['args'] );
+		$key = 0;
+		
+		while ( $WP_loop->have_posts() ) : $WP_loop->the_post();
+			CP::$smarty->assign('key', $key);
+			$return.= CP::$smarty->fetch($loop['template']);;
+			$key++;
+		endwhile;
+		
+		$post = $main_post;
+		$pages = $main_pages;
+		
+		if (isset($loop['wrapper']) && $loop['wrapper']) {
+			$return = str_replace('|', $return, $loop['wrapper']);
+		}
+		
+		return $return;
+	}
 
 }
 
