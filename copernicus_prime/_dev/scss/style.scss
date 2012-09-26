@@ -1,51 +1,49 @@
-/* ########## IGNITION TEMPLATE ########## */
+/* ########## Copernicus ########## */
 
 
-/* ========== HELPERS ========== */
+//* ========== HELPERS ========== */
 
 // helpers are not visible in css
 
-@import "helpers_mixins"; // load mixins
+@import "preamp/preamp/preamp"; // load mixins
 
-@import "helpers_variables"; // load variables
+@import "helpers/variables"; // load variables
 
 
 /* ========== INCLUDES ========== */
 
 // includes are visible in css
 
-@import "includes_reset"; // load css reset
-
-@import "includes_fonts"; // load fonts
+@import "includes/fonts"; // load fonts
 
 
 /* ========== STYLES ========== */
 
-@import "styles_main"; // load main styles
+@import "style/main"; // load main styles
 
-@import "styles_header"; // load header styles
+@import "style/header"; // load header styles
 
-@import "styles_footer"; // load footer styles
+@import "style/footer"; // load footer styles
 
 
 /* ========== MEDIA QUERIES ========== */
 
 @media only print {
-	@import "media_print";
+	@import "media/print";
 }
 
 @media only screen and (min-device-width : 1440px) {
-	@import "media_big";
+	@import "media/big";
 }
 
 @media only screen and (max-width : 1024px) {
-	@import "media_small";
+	@import "media/small";
 }
 
 @media only screen and (max-width : 768px) {
-	@import "media_flex";
+	@import "media/flex";
 }
 
 @media only screen and (max-device-width : 480px) {
-	@import "media_mobile";
+	@import "media/mobile";
 }
