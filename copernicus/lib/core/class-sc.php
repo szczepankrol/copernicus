@@ -43,10 +43,31 @@ class CP_Sc {
 		
 	}
 	
-	public function sh_loop($atts) {
+	public function sh_loop($atts, $content = null) {
 		global $CP_Loop;
 		
 		$loop = $CP_Loop->get_loop($atts['name']);
+		
+		if ($content) {
+			$content = str_replace('[', '{', $content);
+			$content = str_replace(']', '}', $content);
+			$content = str_replace('=>', ':', $content);
+			$content = str_replace('=&gt;', ':', $content);
+			$content = str_replace('\'', '"', $content);
+			$content = str_replace("’", '"', $content);
+			$content = str_replace("&#8217;", '"', $content);
+			$content = str_replace("&#8242;", '"', $content);
+
+			$new_atts = json_decode($content, true);
+			
+		//	new dBug($content);
+		//	new dBug($new_atts);
+			global $CP_Loop;
+			$loop['args'] = $CP_Loop->merge_attributes($new_atts, $loop['args']);
+			
+		}
+	//	new dBug($atts);
+		
 		
 		foreach ($atts as $key => $att) {
 			if (preg_match('/args_[a-z_]+/', $key, $matches)) {
@@ -56,11 +77,16 @@ class CP_Sc {
 			else
 				$loop[$key] = $att;
 		}
+	//	new dBug($loop);
 		
 		return $CP_Loop->show_loop($loop);
 	}
 	
-	
+	function process_content($content){
+		$attr = array();
+		
+		
+	}
 }
 
 ?>
