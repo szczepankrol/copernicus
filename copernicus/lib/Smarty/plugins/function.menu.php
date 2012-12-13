@@ -30,7 +30,13 @@ function smarty_function_menu($params, $template) {
 		
 		if ($menu['type'] == 'standard') {
 			global $post;
-
+			
+			$ancestors = $post->ancestors;
+				
+			if (is_array($ancestors) && count($ancestors)) {
+				$ancestors = array_reverse($ancestors);
+			}
+			
 			if ($menu['args']['child_of'] === "current_id") {
 				if ($post->post_parent) {
 					$menu['args']['child_of'] = $post->post_parent;
@@ -40,14 +46,12 @@ function smarty_function_menu($params, $template) {
 				}
 			}
 			else if ($menu['args']['child_of'] === "level_1") {
-				$ancestors = array_reverse($post->ancestors);
 				if (isset($ancestors[0]))
 					$menu['args']['child_of'] = $ancestors[0];
 				else
 					$menu['args']['child_of'] = $post->ID;
 			}
 			else if ($menu['args']['child_of'] === "level_2") {
-				$ancestors = array_reverse($post->ancestors);
 				if (isset($ancestors[1]))
 					$menu['args']['child_of'] = $ancestors[1];
 				else
@@ -75,6 +79,7 @@ function smarty_function_menu($params, $template) {
 			$navigation = preg_replace('/current_page_item/', 'active', $navigation);
 			$navigation = preg_replace('/page_item[ ]?/', '', $navigation);
 			$navigation = preg_replace('/page-item-2[0-9 ]+?/', '', $navigation);
+			$navigation = preg_replace("/\n/", '', $navigation);
 		}
 		return $navigation;
 	}

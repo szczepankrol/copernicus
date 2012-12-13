@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copernicus Theme Framework Config file
  *
@@ -6,7 +7,6 @@
  * @subpackage Copernicus Theme
  * @author Piotr Soluch
  */
-
 /* ----------- copernicus info -------------- */
 
 $cp_config['theme']['short_name'] = 'Copernicus';
@@ -34,9 +34,9 @@ $cp_config['cleanup']['meta']['parent_post_rel'] = false; // prev link
 $cp_config['cleanup']['meta']['start_post_rel'] = false; // start link
 $cp_config['cleanup']['meta']['adjacent_posts_rel'] = false; // Display relational links for the posts adjacent to the current post.
 
-$cp_config['cleanup']['js']['l10n'] = false; 
+$cp_config['cleanup']['js']['l10n'] = false;
 
-$cp_config['cleanup']['admin']['bar'] = false; 
+$cp_config['cleanup']['admin']['bar'] = false;
 
 
 /* ----------- plugins -------------- */
@@ -457,7 +457,6 @@ $cp_config['mb'][] = array(
 				'png'
 			),
 			'fields' => array(
-				
 			),
 			'attributes' => array(
 				'autofocus' => false,
@@ -472,6 +471,26 @@ $cp_config['mb'][] = array(
 
 /* ----------- Taxonomy -------------- */
 
+$cp_config['taxonomy'][] = array(
+	'settings' => array(
+		'active' => true,
+		'id' => 'coursecategory',
+		'name' => 'Additional information',
+		'post_type' => 'test',
+		'context' => 'side', // normal | advanced | side
+		'priority' => 'high' // high | core | default | low
+	),
+	'labels' => array(
+		'name' => __('coursecategory'),
+		'sort' => true,
+		'args' => array('orderby' => 'title'),
+		'rewrite' => array('slug' => 'coursecategory')
+	),
+	'args' => array(
+		'hierarchical' => false,
+		'show_tagcloud' => true
+	)
+);
 
 /* ----------- Users -------------- */
 
@@ -480,5 +499,4 @@ $cp_config['mb'][] = array(
 
 
 /* ----------- Custom Menus -------------- */
-
 ?>

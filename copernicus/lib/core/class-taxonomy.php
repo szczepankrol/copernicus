@@ -17,7 +17,7 @@
  */
 class CP_Taxonomy {
 	
-	var $taxonomies = array();
+	var $taxonomy = array();
 	
 	/**
 	 * Class constructor
@@ -62,10 +62,10 @@ class CP_Taxonomy {
 	function create_taxonomies() {
 		
 		// if there are taxonomies
-		if (is_array($this->taxonomies)) {
-			
+		if (is_array($this->taxonomy)) {
+
 			// for each taxonomy
-			foreach($this->taxonomies AS $taxonomy) {
+			foreach($this->taxonomy AS $taxonomy) {
 				
 				// if taxonomy is active
 				if ($taxonomy['settings']['active'])
@@ -84,7 +84,7 @@ class CP_Taxonomy {
 	 * @author Piotr Soluch
 	 */
 	function add_taxonomy($taxonomy) {
-		
+
 		$args['labels'] = $taxonomy['labels'];
 		
 		$args = array_merge($args, $taxonomy['args']);

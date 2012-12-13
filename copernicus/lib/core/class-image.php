@@ -44,7 +44,7 @@ class CP_Image {
 	}
 	
 	public function image($params) {
-		if (!isset ($params['id']))
+		if (!isset ($params['id']) || $params['id'] < 1)
 			return null;
 		
 		$img_attributes = '';
