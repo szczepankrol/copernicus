@@ -12,7 +12,7 @@
 define('CP_PATH', dirname(__FILE__));
 
 // main class file path
-$core_class_filename = CP_PATH . '/lib/core/class-cp.php';
+$core_class_filename = CP_PATH . '/lib/core/class-copernicus.php';
 
 if (file_exists($core_class_filename)) {
 

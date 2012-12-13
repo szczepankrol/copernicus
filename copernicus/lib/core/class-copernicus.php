@@ -200,7 +200,7 @@ class CP {
 	private static function load_config() {
 		
 		// get config
-		require_once get_stylesheet_directory() . '/cp-config.php';
+		require_once get_stylesheet_directory() . '/config/core.config.php';
 		self::$config = $cp_config;
 	}
 	
