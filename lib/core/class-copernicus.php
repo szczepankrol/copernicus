@@ -155,9 +155,11 @@ class CP {
 
 	public static function view($template) {
 		
-		while ( have_posts() ) : the_post();
+		$view = '';
 		
-		$view = self::$smarty->fetch($template);
+		while ( have_posts() ) : the_post();
+	
+		$view.= self::$smarty->fetch($template);
 		
 		endwhile;
 		

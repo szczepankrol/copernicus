@@ -97,12 +97,22 @@ $cp_config['language'][] = array(
 );
 
 $cp_config['language'][] = array(
-	'name' => 'German',
+	'name' => 'Deutsch',
 	'short_name' => 'de',
 	'status' => 1,
 	'code' => 'de',
 	'language' => 'de',
 	'postmeta_suffix' => '_de',
+	'default' => 0
+);
+
+$cp_config['language'][] = array(
+	'name' => 'Polski',
+	'short_name' => 'pl',
+	'status' => 1,
+	'code' => 'pl',
+	'language' => 'pl',
+	'postmeta_suffix' => '_pl',
 	'default' => 0
 );
 

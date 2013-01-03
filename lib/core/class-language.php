@@ -68,6 +68,8 @@ class CP_Language {
 		$_SESSION['language'] = $current_language['code'];
 		$expire = 60 * 60 * 24 * 31; // a month
 		setcookie('language', $current_language['code'], time() + $expire);
+		define('LANGUAGE', $current_language['code']);
+		define('LANGUAGE_SUFFIX', $current_language['postmeta_suffix']);
 	}
 	
 	public function get_language($code = '') {

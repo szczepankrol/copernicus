@@ -31,13 +31,13 @@ $cp_config['cpt'][] = array(
 	'support' => array(
 		'title' => true,
 		'editor' => true,
-		'author' => true,
+		'author' => false,
 		'thumbnail' => true,
-		'excerpt' => true,
-		'trackbacks' => true,
+		'excerpt' => false,
+		'trackbacks' => false,
 		'custom-fields' => false,
-		'comments' => true,
-		'revisions' => true,
+		'comments' => false,
+		'revisions' => false,
 		'page-attributes' => true,
 		'post-formats' => false
 	)
@@ -61,22 +61,57 @@ $cp_config['mb'][] = array(
 			'name' => 'Text',
 			'type' => 'text',
 			'translation' => 1,
-			'prefix' => 'prefix',
-			'suffix' => 'suffix',
-			'description' => 'match pattern [A-Za-z]{3}',
-			'default_value' => 'default value',
+			'title' => 1,
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'default_value' => '',
 			'attributes' => array(
-				'width' => '120px',
-				'size' => '12',
+				'width' => '',
+				'size' => '',
 				'readonly' => false,
 				'disabled' => false,
 				'maxlength' => false,
-				'required' => true,
-				'placeholder' => 'text placeholder',
-				'pattern' => '[A-Za-z]{3}',
+				'required' => false,
+				'placeholder' => '',
+				'pattern' => '',
+				'autocomplete' => 'on',
+				'autofocus' => false,
+			)
+		),
+		2 => array(
+			'id' => 'link',
+			'name' => 'Link',
+			'type' => 'text',
+			'translation' => 1,
+			'prefix' => '',
+			'suffix' => '',
+			'description' => '',
+			'default_value' => '',
+			'attributes' => array(
+				'width' => '',
+				'size' => '',
+				'readonly' => false,
+				'disabled' => false,
+				'maxlength' => false,
+				'required' => false,
+				'placeholder' => '',
+				'pattern' => '',
 				'autocomplete' => 'on',
 				'autofocus' => false,
 			)
 		)
+	)
+);
+
+
+$cp_config['loop'][] = array(
+	'name' => 'slider',
+	'template' => 'loop_slider.html',
+	'args' => array(
+		'post_type' => 'slider',
+		'posts_per_page' => 5,
+		'orderby' => 'menu_order',
+		'order' => 'ASC',
 	)
 );
