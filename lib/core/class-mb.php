@@ -110,238 +110,371 @@ class CP_Mb {
 	 * @author Piotr Soluch
 	 */
 	public function add_meta_box($post, $meta_box) {
-		
 		$styles = '';
 		
 		// get data from the DB for current post id
-		$custom = get_post_custom($post->ID);
+		$values = get_post_custom($post->ID);
 		$fields = $meta_box['args']['fields'];
 
 		wp_nonce_field(basename(__FILE__), 'add_meta_box_nonce');
 
 		// for each field in a box
 		foreach ($fields as $field) {
-			$value = '';
-
-			// get if the value is saved
-			if (isset($custom[$field['id']][0]))
-				$value = $custom[$field['id']][0];
-
-			if (empty($value)) {
-				if (isset($field['default_value'])) {
-					$value = $field['default_value'];
-				}
-			}
-
-			
 			$field['label'] = 1;
-					
-			// create a form field based on the type of field
-			switch ($field['type']) {
-
-				// text field
-				case 'text':
-				case 'password':
-				case 'email':
-				case 'number':
-				case 'range':
-				case 'color':
-				case 'url':
-					
-					if (!isset($field['attributes']['size']))
-						$field['attributes']['size'] = 30;
-					
-					$field['text'] =  '<input type="' . $field['type'] . '" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '"';
-					if (isset($field['attributes']))
-						$field['text'].= $this->meta_box_attributes($field['attributes']);
-					
-					$field['text'].= '/>';
-					
-					break;
-					
-				case 'date':
-					wp_register_style('jquery-ui', get_bloginfo ('template_directory') . '/static/jquery-ui/jquery-ui-1.8.17.custom.css', '', '', 'all');
-
-					wp_enqueue_style('jquery-ui');
-					wp_enqueue_script('jquery');
-					wp_enqueue_script('jquery-ui-core');
-					wp_enqueue_script('jquery-ui-datepicker');
-					
-					$field['text'] =  '<input type="text" name="' . $field['id'] . '" id="' . $field['id'] . '" value="' . $value . '"';
-					if (isset($field['attributes']))
-						$field['text'].= $this->meta_box_attributes($field['attributes']);
-					
-					$field['text'].= '/>';
-					
-					$field['text'].= '<script type="text/javascript">
-							jQuery(function($){
-								$(\'#' . $field['id'] .'\').datepicker({';
-						if (isset ($field['options']) && is_array($field['options'])) {
-						
-							foreach ($field['options'] as $key => $option) {
-							
-								$field['text'].= "'".$key."' : '".$option."',";
-							}
-						}
-						$field['text'].= '	});
-							});
-						</script>';
-					
-					
-					break;
-
-				// textarea field
-				case 'textarea':
-					if (!isset($field['attributes']['rows']))
-						$field['attributes']['rows'] = 6;
-					if (!isset($field['attributes']['cols']))
-						$field['attributes']['cols'] = 60;
-					
-					$field['text'] = '<textarea name="' . $field['id'] . '" id="' . $field['id'] . '"';
-					if (isset($field['attributes']))
-						$field['text'].= $this->meta_box_attributes($field['attributes']);
-					$field['text'].= '>' . $value . '</textarea>';
-					
-					break;
-
-				// wysiwyg editor field
-				case 'editor':
-					ob_start();
-					wp_editor($value, $field['id'], array());
-					$field['text'] = ob_get_clean();
-					
-					break;
-
-				// checkboxes
-				case 'checkbox':
-					if ($value)
-						$values = maybe_unserialize($value);
-					else
-						$values = array();
-					
-					$field['text'] = '<span>' . $field['name'] . '</span>';
-					$field['text'].= '<ul>';
-					if (is_array($field['values'])) {
-						foreach ($field['values'] AS $field_key => $field_value) {
-							$field['text'].= '<li>';
-							$field['text'].= '<input type="checkbox" name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
-							if (in_array($field_key, $values))
-								$field['text'].= 'checked="checked" ';
-							
-							$field['text'].= $this->meta_box_attributes($field['attributes']);
-							$field['text'].= ' /> ';
-							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
-							$field['text'].= '</li>';
-						}
-					}
-					$field['text'].= '</ul>';
-					
-					$field['label'] = 0;
-					
-					break;
-				
-				// radio 
-				case 'radio':
-					$field['text'] = '<span>' . $field['name'] . '</span>';
-					$field['text'].= '<ul>';
-					if (is_array($field['values'])) {
-						foreach ($field['values'] AS $field_key => $field_value) {
-							$field['text'].= '<li>';
-							$field['text'].= '<input type="radio" name="' . $field['id'] . '" id="' . $field['id'] . '_' . $field_key . '" value="' . $field_key . '" ';
-							if ($value == $field_key)
-								echo 'checked="checked" ';
-							$field['text'].= $this->meta_box_attributes($field['attributes']);
-							$field['text'].= '/> ';
-							$field['text'].= '<label for="' . $field['id'] . '_' . $field_key . '">' . $field_value . '</label>';
-							$field['text'].= '</li>';
-						}
-					}
-					$field['text'].= '</ul>';
-					
-					$field['label'] = 0;
-					
-					break;
-				
-				// selectbox
-				case 'select':
-					$field['text'] = '<select id="' . $field['id'] . '" name="' . $field['id'] . '"';
-					$field['text'].= $this->meta_box_attributes($field['attributes']);
-					$field['text'].= '>';
-					if (is_array($field['values'])) {
-						foreach ($field['values'] AS $field_key => $field_value) {
-							$field['text'].= '<option value="' . $field_key . '" ';
-
-							if ($value == $field_key)
-								$field['text'].= 'selected="selected" ';
-							$field['text'].= '> ';
-							$field['text'].= $field_value;
-							$field['text'].= '</option>';
-						}
-					}
-					$field['text'].= '</select>';
-					
-					break;
-					
-				// multi select
-				case 'multiselect':
-					if ($value)
-						$values = maybe_unserialize($value);
-					else
-						$values = array();
-					
-					$field['text'].= '<select id="' . $field['id'] . '" name="' . $field['id'] .'[]" size="' . $field['size'] . '" multiple="multiple"';
-					$field['text'].= $this->meta_box_attributes($field['attributes']);
-					$field['text'].= '>';
-					if (is_array($field['values'])) {
-						foreach ($field['values'] AS $field_key => $field_value) {
-							$field['text'].= '<option value="' . $field_key . '" ';
-
-							if (in_array($field_key, $values))
-								$field['text'].= 'selected="selected" ';
-							$field['text'].= '> ';
-							$field['text'].= $field_value;
-							$field['text'].= '</option>';
-						}
-					}
-					$field['text'].= '</select>';
-					
-					break;
-
-				// post link
-				case 'post_link':
-					$field['text'] = '<select id="' . $field['id'] . '" name="' . $field['id'] .'"';
-					$field['text'].= $this->meta_box_attributes($field['attributes']);
-					$field['text'].= '>';
-					$field['text'].= '<option value="0"> -- select -- </option>';
-					
-					if (!isset($field['arguments']['posts_per_page']))
-						$field['arguments']['posts_per_page'] = '-1';
-						
-					$loop_links = new WP_Query( $field['arguments'] );
-					
-					$all_links = array();
-					
-					$posts = $loop_links->posts;
-					
-					
-					foreach ($posts as $post) {
-						if ($value == $post->ID)
-							$post->selected = 1;
-						$all_links[$post->post_parent][$post->ID] = $post;
-					}
-					
-					$field['text'].= $this->get_links($all_links);
-					$field['text'].= '</select>';
-					break;
-				
-				case 'file':
-					
-					break;
-			}
-			echo $this->meta_box_field($field);
+			
+			echo $this->meta_box_field($field, $values);
 		}
 	}
 	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
+	private function meta_box_field($field, $values) {
+		global $CP_Language;
+		
+		$return = '<div class="cp_meta_box field_' . $field['type'] . '">';
+		if ($field['label']) {
+			$return.= '<label';
+			
+			if (isset($field['title']) && $field['title']) {
+				$return.= ' for="main-post-title"';
+			}
+			else {
+				$return.= ' for='.$field['id'] .'"';
+			}
+			$return.= '>' . $field['name'];
+				
+			if (isset($field['attributes']['required']) && $field['attributes']['required'])
+				$return.= ' *';
+
+			$return.= '</label>';
+		}
+		
+		$languages = $CP_Language->get_languages();
+		
+		$return.= '<div class="langs" id="langs_'.$field['id'].'">';
+		if (isset($field['translation']) && $field['translation']) {
+			
+			if (!isset($_COOKIE['langs_'.$field['id']])) {
+				$active = $languages[0]['code'];
+			}
+			else {
+				$active = $_COOKIE['langs_'.$field['id']];
+			}
+			
+			foreach ($languages as $language) {
+				$return.= '<span id="_'.$field['id'].'_'.$language['code'].'" class="option';
+				if ($active == $language['code'])
+					$return.= ' active';
+				$return.= '">'.$language['name'].'</span>';
+			}
+			
+			$return.= '<div class="langs_list">';
+			
+			foreach ($languages as $language) {
+				
+				$return.= '<div id="div_'.$field['id'].'_'.$language['code'].'"';
+				if ($active == $language['code'])
+					$return.= ' class="active"';
+				$return.= '>';
+				$text = $this->show_field($field, $values, $language);
+				$return.= $this->meta_box_field_content($field, $text);
+				$return.= '</div>';
+			}
+			$return.= '</div>';
+		}
+		else {
+			$text = $this->show_field($field, $values);
+			$return.= $this->meta_box_field_content($field, $text);
+		}
+		$return.= '</div>';
+		
+		$return.= '</div>';
+		
+		return $return;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
+	private function show_field($field, $values, $language = array()) {
+		
+		if (isset($language['postmeta_suffix'])) {
+			$suffix = $language['postmeta_suffix'];
+		}
+		else {
+			$suffix = '';
+		}
+		
+		$value = '';
+
+		// get if the value is saved
+		if (isset($values[$field['id'] . $suffix][0]))
+			$value = $values[$field['id'] . $suffix][0];
+
+		if (empty($value)) {
+			if (isset($field['default_value'])) {
+				$value = $field['default_value'];
+			}
+		}
+		
+		// create a form field based on the type of field
+		switch ($field['type']) {
+
+			// text field
+			case 'text':
+			case 'password':
+			case 'email':
+			case 'number':
+			case 'range':
+			case 'color':
+			case 'url':
+
+				if (!isset($field['attributes']['size']))
+					$field['attributes']['size'] = 30;
+
+				$field['text'] =  '<input type="' . $field['type'] . '" name="' . $field['id'] . $suffix . '" value="' . $value . '"';
+				
+				if (isset($field['title']) && $field['title'] && $language['default'])
+					$field['text'].= 'id="main-post-title"';
+				else 
+					$field['text'].= 'id='.$field['id'] . $suffix.'"';
+
+				if (isset($field['attributes']))
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+
+				$field['text'].= '/>';
+
+				break;
+
+			case 'date':
+				wp_register_style('jquery-ui', get_bloginfo ('template_directory') . '/static/jquery-ui/jquery-ui-1.8.17.custom.css', '', '', 'all');
+
+				wp_enqueue_style('jquery-ui');
+				wp_enqueue_script('jquery');
+				wp_enqueue_script('jquery-ui-core');
+				wp_enqueue_script('jquery-ui-datepicker');
+
+				$field['text'] =  '<input type="text" name="' . $field['id'] . $suffix . '" id="' . $field['id'] . $suffix . '" value="' . $value . '"';
+				if (isset($field['attributes']))
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+
+				$field['text'].= '/>';
+
+				$field['text'].= '<script type="text/javascript">
+						jQuery(function($){
+							$(\'#' . $field['id'] . $suffix .'\').datepicker({';
+					if (isset ($field['options']) && is_array($field['options'])) {
+
+						foreach ($field['options'] as $key => $option) {
+
+							$field['text'].= "'".$key."' : '".$option."',";
+						}
+					}
+					$field['text'].= '	});
+						});
+					</script>';
+
+
+				break;
+
+			// textarea field
+			case 'textarea':
+				if (!isset($field['attributes']['rows']))
+					$field['attributes']['rows'] = 6;
+				if (!isset($field['attributes']['cols']))
+					$field['attributes']['cols'] = 60;
+
+				$field['text'] = '<textarea name="' . $field['id'] . $suffix . '" id="' . $field['id'] . $suffix . '"';
+				if (isset($field['attributes']))
+					$field['text'].= $this->meta_box_attributes($field['attributes']);
+				$field['text'].= '>' . $value . '</textarea>';
+
+				break;
+
+			// wysiwyg editor field
+			case 'editor':
+				ob_start();
+				wp_editor($value, $field['id'] . $suffix , array());
+				$field['text'] = ob_get_clean();
+
+				break;
+
+			// checkboxes
+			case 'checkbox':
+				if ($value)
+					$values = maybe_unserialize($value);
+				else
+					$values = array();
+
+				$field['text'] = '<span class="clm">' . $field['name'] . '</span>';
+				$field['text'].= '<ul>';
+				if (is_array($field['values'])) {
+					foreach ($field['values'] AS $field_key => $field_value) {
+						$field['text'].= '<li>';
+						$field['text'].= '<input type="checkbox" name="' . $field['id'] . $suffix . '[]" id="' . $field['id'] . $suffix . '_' . $field_key . '" value="' . $field_key . '" ';
+						if (in_array($field_key, $values))
+							$field['text'].= 'checked="checked" ';
+
+						if (!isset($field['attributes']))
+							$field['attributes'] = array();
+						
+						$field['text'].= $this->meta_box_attributes($field['attributes']);
+						$field['text'].= ' /> ';
+						$field['text'].= '<label for="' . $field['id'] . $suffix . '_' . $field_key . '">' . $field_value . '</label>';
+						$field['text'].= '</li>';
+					}
+				}
+				$field['text'].= '</ul>';
+
+				$field['label'] = 0;
+
+				break;
+
+			// radio 
+			case 'radio':
+				$field['text'] = '<span class="clm">' . $field['name'] . '</span>';
+				$field['text'].= '<ul>';
+				if (is_array($field['values'])) {
+					foreach ($field['values'] AS $field_key => $field_value) {
+						$field['text'].= '<li>';
+						$field['text'].= '<input type="radio" name="' . $field['id'] . $suffix . '" id="' . $field['id'] . $suffix . '_' . $field_key . '" value="' . $field_key . '" ';
+						if ($value == $field_key)
+							$field['text'].= 'checked="checked" ';
+						$field['text'].= $this->meta_box_attributes($field['attributes']);
+						$field['text'].= '/> ';
+						$field['text'].= '<label for="' . $field['id'] . $suffix . '_' . $field_key . '">' . $field_value . '</label>';
+						$field['text'].= '</li>';
+					}
+				}
+				$field['text'].= '</ul>';
+
+				$field['label'] = 0;
+
+				break;
+
+			// selectbox
+			case 'select':
+				$field['text'] = '<select id="' . $field['id'] . $suffix . '" name="' . $field['id'] . $suffix . '"';
+				$field['text'].= $this->meta_box_attributes($field['attributes']);
+				$field['text'].= '>';
+				if (is_array($field['values'])) {
+					foreach ($field['values'] AS $field_key => $field_value) {
+						$field['text'].= '<option value="' . $field_key . '" ';
+
+						if ($value == $field_key)
+							$field['text'].= 'selected="selected" ';
+						$field['text'].= '> ';
+						$field['text'].= $field_value;
+						$field['text'].= '</option>';
+					}
+				}
+				$field['text'].= '</select>';
+
+				break;
+
+			// multi select
+			case 'multiselect':
+				if ($value)
+					$values = maybe_unserialize($value);
+				else
+					$values = array();
+
+				if (!isset($field['size']))
+					$field['size'] = 1;
+				
+				$field['text'] = '<select id="' . $field['id'] . $suffix . '" name="' . $field['id'] . $suffix .'[]" size="' . $field['size'] . '" multiple="multiple"';
+				$field['text'].= $this->meta_box_attributes($field['attributes']);
+				$field['text'].= '>';
+				if (is_array($field['values'])) {
+					foreach ($field['values'] AS $field_key => $field_value) {
+						$field['text'].= '<option value="' . $field_key . '" ';
+
+						if (in_array($field_key, $values))
+							$field['text'].= 'selected="selected" ';
+						$field['text'].= '> ';
+						$field['text'].= $field_value;
+						$field['text'].= '</option>';
+					}
+				}
+				$field['text'].= '</select>';
+
+				break;
+
+			// post link
+			case 'post_link':
+				$field['text'] = '<select id="' . $field['id'] . $suffix . '" name="' . $field['id'] . $suffix .'"';
+				$field['text'].= $this->meta_box_attributes($field['attributes']);
+				$field['text'].= '>';
+				$field['text'].= '<option value="0"> -- select -- </option>';
+
+				if (!isset($field['arguments']['posts_per_page']))
+					$field['arguments']['posts_per_page'] = '-1';
+
+				$loop_links = new WP_Query( $field['arguments'] );
+
+				$all_links = array();
+
+				$posts = $loop_links->posts;
+
+
+				foreach ($posts as $post) {
+					if ($value == $post->ID)
+						$post->selected = 1;
+					$all_links[$post->post_parent][$post->ID] = $post;
+				}
+
+				$field['text'].= $this->get_links($all_links);
+				$field['text'].= '</select>';
+				break;
+
+			case 'file':
+				$field['text'] = '';
+				break;
+		}
+		
+		return $field['text'];
+	}
+	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
+	public function meta_box_field_content($field, $text) {
+		$return = '';
+		
+		if (isset($field['prefix']) && $field['prefix'])
+			$return.= '<div class="prefix">' . $field['prefix'] . '</div>';
+		
+		$return.= $text;
+		
+		if (isset($field['suffix']) && $field['suffix'])
+			$return.= '<div class="suffix">' . $field['suffix'] . '</div>';
+		
+		if (isset($field['description']) && $field['description'])
+			$return.= '<div class="description">' . $field['description'] . '</div>';
+		
+		return $return;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
 	private function get_links($links, $parent_id = 0, $indent = 0) {
 		$return = '';
 
@@ -364,33 +497,13 @@ class CP_Mb {
 		return $return;
 	}
 	
-	private function meta_box_field($field) {
-		$return = '<div class="cp_meta_box field_' . $field['type'] . '">';
-		if ($field['label']) {
-			$return.= '<label for="' . $field['id'] . '">' . $field['name'];
-
-			if (isset($field['attributes']['required']) && $field['attributes']['required'])
-				$return.= ' *';
-
-			$return.= '</label>';
-		}
-		
-		if (isset($field['prefix']) && $field['prefix'])
-			$return.= '<div class="prefix">' . $field['prefix'] . '</div>';
-		
-		$return.= $field['text'];
-		
-		if (isset($field['suffix']) && $field['suffix'])
-			$return.= '<div class="suffix">' . $field['suffix'] . '</div>';
-		
-		if (isset($field['description']) && $field['description'])
-			$return.= '<div class="description">' . $field['description'] . '</div>';
-		
-		$return.= '</div>';
-		
-		return $return;
-	}
-	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
 	private function meta_box_attributes($attributes) {
 		$styles = '';
 		$return = '';
@@ -419,7 +532,7 @@ class CP_Mb {
 					case 'max':
 					case 'step':
 					case 'autocomplete':
-						if ($attribute !== false)
+						if ($attribute !== false && $attribute !='')
 						$return.= ' ' . $a_key . '="' . $attribute . '"';
 						break;
 				}
@@ -432,11 +545,13 @@ class CP_Mb {
 		return $return;
 	}
 
+// -------------------- SAVING --------------------	
+	
 	/**
-	 * Save meta boxes
+	 * 
 	 *
 	 * @access type public
-	 * @return type none save the boxes
+	 * @return type 
 	 * @author Piotr Soluch
 	 */
 	public function save_meta_boxes($post_id, $post) {
@@ -465,8 +580,7 @@ class CP_Mb {
 	 * @author Piotr Soluch
 	 */
 	public function save_meta_box_fields($fields) {
-		global $post;
-		global $post_id;
+		global $post, $post_id, $CP_Language;
 		
 		// for new posts
 		if ($post === null)
@@ -482,37 +596,62 @@ class CP_Mb {
 		// Check if the current user has permission to edit the post.
 		if (!current_user_can($post_type->cap->edit_post, $post_id))
 			return;
+		
+		$languages = $CP_Language->get_languages();
 
 		// for each field in a box
 		foreach ($fields as $field) {
 
 			// Get the meta key.
 			$meta_key = $field['id'];
-
-			// Get the posted data
-			$new_meta_value = ( isset($_POST[$meta_key]) ? $_POST[$meta_key] : '' );
-
-			// Get the meta value of the custom field key.
-			$meta_value = get_post_meta($post_id, $meta_key, true);
-
+			
 			//can't save during autosave, otherwise it saves blank values (there's a problem that meta box values are not send with POST during autosave. Probably fixable
-			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
 				return;
+			}
+			else if (isset($field['translation']) && $field['translation']) {
+				
+				foreach ($languages as $language) {
 
-			// If a new meta value was added and there was no previous value, add it.
-			if ($new_meta_value && '' == $meta_value)
-				add_post_meta($post_id, $meta_key, $new_meta_value, true);
-
-			// If the new meta value does not match the old value, update it.
-			elseif ($new_meta_value && $new_meta_value != $meta_value)
-				update_post_meta($post_id, $meta_key, $new_meta_value);
-
-			// If there is no new meta value but an old value exists, delete it.
-			elseif ('' == $new_meta_value && $meta_value)
-				delete_post_meta($post_id, $meta_key, $meta_value);
+					$this->save_meta_box_field($field['id'].$language['postmeta_suffix'], $post_id);
+				}
+			}
+			else {
+				$this->save_meta_box_field($meta_key, $post_id);
+			}
 		}
 	}
 	
+	public function save_meta_box_field($meta_key, $post_id) {
+		
+		// Get the posted data
+		$new_meta_value = ( isset($_POST[$meta_key]) ? $_POST[$meta_key] : '' );
+
+		// Get the meta value of the custom field key.
+		$meta_value = get_post_meta($post_id, $meta_key, true);
+		
+		// If a new meta value was added and there was no previous value, add it.
+		if ($new_meta_value && $meta_value == '')
+			add_post_meta($post_id, $meta_key, $new_meta_value, true);
+
+		// If the new meta value does not match the old value, update it.
+		else if ($new_meta_value && $new_meta_value != $meta_value)
+			update_post_meta($post_id, $meta_key, $new_meta_value);
+
+		// If there is no new meta value but an old value exists, delete it.
+		elseif (!$new_meta_value && $meta_value)
+			delete_post_meta($post_id, $meta_key, $meta_value);
+	}
+	
+// -------------------- OTHER --------------------
+	
+	/**
+	 * 
+	 *
+	 * @access type public
+	 * @return type 
+	 * @author Piotr Soluch
+	 */
 	public function get_value($field, $value) {
 		
 		switch($field['type']) {

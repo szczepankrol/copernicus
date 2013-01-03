@@ -12,7 +12,7 @@
  */
 class CP {
 
-	private static $config;
+	private static $config = array();
 	
 	public static $smarty;
 	
@@ -40,6 +40,20 @@ class CP {
 		// load & init cleanup class
 		if (self::load_class('cleanup'))
 			$CP_Cleanup = new CP_Cleanup;
+		
+		// load & init language class
+		if (self::load_class('language')) {
+			global $CP_Language;
+			$CP_Language = new CP_Language;
+		}
+		
+		// load & init language class
+		if (self::load_class('location'))
+			$CP_Location = new CP_Location;
+		
+		// load & init language class
+		if (self::load_class('translation'))
+			$CP_Translation = new CP_Translation;
 		
 		// load & init custom post types class
 		if (self::load_class('cpt'))
@@ -197,11 +211,24 @@ class CP {
 	
 /* -------------- private -------------- */
 	
-	private static function load_config() {
-		
-		// get config
-		require_once get_stylesheet_directory() . '/config/core.config.php';
-		self::$config = $cp_config;
+	private static function load_config() {	
+		// get all files from config folder
+		if ($handle = opendir(get_stylesheet_directory() . '/config/')) {
+
+			// for each file with .config.php extension
+			while (false !== ($filename = readdir($handle))) {
+				
+				if (preg_match('/.config.php$/', $filename)) {
+				
+					// get config array from file
+					require_once get_stylesheet_directory() . '/config/'.$filename;
+					
+					// merge with config
+					self::$config = array_merge(self::$config, $cp_config);
+				}
+			}
+			closedir($handle);
+		}
 	}
 	
 	private static function load_class($class_name) {
