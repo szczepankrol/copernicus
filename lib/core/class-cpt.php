@@ -89,6 +89,9 @@ class CP_Cpt {
 		// create an array for supported elements
 		$supports = array();
 
+		// force to always include title
+		$cpt['support']['title'] = true;
+		
 		// create a list of supported fields
 		foreach ($cpt['support'] as $key => $value) {
 			if ($value)
@@ -104,6 +107,19 @@ class CP_Cpt {
 		register_post_type(
 			$cpt['settings']['name'], $settings
 		);
+	}
+	
+	public function get_parent_page($post_type) {
+		
+		foreach ($this->cpt as $cpt) {
+			if ($cpt['settings']['name'] == $post_type) {
+				if (isset($cpt['settings']['parent_page'])) {
+					return $cpt['settings']['parent_page'];
+				}
+			}
+		}
+		
+		return 0;
 	}
 }
 
