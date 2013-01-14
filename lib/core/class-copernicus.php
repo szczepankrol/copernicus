@@ -12,7 +12,7 @@
  */
 class CP {
 
-	private static $config = array();
+	private static $config;
 	
 	public static $smarty;
 	
@@ -21,7 +21,6 @@ class CP {
 /* -------------- methods -------------- */	
 	
 	public static function init() {
-		session_start();
 		
 		// load config file
 		self::load_config();
@@ -42,25 +41,9 @@ class CP {
 		if (self::load_class('cleanup'))
 			$CP_Cleanup = new CP_Cleanup;
 		
-		// load & init language class
-		if (self::load_class('language')) {
-			global $CP_Language;
-			$CP_Language = new CP_Language;
-		}
-		
-		// load & init language class
-		if (self::load_class('location'))
-			$CP_Location = new CP_Location;
-		
-		// load & init language class
-		if (self::load_class('translation'))
-			$CP_Translation = new CP_Translation;
-		
 		// load & init custom post types class
-		if (self::load_class('cpt')) {
-			global $CP_Cpt;
+		if (self::load_class('cpt'))
 			$CP_Cpt = new CP_Cpt;
-		}
 		
 		// load & init custom post types class
 		if (self::load_class('mb')) {
@@ -83,10 +66,6 @@ class CP {
 		// load & init user meta boxes class
 		if (self::load_class('umb'))
 			$CP_Umb = new CP_Umb;
-		
-		// load & init user meta boxes class
-		if (self::load_class('permalink'))
-			$CP_Permalink = new CP_Permalink;
 		
 		// load & init user meta boxes class
 		if (self::load_class('menu')) {
@@ -130,7 +109,7 @@ class CP {
 		// add css files
 		add_filter('wp_enqueue_scripts', array('CP','add_css'));
 	}
-
+	
 	public static function header() {
 		ob_start();
 		wp_head();
@@ -162,14 +141,11 @@ class CP {
 
 	public static function view($template) {
 		
-		$view = '';
+		while ( have_posts() ) : the_post();
 		
-		if (!have_posts()) {
-			$view.= self::$smarty->fetch($template);
-		}
-		else {
-			$view.= self::$smarty->fetch($template);
-		}
+		$view = self::$smarty->fetch($template);
+		
+		endwhile;
 		
 		echo $view."\n";
 	}
@@ -221,24 +197,11 @@ class CP {
 	
 /* -------------- private -------------- */
 	
-	private static function load_config() {	
-		// get all files from config folder
-		if ($handle = opendir(get_stylesheet_directory() . '/config/')) {
-
-			// for each file with .config.php extension
-			while (false !== ($filename = readdir($handle))) {
-				
-				if (preg_match('/.config.php$/', $filename)) {
-				
-					// get config array from file
-					require_once get_stylesheet_directory() . '/config/'.$filename;
-					
-					// merge with config
-					self::$config = array_merge(self::$config, $cp_config);
-				}
-			}
-			closedir($handle);
-		}
+	private static function load_config() {
+		
+		// get config
+		require_once get_stylesheet_directory() . '/config/core.config.php';
+		self::$config = $cp_config;
 	}
 	
 	private static function load_class($class_name) {
