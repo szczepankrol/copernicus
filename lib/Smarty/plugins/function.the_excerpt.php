@@ -14,19 +14,21 @@
  *
  */
 function smarty_function_the_excerpt($params, $template) {
-	$more_link_text = '';
-	$stripteaser = false;
+    
+    global $more;
+	$more = 0;
 	
-	if (isset($params['more_link_text']))
-		$more_link_text = $params['more_link_text'];
+    $the_id = get_the_ID();
+	
+    $post= get_post_meta($the_id, $params['key'], 1);
 
-	if (isset($params['stripteaser']))
-		$stripteaser = $params['stripteaser'];
+
+
+
+ return substr( $post, 0, strpos($post, ' ', $params['lenght']) );
+
 	
-	$content = get_the_excerpt($more_link_text, $stripteaser);
-	$content = apply_filters('the_content', $content);
 	
-    return $content;
 }
-
+	
 ?>

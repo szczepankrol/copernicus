@@ -13,12 +13,19 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_the_content($params, $template) {
-	$more_link_text = '';
+
+
+function smarty_function_the_content_short($params, $template) {
+	//new dBug($params);
+	 global $more;
+		$more = 0;
+	$link = $params['id'];
+	$more_link_text = '<a class="fancybox" href="#more'.$link.'">more</a>';
 	$stripteaser = false;
-	
-	if (isset($params['more_link_text']))
-		$more_link_text = $params['more_link_text'];
+	   
+
+	//if (isset($params['more_link_text']))
+	//	$more_link_text = $params['more_link_text'];
 
 	if (isset($params['stripteaser']))
 		$stripteaser = $params['stripteaser'];

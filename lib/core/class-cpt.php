@@ -89,6 +89,9 @@ class CP_Cpt {
 		// create an array for supported elements
 		$supports = array();
 
+		// force to always include title
+		$cpt['support']['title'] = true;
+		
 		// create a list of supported fields
 		foreach ($cpt['support'] as $key => $value) {
 			if ($value)
