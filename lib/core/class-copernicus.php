@@ -21,6 +21,7 @@ class CP {
 /* -------------- methods -------------- */	
 	
 	public static function init() {
+		session_start();
 		
 		// load config file
 		self::load_config();
@@ -56,8 +57,10 @@ class CP {
 			$CP_Translation = new CP_Translation;
 		
 		// load & init custom post types class
-		if (self::load_class('cpt'))
+		if (self::load_class('cpt')) {
+			global $CP_Cpt;
 			$CP_Cpt = new CP_Cpt;
+		}
 		
 		// load & init custom post types class
 		if (self::load_class('mb')) {
@@ -80,6 +83,10 @@ class CP {
 		// load & init user meta boxes class
 		if (self::load_class('umb'))
 			$CP_Umb = new CP_Umb;
+		
+		// load & init user meta boxes class
+		if (self::load_class('permalink'))
+			$CP_Permalink = new CP_Permalink;
 		
 		// load & init user meta boxes class
 		if (self::load_class('menu')) {
@@ -123,7 +130,7 @@ class CP {
 		// add css files
 		add_filter('wp_enqueue_scripts', array('CP','add_css'));
 	}
-	
+
 	public static function header() {
 		ob_start();
 		wp_head();
@@ -157,11 +164,12 @@ class CP {
 		
 		$view = '';
 		
-		while ( have_posts() ) : the_post();
-	
-		$view.= self::$smarty->fetch($template);
-		
-		endwhile;
+		if (!have_posts()) {
+			$view.= self::$smarty->fetch($template);
+		}
+		else {
+			$view.= self::$smarty->fetch($template);
+		}
 		
 		echo $view."\n";
 	}

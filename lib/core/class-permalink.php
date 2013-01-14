@@ -45,7 +45,9 @@ class CP_Permalink {
 	}
 	
 	function add_rewrite_rules() {
-		//add_rewrite_tag('%bcat%', '([a-z0-9_]+)','');
+		add_rewrite_tag('%action%', '([a-z]+)','');
+		add_rewrite_tag('%lang%', '([a-z]{2})','');
+		add_rewrite_tag('%token%', '(.*)','');
 		
 		add_rewrite_rule(
 			'teaching/open-student-projects/([^/]+)/?$',
@@ -62,6 +64,12 @@ class CP_Permalink {
 		add_rewrite_rule(
 			'people/former-members/([^/]+)/?$',
 			'index.php?member=$matches[1]',
+			'top'
+		);
+		
+		add_rewrite_rule(
+			'[a-z]{2}/?$',
+			'index.php?action=change_language&lang=$matches[1]',
 			'top'
 		);
 	}

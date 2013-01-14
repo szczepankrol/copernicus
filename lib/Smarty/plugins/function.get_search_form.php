@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -19,16 +20,12 @@
  * @param Smarty_Internal_Template $template template object
  * @return string|null
  */
-function smarty_function_get_search_form()
-{
+function smarty_function_get_search_form() {
 
-    global $wp_query;
-$total_results = $wp_query->found_posts;
+	global $wp_query;
+	$total_results = get_search_form();
 
-
-
-    return $total_results;
-    
+	return $total_results;
 }
 
 ?>

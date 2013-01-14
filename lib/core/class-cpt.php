@@ -108,6 +108,19 @@ class CP_Cpt {
 			$cpt['settings']['name'], $settings
 		);
 	}
+	
+	public function get_parent_page($post_type) {
+		
+		foreach ($this->cpt as $cpt) {
+			if ($cpt['settings']['name'] == $post_type) {
+				if (isset($cpt['settings']['parent_page'])) {
+					return $cpt['settings']['parent_page'];
+				}
+			}
+		}
+		
+		return 0;
+	}
 }
 
 ?>

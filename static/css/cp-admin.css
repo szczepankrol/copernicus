@@ -24,7 +24,7 @@
     margin-top: 26px; }
   .cp_meta_box .wp-editor-wrap {
     display: inline-block;
-    width: 80%;
+    width: 100%;
     min-width: 484px; }
   .cp_meta_box.field_checkbox span.clm, .cp_meta_box.field_radio span.clm {
     width: 20%;
@@ -71,5 +71,25 @@
         display: none; }
         .cp_meta_box .langs > .langs_list > div.active {
           display: block; }
+  .cp_meta_box .cp-files {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 3px; }
+    .cp_meta_box .cp-files div {
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 3px;
+      margin: 10px 0 0 0;
+      position: relative; }
+    .cp_meta_box .cp-files span {
+      margin-left: 10px; }
+    .cp_meta_box .cp-files .cp-remove {
+      margin: 0 0 0 10px;
+      position: absolute;
+      right: 10px;
+      bottom: 10px; }
+
+.mceLayout {
+  background: #fff; }
 
 /* @end */

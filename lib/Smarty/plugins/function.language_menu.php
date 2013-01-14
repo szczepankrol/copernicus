@@ -18,11 +18,11 @@ function smarty_function_language_menu($params, $template) {
 	
 	$languages = $CP_Language->get_languages();
 	
-	$menu = '<nav><ul>';
+	$menu = '';
 	
 	foreach ($languages as $key => $language) {
 		$menu.= '<li>';
-		$menu.= '<a href="/'.$language['code'].'/"';
+		$menu.= '<a href="/index.php?lang='.$language['code'].'"';
 		if ($language['code'] == LANGUAGE) {
 			$menu.= ' class="active"';
 		}
@@ -32,7 +32,6 @@ function smarty_function_language_menu($params, $template) {
 		$menu.= '</li>';
 	}
 	
-	$menu.= '</ul></nav>';
 	return $menu;
 	
     

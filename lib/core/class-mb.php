@@ -214,6 +214,10 @@ class CP_Mb {
 			$suffix = '';
 		}
 		
+		if (!isset($language['default'])) {
+			$language['default'] = 1;
+		}
+		
 		$value = '';
 
 		// get if the value is saved
@@ -243,7 +247,7 @@ class CP_Mb {
 
 				$field['text'] =  '<input type="' . $field['type'] . '" name="' . $field['id'] . $suffix . '" value="' . $value . '"';
 				
-				if (isset($field['title']) && $field['title'] && $language['default'])
+				if (isset($field['title']) && $field['title'] && ($language['default']))
 					$field['text'].= 'id="main-post-title"';
 				else 
 					$field['text'].= 'id='.$field['id'] . $suffix.'"';
@@ -437,7 +441,93 @@ class CP_Mb {
 				break;
 
 			case 'file':
-				$field['text'] = '';
+				
+				// This function loads in the required media files for the media manager.
+				wp_enqueue_media();
+				
+				if ($field['multiple']) {
+					$go_function = 'media_upload_multiple';
+					switch($field['filetype']) {
+						case 'image':
+							$button = 'Add Images';
+							$button_window = 'Add Images';
+							$title_window = 'Upload or Choose Images';
+						break;
+						case 'file':
+							$button = 'Add Files';
+							$button_window = 'Add Files';
+							$title_window = 'Upload or Choose Files';
+						break;
+						case 'video':
+							$button = 'Add Videos';
+							$button_window = 'Add Videos';
+							$title_window = 'Upload or Choose Videos';
+						break;
+					}
+				}
+				else {
+					$go_function = 'media_upload_single';
+					switch($field['filetype']) {
+						case 'image':
+							$button = 'Add an Image';
+							$button_window = 'Add an Image';
+							$title_window = 'Upload or Choose an Image';
+						break;
+						case 'file':
+							$button = 'Add a File';
+							$button_window = 'Add a File';
+							$title_window = 'Upload or Choose a File';
+						break;
+						case 'video':
+							$button = 'Add a Video';
+							$button_window = 'Add a Video';
+							$title_window = 'Upload or Choose a Video';
+						break;
+					}
+				}
+				
+				if ($value) {
+					$values = maybe_unserialize($value);
+				}
+				else {
+					$values = array();
+				}
+				
+				$disabled = '';
+				
+				if (!$field['multiple'] && count($values) == 1) {
+					$disabled = ' disabled="disabled"';
+				}
+				
+				$field['text'] = '<div id="container_'.$field['id'].'" class="cp-files">';
+				$field['text'].= '<a href="javascript:'.$go_function.'(\''.$field['filetype'].'\',\''.$field['id'].'\',\''.$title_window.'\', \''.$button_window.'\');" '.$disabled.' class="cp-open-media button button-primary" id="button_'.$field['id'].'" title="' . esc_attr__( 'Add Images', 'tgm-nmp' ) . '">' . __( $button, 'tgm-nmp' ) . '</a>';
+				
+				
+				foreach ($values as $attachment) {
+					
+					$attachment_data = get_post($attachment);
+					$im = wp_get_attachment_metadata($attachment, 1);
+					
+					$field['text'].= '<div id="file-'.$attachment.'">';
+					
+					if ($field['filetype'] == 'image') {
+						$field['text'].= '<img src="'.$attachment_data->guid.'" width="100">';
+					}
+					else {
+						$image = wp_get_attachment_image_src( $attachment, 100, true);
+						if ($image[1] > 100) {
+							$image[1] = 100;
+						}
+						$field['text'].= '<img src="'.$image[0].'" width="'.$image[1].'" >';
+						$field['text'].= '<span>'.basename($attachment_data->guid).'</span>';
+					}
+					
+					$field['text'].= '<input type="hidden" name="'.$field['id'].'[]" value="'.$attachment.'">';
+					$field['text'].= '<a href="javascript:remove_image(\''.$attachment.'\');" class="cp-remove button">Remove</a>';
+					$field['text'].= '</div>';
+				}
+				
+				$field['text'].= '</div>';
 				break;
 		}
 		

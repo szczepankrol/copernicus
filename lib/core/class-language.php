@@ -43,6 +43,10 @@ class CP_Language {
 	 */
 	public function _init() {
 
+		if (isset($_GET['lang'])) {
+			$this->change_language($_GET['lang']);
+		}
+		
 		// get config
 		$config = CP::get_config();
 
@@ -99,6 +103,14 @@ class CP_Language {
 			}
 		}
 		return $languages;
+	}
+	
+	private function change_language($lang) {
+		$_SESSION['language'] = $lang;
+		$home = get_home_url();
+		
+		wp_redirect($home);
+		exit;
 	}
 }
 
