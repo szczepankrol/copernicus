@@ -53,8 +53,10 @@ class CP {
 			$CP_Location = new CP_Location;
 		
 		// load & init language class
-		if (self::load_class('translation'))
+		if (self::load_class('translation')) {
+			global $CP_Translation;
 			$CP_Translation = new CP_Translation;
+		}
 		
 		// load & init custom post types class
 		if (self::load_class('cpt')) {
@@ -290,14 +292,18 @@ class CP {
 		// load smarty
 		self::load_library(CP_PATH.'/lib/Smarty/Smarty.class.php');
 		
-		if (is_child_theme()) 
+		if (is_child_theme()) {
 			$template_dirs[] = get_stylesheet_directory() . '/templates/';
+		}
 		$template_dirs[] = CP_PATH . '/templates/';
 		
 		self::$smarty = new Smarty();
+		self::$smarty->addPluginsDir(CP_PATH.'/lib/Smarty_plugins/');
 		self::$smarty->setTemplateDir($template_dirs);
 		self::$smarty->setCompileDir(WP_CONTENT_DIR . '/smarty/templates_c/');
 		self::$smarty->setCacheDir(WP_CONTENT_DIR . '/smarty/cache/');
+		
+		//var_dump(self::$smarty->getPluginsDir());
 	}
 	
 	private static function phpthumb_init(){
