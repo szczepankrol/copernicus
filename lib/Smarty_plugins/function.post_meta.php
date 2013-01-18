@@ -23,11 +23,6 @@ function smarty_function_post_meta($params, $template) {
 	}
 
 	$post_meta = '';
-	$limit = 0;
-	
-	if (isset($params['limit'])) {
-		$limit = $params['limit'];
-	}
 
 	if (LANGUAGE_SUFFIX != '') {
 		$post_meta = get_post_meta($the_id, $params['key'] . LANGUAGE_SUFFIX);
@@ -37,7 +32,6 @@ function smarty_function_post_meta($params, $template) {
 		$post_meta = get_post_meta($the_id, $params['key']);
 	}
 
-
 	$post_meta = maybe_unserialize($post_meta);
 	$post_meta = strip_array($post_meta);
 
@@ -45,23 +39,16 @@ function smarty_function_post_meta($params, $template) {
 		$post_meta = apply_filters('the_content', $post_meta);
 	}
 
-	if (isset($params['out']))
+	if (isset($params['out'])) {
 		$template->assign($params['out'], $post_meta);
-	else
-
-
-
-	if ($limit) {
-		$post_meta_l = strlen($post_meta);
-
-		if ($limit && $post_meta_l > $limit) {
-			return substr($post_meta, 0, strpos($post_meta, ' ', $limit));
-		} else {
-			return $post_meta;
-		}
-	} else {
-		return $post_meta;
+		return;
 	}
+	
+	if (isset($params['shortcode']) && $params['shortcode']) {
+		return do_shortcode($post_meta);
+	}
+	
+	return $post_meta;
 }
 
 function strip_array($array) {

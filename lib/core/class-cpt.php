@@ -109,6 +109,11 @@ class CP_Cpt {
 		);
 	}
 	
+	/**
+	 * 
+	 * @param type $post_type
+	 * @return int
+	 */
 	public function get_parent_page($post_type) {
 		
 		foreach ($this->cpt as $cpt) {
@@ -121,6 +126,19 @@ class CP_Cpt {
 		
 		return 0;
 	}
+	
+	public function get_post_types() {
+		$post_types = array();
+		
+		foreach ($this->cpt AS $cpt) {
+			if ($cpt['settings']['active']) {
+				$post_types[] = $cpt['settings']['name'];
+			}
+		}
+		
+		return $post_types;
+	}
+	
 }
 
 ?>

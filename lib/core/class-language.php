@@ -109,7 +109,9 @@ class CP_Language {
 		$_SESSION['language'] = $lang;
 		$home = get_home_url();
 		
-		wp_redirect($home);
+		wp_redirect($_SERVER['HTTP_REFERER']);
+		
+//		wp_redirect($home);
 		exit;
 	}
 }

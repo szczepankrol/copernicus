@@ -96,6 +96,12 @@ class CP {
 			$CP_Menu = new CP_Menu;
 		}
 		
+		// load & init search class
+		if (self::load_class('search')) {
+			global $CP_Search;
+			$CP_Search = new CP_Search;
+		}
+		
 		// load & init loop class
 		if (self::load_class('loop')) {
 			global $CP_Loop;

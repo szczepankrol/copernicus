@@ -66,6 +66,7 @@ class CP_Alv {
 			add_filter('pre_get_posts', array($this, 'set_list_views_order'));
 			
 			add_action('manage_posts_custom_column', array($this, 'custom_columns'), 10, 2);
+			add_action('manage_pages_custom_column', array($this, 'custom_columns'), 10, 2);
 		}
 	}
 
@@ -87,7 +88,7 @@ class CP_Alv {
 				// if alv is active
 				if ($alv['settings']['active']) {
 					
-					if ($_GET['post_type'] == $alv['settings']['post_type']) {
+					if (isset($_GET['post_type']) && $_GET['post_type'] == $alv['settings']['post_type']) {
 						
 						$this->alv_fields = $alv['fields'];
 						$this->get_mb_fields($alv['settings']['post_type']);
@@ -110,8 +111,6 @@ class CP_Alv {
 	public function modify_list_view($columns) {
 		$new_columns = array();
 		
-		new dBug($columns);
-		
 		if (isset($columns['cb']))
 			$new_columns['cb'] = $columns['cb'];
 		
@@ -125,6 +124,12 @@ class CP_Alv {
 				case 'ID':
 					$field_name = $field;
 					break;
+				case 'menu_order':
+					$field_name = "Order";
+					break;
+				case 'featured_image':
+					$field_name = "Image";
+					break;
 				default:
 					$field_name = $this->mb_fields[$field]['name'];
 					break;
@@ -136,20 +141,31 @@ class CP_Alv {
 		return $new_columns;
 	}
 	
+	/**
+	 * 
+	 * @param type $post_type
+	 */
 	private function get_mb_fields($post_type) {
 		
 		$fields = array();
 		
 		foreach ($this->mb as $mb) {
 			
-			foreach ($mb['fields'] as $field) {
-				$fields[$field['id']] = $field;
+			if (is_array($mb['fields'])) {
+				foreach ($mb['fields'] as $field) {
+					$fields[$field['id']] = $field;
+				}
 			}
+			
 			
 		}
 		$this->mb_fields = $fields;
 	}
 	
+	/**
+	 * 
+	 * @param type $wp_query
+	 */
 	public function set_list_views_order($wp_query) {
 
 		// Get the post type from the query  
@@ -196,6 +212,12 @@ class CP_Alv {
 		}
 	}
 
+	/**
+	 * 
+	 * @global type $CP_Mb
+	 * @param type $column
+	 * @param type $post_id
+	 */
 	public function custom_columns($column, $post_id) {
 		global $CP_Mb;
 		
@@ -203,10 +225,31 @@ class CP_Alv {
 			case 'ID':
 				echo $post_id;
 				break;
+			case 'menu_order':
+				$post = get_post($post_id);
+				echo $post->menu_order;
+				break;
+			case 'featured_image':
+				$post_thumbnail_id = get_post_thumbnail_id($post_id);
+				
+				if ($post_thumbnail_id) {
+					global $CP_Image;
+					$params = array(
+						'id' => $post_thumbnail_id,
+						'w' => 50,
+						'h' => 50,
+						'zc' => 1,
+						'q' => 70
+					);
+					echo $CP_Image->image($params);
+				}
+				break;
 			default:
 				$value = get_post_meta($post_id, $column, 1);
-				$field = $this->mb_fields[$column];
-				echo $CP_Mb->get_value($field, $value);
+				if ($value) {
+					$field = $this->mb_fields[$column];
+					echo $CP_Mb->get_value($field, $value);
+				}
 				break;
 		}
 		

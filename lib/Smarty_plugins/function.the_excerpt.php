@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -14,21 +15,24 @@
  *
  */
 function smarty_function_the_excerpt($params, $template) {
-    
-    global $more;
+
+	global $more;
 	$more = 0;
+
+	$the_id = get_the_ID();
+
+	$post = get_post_meta($the_id, $params['key'], 1);
 	
-    $the_id = get_the_ID();
+	if (!$post) {
+		return null;
+	}
 	
-    $post= get_post_meta($the_id, $params['key'], 1);
+	if (isset($params['lenght'])) {
+		$post = strip_tags($post);
+		return substr($post, 0, strpos($post, ' ', $params['lenght']));
+	}
 
-
-
-
- return substr( $post, 0, strpos($post, ' ', $params['lenght']) );
-
-	
-	
+	return $post;
 }
-	
+
 ?>

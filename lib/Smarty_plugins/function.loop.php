@@ -24,12 +24,13 @@ function smarty_function_loop($params, $template) {
 	$return = '';
 	$key = 0;
 	
-	if (isset($params['template']))
-		$loop['template'] = $params['template'];
-	
 	if (isset($params['name']) && $params['name']) {
 		
 		$loop = $CP_Loop->get_loop($params['name']);
+		
+		if (isset($params['template'])) {
+			$loop['template'] = $params['template'];
+		}
 	
 		// if there are valid arguments parameters
 		if (isset($params['args']) && is_array($params['args'])) {
@@ -63,7 +64,7 @@ function smarty_function_loop($params, $template) {
 		while ( have_posts() ) : the_post();
 			CP::$smarty->assign('key', $key);
 			CP::$smarty->assign('post', $post);
-			$return.= CP::$smarty->fetch($loop['template']);;
+			$return.= CP::$smarty->fetch($params['template']);
 			$key++;
 		endwhile;
 		return $return;

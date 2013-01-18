@@ -6,8 +6,6 @@
  * @package Copernicus
  * @author Piotr Soluch
  */
-?>
-<?php
 
 class CP_Admin {
 	
@@ -101,7 +99,6 @@ class CP_Admin {
 							});
 						</script>';
 	}
-
 
 	function no_media_library_tab( $tabs ) {
 		unset($tabs['library']);

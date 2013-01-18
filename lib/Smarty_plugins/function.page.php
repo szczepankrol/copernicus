@@ -32,6 +32,9 @@ function smarty_function_page($params, $template) {
 				case 'content':
 					return $page->post_content;
 					break;
+				case 'excerpt':
+					return $page->post_excerpt;
+					break;
 				case 'guid':
 					return $page->guid;
 					break;

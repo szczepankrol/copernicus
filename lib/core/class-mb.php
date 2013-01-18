@@ -443,7 +443,7 @@ class CP_Mb {
 			case 'file':
 				
 				// This function loads in the required media files for the media manager.
-				wp_enqueue_media();
+				//wp_enqueue_media();
 				
 				if ($field['multiple']) {
 					$go_function = 'media_upload_multiple';
@@ -712,6 +712,11 @@ class CP_Mb {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type $meta_key
+	 * @param type $post_id
+	 */
 	public function save_meta_box_field($meta_key, $post_id) {
 		
 		// Get the posted data
@@ -757,6 +762,31 @@ class CP_Mb {
 				break;
 		}
 		
+	}
+	
+	public function get_meta_box_fields() {
+		$fields = array();
+		
+		//new dBug($this->mb);
+		
+		foreach ($this->mb AS $mb) {
+			if ($mb['settings']['active']) {
+				if (!isset($fields[$mb['settings']['post_type']])) {
+					$fields[$mb['settings']['post_type']] = array();
+				}
+				
+				foreach ($mb['fields'] AS $field) {
+					
+					$fieldName = $field['id'];
+					if (isset($field['translation']) && $field['translation']) {
+						$fieldName = $field['id'].LANGUAGE_SUFFIX;
+					}
+					$fields[$mb['settings']['post_type']][] = $fieldName;
+				}
+			}
+		}
+		
+		return $fields;
 	}
 }
 
