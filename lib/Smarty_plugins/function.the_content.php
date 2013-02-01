@@ -17,11 +17,13 @@ function smarty_function_the_content($params, $template) {
 	$more_link_text = '';
 	$stripteaser = false;
 	
-	if (isset($params['more_link_text']))
+	if (isset($params['more_link_text'])) {
 		$more_link_text = $params['more_link_text'];
+	}
 
-	if (isset($params['stripteaser']))
+	if (isset($params['stripteaser'])) {
 		$stripteaser = $params['stripteaser'];
+	}
 	
 	$content = get_the_content($more_link_text, $stripteaser);
 	$content = apply_filters('the_content', $content);

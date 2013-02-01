@@ -172,12 +172,11 @@ class CP {
 		
 		$view = '';
 		
-		if (!have_posts()) {
-			$view.= self::$smarty->fetch($template);
+		if (have_posts()) {
+			the_post();
 		}
-		else {
-			$view.= self::$smarty->fetch($template);
-		}
+		
+		$view.= self::$smarty->fetch($template);
 		
 		echo $view."\n";
 	}

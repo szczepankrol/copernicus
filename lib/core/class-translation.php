@@ -42,8 +42,9 @@ class CP_Translation {
 	 */
 	public function _init() {
 
+		$translations_folder = get_stylesheet_directory() . '/translation/';
 		// get all files from config folder
-		if ($handle = opendir(get_stylesheet_directory() . '/translation/')) {
+		if (file_exists($translations_folder) && $handle = opendir($translations_folder)) {
 
 			// for each file with .config.php extension
 			while (false !== ($filename = readdir($handle))) {
@@ -57,6 +58,10 @@ class CP_Translation {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type $translation
+	 */
 	private function get_adapter_csv($translation) {
 		$csv_filename = get_stylesheet_directory() . '/translation/' . $translation;
 
@@ -108,6 +113,12 @@ class CP_Translation {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type $text
+	 * @param string $language
+	 * @return type
+	 */
 	public function translate($text, $language = '') {
 		$phrase = $this->get_phrase($text);
 
@@ -128,12 +139,23 @@ class CP_Translation {
 		return $text;
 	}
 	
+	/**
+	 * 
+	 * @param type $text
+	 * @return null
+	 */
 	private function get_phrase($text) {
 		if (isset($this->translation[$text]))
 			return $this->translation[$text];
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param type $language
+	 * @param type $phrase
+	 * @return null
+	 */
 	private function get_translation($language, $phrase) {
 
 		if (isset($phrase[$language]))
