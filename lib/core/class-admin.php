@@ -157,5 +157,3 @@ class CP_Admin {
 			$post->menu_order = $max_order + 10;
 	}
 }
-
-?>

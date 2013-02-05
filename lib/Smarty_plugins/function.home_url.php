@@ -19,5 +19,3 @@ function smarty_function_home_url($params, $template) {
 	
     return $home_url;
 }
-
-?>

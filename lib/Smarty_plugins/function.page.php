@@ -48,5 +48,3 @@ function smarty_function_page($params, $template) {
 	return null;
 	    
 }
-
-?>

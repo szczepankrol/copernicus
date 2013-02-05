@@ -115,5 +115,3 @@ class CP_Language {
 		exit;
 	}
 }
-
-?>

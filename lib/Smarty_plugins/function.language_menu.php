@@ -36,5 +36,3 @@ function smarty_function_language_menu($params, $template) {
 	
     
 }
-
-?>

@@ -25,5 +25,3 @@ $post_name= $post_id_7->post_name;
     return $post_name;
     
 }
-
-?>

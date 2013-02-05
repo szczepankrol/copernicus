@@ -28,5 +28,3 @@ function smarty_function_the_title($params, $template) {
 	
     return $title;
 }
-
-?>

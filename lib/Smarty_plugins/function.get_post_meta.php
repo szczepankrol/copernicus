@@ -23,5 +23,3 @@ function smarty_function_get_post_meta($params, $template) {
 	
     return $post_meta;
 }
-
-?>

@@ -60,5 +60,3 @@ class CP_Sidebar {
 		}
 	}
 }
-
-?>

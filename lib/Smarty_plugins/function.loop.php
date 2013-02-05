@@ -76,5 +76,3 @@ function smarty_function_loop($params, $template) {
 	return null;
 	
 }
-
-?>

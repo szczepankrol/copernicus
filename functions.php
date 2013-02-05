@@ -24,5 +24,3 @@ if (file_exists($core_class_filename)) {
 } else {
 	echo 'error loading framework';
 }
-
-?>

@@ -23,5 +23,3 @@ function smarty_function_the_date($params, $template) {
     return $date;
     
 }
-
-?>

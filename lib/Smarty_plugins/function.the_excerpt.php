@@ -34,5 +34,3 @@ function smarty_function_the_excerpt($params, $template) {
 
 	return $post;
 }
-
-?>

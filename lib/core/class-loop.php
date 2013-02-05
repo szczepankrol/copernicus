@@ -158,5 +158,3 @@ class CP_Loop {
 	}
 	
 }
-
-?>

@@ -24,5 +24,3 @@ function smarty_function_image($params, $template) {
 	
     
 }
-
-?>

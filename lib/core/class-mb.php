@@ -789,5 +789,3 @@ class CP_Mb {
 		return $fields;
 	}
 }
-
-?>

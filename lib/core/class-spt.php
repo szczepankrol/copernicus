@@ -41,5 +41,3 @@ class cp_spt {
 	}
 	
 }
-
-?>

@@ -20,5 +20,3 @@ function smarty_function_taxonomy($params, $template) {
 	
     return $taxonomies;
 }
-
-?>

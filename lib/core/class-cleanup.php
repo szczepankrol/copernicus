@@ -152,5 +152,3 @@ class CP_Cleanup {
 		return $link;
 	}
 }
-
-?>

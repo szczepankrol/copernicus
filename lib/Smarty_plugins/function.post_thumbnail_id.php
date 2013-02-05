@@ -27,5 +27,3 @@ function smarty_function_post_thumbnail_id($params, $template) {
     return null;
     
 }
-
-?>

@@ -21,5 +21,3 @@ function smarty_function_permalink($params, $template) {
 	return get_permalink();
     
 }
-
-?>

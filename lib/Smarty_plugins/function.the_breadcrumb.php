@@ -58,5 +58,3 @@ function smarty_function_the_breadcrumb($parms) {
 	return $breadcrumb;
 	}
 }
-
-?>

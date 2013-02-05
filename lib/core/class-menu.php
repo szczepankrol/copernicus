@@ -64,5 +64,3 @@ class CP_Menu {
 	}
 
 }
-
-?>

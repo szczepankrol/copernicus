@@ -156,5 +156,3 @@ class CP_Image {
 	}
 
 }
-
-?>

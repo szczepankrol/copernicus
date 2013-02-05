@@ -35,5 +35,3 @@ function smarty_function_the_content_short($params, $template) {
 	
     return $content;
 }
-
-?>

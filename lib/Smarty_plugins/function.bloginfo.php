@@ -26,5 +26,3 @@ function smarty_function_bloginfo($params, $template) {
     return $retval;
     
 }
-
-?>

@@ -23,5 +23,3 @@ function smarty_function_post_content($params, $template) {
 
 	return $post_content;
 }
-
-?>

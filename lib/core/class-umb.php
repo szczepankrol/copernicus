@@ -89,5 +89,3 @@ class CP_Umb {
 	}
 	
 }
-
-?>

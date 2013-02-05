@@ -97,5 +97,3 @@ class CP_Taxonomy {
 		);
 	}
 }
-
-?>

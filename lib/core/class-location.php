@@ -44,5 +44,3 @@ class CP_Location {
 		
 	}
 }
-
-?>
