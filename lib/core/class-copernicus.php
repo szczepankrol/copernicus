@@ -119,6 +119,11 @@ class CP {
 			$CP_Sc = new CP_Sc;
 		}
 		
+		// load & init sidebar class
+		if (self::load_class('sidebar')) {
+			$CP_Sidebar = new CP_Sidebar;
+		}
+		
 		if (is_admin()) {
 			// load & init admin class
 			if (self::load_class('admin')) {
