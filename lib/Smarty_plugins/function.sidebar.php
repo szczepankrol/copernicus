@@ -19,7 +19,12 @@ function smarty_function_sidebar($params, $template) {
 	if (!isset ($params['id']))
 		return null;
 	
+	ob_start();
 	
-	return dynamic_sidebar($params['id']);
+	dynamic_sidebar($params['id']);
+	
+	$sidebar = ob_get_clean();
+	
+	return $sidebar;
     
 }
