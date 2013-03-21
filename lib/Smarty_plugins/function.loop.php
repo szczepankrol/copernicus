@@ -70,11 +70,8 @@ function smarty_function_loop($params, $template) {
 		return $return;
 	}
 	
-	
-	
 	$post = $main_post;
 	return null;
-	
 }
 
 ?>

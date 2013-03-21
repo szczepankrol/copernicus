@@ -155,6 +155,8 @@ class CP {
 		$page['title'] = self::get_page_title();
 		$page['content'] = str_replace(array("\n","&nbsp;"), '', $post->post_content);
 		
+		$page['image'] = null;
+		
 		if (has_post_thumbnail( $post->ID ) ) {
 			$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );
 			$page['image'] = $image[0];
