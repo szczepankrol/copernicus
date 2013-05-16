@@ -319,11 +319,13 @@ class CP {
 		
 		if (is_child_theme()) {
 			$template_dirs[] = get_stylesheet_directory() . '/templates/';
+			$plugins_dirs[] = get_stylesheet_directory() . '/lib/Smarty_plugins/';
 		}
 		$template_dirs[] = CP_PATH . '/templates/';
+		$plugins_dirs[] = CP_PATH.'/lib/Smarty_plugins/';
 		
 		self::$smarty = new Smarty();
-		self::$smarty->addPluginsDir(CP_PATH.'/lib/Smarty_plugins/');
+		self::$smarty->addPluginsDir($plugins_dirs);
 		self::$smarty->setTemplateDir($template_dirs);
 		self::$smarty->setCompileDir(WP_CONTENT_DIR . '/smarty/templates_c/');
 		self::$smarty->setCacheDir(WP_CONTENT_DIR . '/smarty/cache/');
