@@ -124,6 +124,11 @@ class CP {
 			$CP_Sidebar = new CP_Sidebar;
 		}
 		
+		// load & init widget class
+		if (self::load_class('widget')) {
+			$CP_Widget = new CP_Widget;
+		}
+		
 		if (is_admin()) {
 			// load & init admin class
 			if (self::load_class('admin')) {

@@ -13,18 +13,18 @@
  * Purpose:  print out a bloginfo information
  *
  */
-
-function smarty_function_sidebar($params, $template) {
+function smarty_function_form_send($form, $template) {
     
-	if (!isset ($params['id']))
+	if (!isset ($form['id']))
 		return null;
 	
-	ob_start();
+	global $CP_Image;
 	
-	dynamic_sidebar($params['id']);
+	new dBug ($form);
 	
-	$sidebar = ob_get_clean();
+	//return $CP_Image->image($params);
 	
-	return $sidebar;
     
 }
+
+?>

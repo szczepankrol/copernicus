@@ -13,15 +13,9 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_get_post_meta($params, $template) {
+function smarty_function_dynamic_sidebar($params, $template) {
 	
-	$post_id = $params['id'];
-	
-	$key = $params['key'];
-	
-    $post_meta = get_post_meta($post_id, $key, true);
-	
-    return $post_meta;
+	if (isset($params['id'])) {
+    	dynamic_sidebar( $params['id'] );
+    }
 }
-
-?>
