@@ -1,6 +1,7 @@
 <?php
 /**
  * Smarty plugin
+ *
  * @package Smarty
  * @subpackage PluginsFunction
  */
@@ -13,10 +14,10 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_the_content($params, $template) {
+function smarty_function_the_content( $params, $template ) {
 	$more_link_text = '';
 	$stripteaser = false;
-	
+
 	if (isset($params['more_link_text'])) {
 		$more_link_text = $params['more_link_text'];
 	}
@@ -30,5 +31,3 @@ function smarty_function_the_content($params, $template) {
 	
     return $content;
 }
-
-?>
