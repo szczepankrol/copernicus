@@ -30,6 +30,21 @@ function smarty_function_menu($params, $template) {
 		$args = array_merge($args, $menu['args'], $params['args']);
 	}
 	
+	$exclude = '';
+	if (isset($menu['args']['exclude'])) {
+		$exclude.= " AND p.ID NOT IN (".$menu['args']['exclude'].") ";
+	}
+	if (isset($menu['args']['exclude_slug'])) {
+		$exclude_slug = explode(',', str_replace(' ', '', $menu['args']['exclude_slug']));
+		$exclude.= " AND p.post_name NOT IN (";
+		foreach ($exclude_slug as $key => $value) {
+			$exclude.= "'".$value."'";
+			if ($key != end(array_keys($exclude_slug)))
+				$exclude.= ', ';
+		}
+		$exclude.= ") ";
+	}
+	
 	$active_pages = array('active' => '', 'ancestors' => array(), 'parent_cpt' => ''); 
 	
 	if ($post) {
@@ -42,7 +57,7 @@ function smarty_function_menu($params, $template) {
 		return null;
 	}
 
-	$all_pages = $wpdb->get_results("
+	$sql = "
 		SELECT
 			p.ID, 
 				p.post_parent, 
@@ -55,8 +70,13 @@ function smarty_function_menu($params, $template) {
 		WHERE 
 			p.post_type = 'page'
 				AND p.post_status = 'publish'
+				" . $exclude . "
 		ORDER BY menu_order
-	", ARRAY_A);
+	";
+
+	echo $sql;
+
+	$all_pages = $wpdb->get_results($sql, ARRAY_A);
 	
 	//new dBug($all_pages);
 	
