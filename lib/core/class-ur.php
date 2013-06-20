@@ -71,8 +71,6 @@ class CP_Ur {
 	 */
 	public function add_user_roles() {
 
-		$wp_roles = new WP_Roles();
-
 		// if there are user roles
 		if (is_array($this->ur)) {
 
@@ -93,7 +91,4 @@ class CP_Ur {
 			add_role($role['settings']['id'], $role['labels']['name'], array());
 		}
 	}
-
 }
-
-?>

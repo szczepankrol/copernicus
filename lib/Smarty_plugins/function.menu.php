@@ -103,7 +103,7 @@ function render_navigation($pages, $active_pages, $args, $post_args = array()) {
 		
 		if (isset($page['children'])) {
 			$navigation.= '<ul>';
-			echo $post_args['level'];
+			//echo $post_args['level'];
 			if ($args['depth'] == '-1' || $args['depth'] > $post_args['level']) {
 				$navigation.= render_navigation($page['children'], $active_pages, $args, $post_args);
 			}

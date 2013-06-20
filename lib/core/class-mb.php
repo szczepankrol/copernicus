@@ -529,6 +529,46 @@ class CP_Mb {
 				
 				$field['text'].= '</div>';
 				break;
+
+			// checkboxes
+			case 'user_roles':
+				if ($value)
+					$values = maybe_unserialize($value);
+				else
+					$values = array();
+
+				$roles = new WP_Roles();
+				$field['values'] = $roles->role_names;
+				$exclude = array();
+				if (isset($field['exclude'])) {
+					$exclude = explode(',', str_replace(' ', '', $field['exclude']));	
+				}
+
+				$field['text'] = '<span class="clm">' . $field['name'] . '</span>';
+				$field['text'].= '<ul>';
+				if (is_array($field['values'])) {
+					foreach ($field['values'] AS $field_key => $field_value) {
+						if (!in_array($field_key, $exclude)) {
+							$field['text'].= '<li>';
+							$field['text'].= '<input type="checkbox" name="' . $field['id'] . $suffix . '[]" id="' . $field['id'] . $suffix . '_' . $field_key . '" value="' . $field_key . '" ';
+							if (in_array($field_key, $values))
+								$field['text'].= 'checked="checked" ';
+
+							if (!isset($field['attributes']))
+								$field['attributes'] = array();
+							
+							$field['text'].= $this->meta_box_attributes($field['attributes']);
+							$field['text'].= ' /> ';
+							$field['text'].= '<label for="' . $field['id'] . $suffix . '_' . $field_key . '">' . $field_value . '</label>';
+							$field['text'].= '</li>';
+						}
+					}
+				}
+				$field['text'].= '</ul>';
+
+				$field['label'] = 0;
+
+				break;
 		}
 		
 		return $field['text'];

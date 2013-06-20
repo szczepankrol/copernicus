@@ -45,7 +45,15 @@ function smarty_function_post_meta($params, $template) {
 	}
 	
 	if (isset($params['shortcode']) && $params['shortcode']) {
-		return do_shortcode($post_meta);
+		$post_meta = do_shortcode($post_meta);
+	}
+	
+	if (isset($params['more']) && $params['more']) {
+		global $more;
+		$more = 1;
+		$post_parts = preg_split('/<!--more(.*?)?-->/', $post_meta) ;
+		$post_meta = $post_parts[0];
+		$post_meta.= ' <a href="'.get_permalink($the_id).'" class=more-link>'.$params['more'].'</a>';
 	}
 	
 	return $post_meta;
