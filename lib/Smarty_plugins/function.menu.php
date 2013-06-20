@@ -63,7 +63,8 @@ function smarty_function_menu($params, $template) {
 				p.post_parent, 
 					p.post_name, 
 						(SELECT pm.meta_value FROM " . $wpdb->postmeta . " AS pm WHERE p.ID = pm.post_id AND pm.meta_key = 'title".LANGUAGE_SUFFIX."') AS title".LANGUAGE_SUFFIX.",
-						(SELECT pm.meta_value FROM " . $wpdb->postmeta . " AS pm WHERE p.ID = pm.post_id AND pm.meta_key = 'title') AS title
+						(SELECT pm.meta_value FROM " . $wpdb->postmeta . " AS pm WHERE p.ID = pm.post_id AND pm.meta_key = 'title') AS title,
+						(SELECT pm.meta_value FROM " . $wpdb->postmeta . " AS pm WHERE p.ID = pm.post_id AND pm.meta_key = 'permissions') AS permissions
 		FROM
 			" . $wpdb->posts . " AS p
 				
@@ -73,8 +74,6 @@ function smarty_function_menu($params, $template) {
 				" . $exclude . "
 		ORDER BY menu_order
 	";
-
-	echo $sql;
 
 	$all_pages = $wpdb->get_results($sql, ARRAY_A);
 	
@@ -104,33 +103,47 @@ function render_navigation($pages, $active_pages, $args, $post_args = array()) {
 	}
 	
 	foreach ($pages AS $page) {
-		$post_args['current_post_name'] = $post_args['post_name'] . $page['post_name'].'/';
-		$navigation.= '<li';
-		if ($page['ID'] == $active_pages['active'] || in_array($page['ID'], $active_pages['ancestors']) || $page['ID'] == $active_pages['parent_cpt']) {
-			$navigation.= ' class="active"';
+		$permitted = 1;
+
+		if (!empty($page['permissions'])) {
+			$permitted = 0;
+			$permissions = maybe_unserialize($page['permissions']);
+
+			global $CP_User;
+			$user = $CP_User->get_user_data();
+			if ($user['administrator'] || in_array($user['role'], $permissions))
+				$permitted = 1;
 		}
-		$navigation.= '>';
-		
-		if ($page['title'.LANGUAGE_SUFFIX]) {
-			$title = $page['title'.LANGUAGE_SUFFIX];
-		}
-		else {
-			$title = $page['title'];
-		}
-		
-		$navigation.= '<a href="'.get_bloginfo('url').'/'.$post_args['current_post_name'].'"';
-		$navigation.= '>'.$title.'</a>';
-		
-		if (isset($page['children'])) {
-			$navigation.= '<ul>';
-			//echo $post_args['level'];
-			if ($args['depth'] == '-1' || $args['depth'] > $post_args['level']) {
-				$navigation.= render_navigation($page['children'], $active_pages, $args, $post_args);
+
+		if ($permitted) {
+			$post_args['current_post_name'] = $post_args['post_name'] . $page['post_name'].'/';
+			$navigation.= '<li';
+			if ($page['ID'] == $active_pages['active'] || in_array($page['ID'], $active_pages['ancestors']) || $page['ID'] == $active_pages['parent_cpt']) {
+				$navigation.= ' class="active"';
 			}
-			$navigation.= '</ul>';
+			$navigation.= '>';
+			
+			if ($page['title'.LANGUAGE_SUFFIX]) {
+				$title = $page['title'.LANGUAGE_SUFFIX];
+			}
+			else {
+				$title = $page['title'];
+			}
+			
+			$navigation.= '<a href="'.get_bloginfo('url').'/'.$post_args['current_post_name'].'"';
+			$navigation.= '>'.$title.'</a>';
+			
+			if (isset($page['children'])) {
+				$navigation.= '<ul>';
+				//echo $post_args['level'];
+				if ($args['depth'] == '-1' || $args['depth'] > $post_args['level']) {
+					$navigation.= render_navigation($page['children'], $active_pages, $args, $post_args);
+				}
+				$navigation.= '</ul>';
+			}
+			
+			$navigation.= '</li>';
 		}
-		
-		$navigation.= '</li>';
 	}
 	
 	return $navigation;
