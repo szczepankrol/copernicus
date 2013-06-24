@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="{bloginfo show=language}" dir="{bloginfo show=text_direction}">
 <head>
 	<title>{$page.title}</title>
 	<meta charset="{bloginfo show=charset}" />
@@ -11,16 +11,8 @@
 	<meta property="og:url" content="{permalink}"/>
 	<meta property="og:site_name" content="{bloginfo show=name}"/>
 	<meta property="og:type" content="website"/>
-
 	{if $page.image}<meta property="og:image" content="{$page.image}" />
 {/if}
 	{$header}
-		<!--[if lt IE 9]>
-<script src="/wp-content/themes/chat/static/js/html5shiv.js"></script>
-<link rel='stylesheet' id='style-css'  href='/wp-content/themes/chat/static/css/ie.css' type='text/css' media='all' />
-<![endif]-->
-<!--[if lt IE 8]>
-<link rel='stylesheet' id='style-css'  href='/wp-content/themes/chat/static/css/ie-7.css' type='text/css' media='all' />
-<![endif]-->
 </head>
-<body {subdomain}>
+<body>
