@@ -19,7 +19,11 @@ function smarty_function_post_meta($params, $template) {
 	if (isset($params['id'])) {
 		$the_id = $params['id'];
 	} else {
-		$the_id = get_the_ID();
+		$the_id = @get_the_ID();
+	}
+
+	if (!$the_id) {
+		return null;
 	}
 
 	$post_meta = '';

@@ -52,26 +52,23 @@ function smarty_function_loop($params, $template) {
 				$key++;
 			endwhile;
 
-			$post = $main_post;
-			$pages = $main_pages;
-
 			$return = apply_filters("cp_loop", $return);
-			return $return;
 		}
 		
 	}
 	else {
+		//rewind_posts();
 		while ( have_posts() ) : the_post();
 			CP::$smarty->assign('key', $key);
 			CP::$smarty->assign('post', $post);
 			$return.= CP::$smarty->fetch($params['template']);
 			$key++;
 		endwhile;
-		return $return;
 	}
 	
 	$post = $main_post;
-	return null;
+	$pages = $main_pages;
+	return $return;
 }
 
 ?>
