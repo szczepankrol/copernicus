@@ -57,7 +57,7 @@ function smarty_function_loop($params, $template) {
 		
 	}
 	else {
-		//rewind_posts();
+		rewind_posts();
 		while ( have_posts() ) : the_post();
 			CP::$smarty->assign('key', $key);
 			CP::$smarty->assign('post', $post);
