@@ -14,7 +14,7 @@
  *
  */
 function smarty_function_season_vis($params, $template) {
-    
+    $season = '';
 	//new dBug ($params);
 	$pcustom = get_post_custom($params['id']);
 
@@ -24,7 +24,7 @@ function smarty_function_season_vis($params, $template) {
 
 	}
 	else {
-		$season=" style='display:none'";
+		$season = " style='display:none'";
 
 	}
 

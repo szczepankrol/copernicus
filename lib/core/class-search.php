@@ -18,10 +18,14 @@ class CP_Search {
 	private function _init() {
 		
 		if (isset($_GET['s'])) {
-			if (is_search()) {
-				add_filter('posts_where', array($this,'custom_search_where'));
-				add_filter('post_limits', array($this,'custom_search_limits'));
+			if (preg_match('/\?s=/', $_SERVER['REQUEST_URI'])) {
+				$search = str_replace(' ', '+', $_GET['s']);
+				wp_redirect( '/search/'.$search.'/');
+				exit;
 			}
+
+			//add_filter('post_limits', array($this,'custom_search_limits'));
+			add_filter('posts_where', array($this,'custom_search_where'));
 		}
 	}
 
@@ -35,6 +39,11 @@ class CP_Search {
 	 */
 	function custom_search_where($where) {
 		global $wpdb, $CP_Cpt, $CP_Mb;
+
+		$term = $_GET['s'];
+		if (!strpos($where, $term)) {
+			return $where;
+		}
 		
 		$where = "AND wp_posts.post_status = 'publish'";
 		// post types
@@ -75,7 +84,7 @@ class CP_Search {
 	}
 
 	public function custom_search_limits($limit) {
-		return '';
+		return 'LIMIT 99999';
 	}
 
 }
