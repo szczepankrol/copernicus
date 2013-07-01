@@ -66,7 +66,6 @@ function smarty_function_loop($params, $template) {
 				$return.= show_pagination($WP_loop->max_num_pages);
 			}
 		}
-		
 	}
 	else {
 		rewind_posts();
@@ -82,7 +81,6 @@ function smarty_function_loop($params, $template) {
 		if ($wp_query->max_num_pages > 1) {
 			$return.= show_pagination($wp_query->max_num_pages);
 		}
-
 	}
 	
 	$post = $main_post;
