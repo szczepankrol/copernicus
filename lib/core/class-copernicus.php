@@ -124,6 +124,11 @@ class CP {
 			$CP_Sidebar = new CP_Sidebar;
 		}
 		
+		// load & init widget class
+		if (self::load_class('widget')) {
+			$CP_Widget = new CP_Widget;
+		}
+		
 		if (is_admin()) {
 			// load & init admin class
 			if (self::load_class('admin')) {
@@ -151,7 +156,23 @@ class CP {
 		$header = ob_get_clean();
 		$header = str_replace("\n", "\n\t", $header);
 		
+		global $post;
+
+		$page['image'] = null;
+		$page['language'] = str_replace('-', '_', get_bloginfo('language'));
 		$page['title'] = self::get_page_title();
+		
+		if ($post) {
+			$page['content'] = str_replace(array("\n","&nbsp;"), '', $post->post_content);
+			
+			if (has_post_thumbnail( $post->ID ) ) {
+				$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );
+				$page['image'] = $image[0];
+			}
+		}
+		else {
+			$page['content'] = '';
+		}
 		
 		self::$smarty->assign('header', $header);
 		self::$smarty->assign('page', $page);
@@ -304,11 +325,13 @@ class CP {
 		
 		if (is_child_theme()) {
 			$template_dirs[] = get_stylesheet_directory() . '/templates/';
+			$plugins_dirs[] = get_stylesheet_directory() . '/lib/Smarty_plugins/';
 		}
 		$template_dirs[] = CP_PATH . '/templates/';
+		$plugins_dirs[] = CP_PATH.'/lib/Smarty_plugins/';
 		
 		self::$smarty = new Smarty();
-		self::$smarty->addPluginsDir(CP_PATH.'/lib/Smarty_plugins/');
+		self::$smarty->addPluginsDir($plugins_dirs);
 		self::$smarty->setTemplateDir($template_dirs);
 		self::$smarty->setCompileDir(WP_CONTENT_DIR . '/smarty/templates_c/');
 		self::$smarty->setCacheDir(WP_CONTENT_DIR . '/smarty/cache/');

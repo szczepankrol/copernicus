@@ -18,8 +18,7 @@ function smarty_function_page($params, $template) {
 	if (isset($params['id']) && isset($params['field'])) {
 		
 		$page = get_page( $params['id'] ) ;
-	
-	//	new dBug($page);
+		//new dBug($page);
 	
 		if ($page) {
 			switch($params['field']) {

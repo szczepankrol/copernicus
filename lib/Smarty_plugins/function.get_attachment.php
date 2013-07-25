@@ -13,13 +13,14 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_get_post_meta($params, $template) {
+function smarty_function_get_attachment($params, $template) {
+    
 	
-	$post_id = $params['id'];
-	
-	$key = $params['key'];
-	
-    $post_meta = get_post_meta($post_id, $key, true);
-	
-    return $post_meta;
+	$file=$params['file'];
+	 
+	//new dBug( $tag );
+    return wp_get_attachment_url( $file );
+    
 }
+
+?>

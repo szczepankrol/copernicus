@@ -48,6 +48,7 @@ class CP_Permalink {
 		add_rewrite_tag('%action%', '([a-z]+)','');
 		add_rewrite_tag('%lang%', '([a-z]{2})','');
 		add_rewrite_tag('%token%', '(.*)','');
+		add_rewrite_tag('%paged%', '([0-9]+)','');
 		
 		add_rewrite_rule(
 			'teaching/open-student-projects/([^/]+)/?$',
@@ -72,5 +73,12 @@ class CP_Permalink {
 			'index.php?action=change_language&lang=$matches[1]',
 			'top'
 		);
+
+		add_rewrite_rule(
+			'blog/page/([0-9]+)/?$',
+			'index.php?pagename=blog&paged=$matches[1]',
+			'top'
+		);
+
 	}
 }

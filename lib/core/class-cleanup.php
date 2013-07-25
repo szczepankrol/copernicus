@@ -51,6 +51,7 @@ class CP_Cleanup {
 			
 			add_filter('init', array($this,'clean_up'));
 			add_filter('the_content_more_link', array($this,'remove_more_jump_link'));
+			add_filter('widgets_init', array($this,'unregister_widgets'));
 			//add_filter('nav_menu_css_class', array($this,'special_nav_class'), 10, 2);
 			//add_filter('nav_menu_item_id', array($this,'special_nav_id'), 10, 2);
 			//add_filter('wp_get_nav_menu_items', array($this,'nav_menu_items'), 10, 2);
@@ -150,5 +151,15 @@ class CP_Cleanup {
 			$link = substr_replace($link, '', $offset, $end-$offset);
 		}
 		return $link;
+	}
+
+	function unregister_widgets() {
+		if (isset($this->cleanup['widget'])) {
+			foreach ($this->cleanup['widget'] as $widget => $status) {
+				if (!$status) {
+					unregister_widget($widget);
+				}
+			}
+		}
 	}
 }
