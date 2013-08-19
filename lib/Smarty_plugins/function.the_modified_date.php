@@ -13,7 +13,7 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_the_date($params, $template) {
+function smarty_function_the_modified_date($params, $template) {
 	
 	// default params
 	$default_params = array(
@@ -26,8 +26,8 @@ function smarty_function_the_date($params, $template) {
 
 	if ($params['id']) {
 		$the_post = get_post($params['id']);
-		return mysql2date($params['d'], $the_post->post_date);
+		return mysql2date($params['d'], $the_post->post_modified);
 	}
 
-	return get_the_date($params['d']);
+	return get_the_modified_date($params['d']);
 }

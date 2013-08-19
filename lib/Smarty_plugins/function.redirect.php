@@ -23,5 +23,3 @@ function smarty_function_redirect($params, $template) {
 	}
 	exit;
 }
- 
-?>

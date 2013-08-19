@@ -15,14 +15,18 @@
  */
 function smarty_function_post_thumbnail_id($params, $template) {
     
-	$post_id = get_the_ID();
+    // default params
+	$default_params = array(
+		'id' => get_the_ID()
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 	
-	if ($post_id) {
-		$post_thumbnail_id = get_post_thumbnail_id($post_id);
-		
-		if ($post_thumbnail_id)
-			return $post_thumbnail_id;
-	}
+	$post_thumbnail_id = get_post_thumbnail_id($post_id);
+	
+	if ($post_thumbnail_id)
+		return $post_thumbnail_id;
 	
     return null;
     

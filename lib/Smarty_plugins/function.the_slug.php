@@ -13,21 +13,16 @@
  * Purpose:  print out a bloginfo information
  *
  */
-function smarty_function_the_date($params, $template) {
-	
-	// default params
+function smarty_function_the_slug($params, $template) {
+    
+    // default params
 	$default_params = array(
-		'id' => null,
-		'd' => get_option('date_format')
+		'id' => get_the_ID()
 	);
     
     // merge default params with the provided ones
 	$params = array_merge($default_params, $params);
 
-	if ($params['id']) {
-		$the_post = get_post($params['id']);
-		return mysql2date($params['d'], $the_post->post_date);
-	}
-
-	return get_the_date($params['d']);
+	$the_post = get_post($params['id']); 
+	return $the_post->post_name;
 }

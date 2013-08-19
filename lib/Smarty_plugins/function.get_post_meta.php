@@ -15,11 +15,14 @@
  */
 function smarty_function_get_post_meta($params, $template) {
 	
-	$post_id = $params['id'];
-	
-	$key = $params['key'];
-	
-    $post_meta = get_post_meta($post_id, $key, true);
-	
-    return $post_meta;
+	// default params
+	$default_params = array(
+		'id' => get_the_ID(),
+		'key' => null,
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
+
+    return get_post_meta($params['id'], $params['key'], true);
 }

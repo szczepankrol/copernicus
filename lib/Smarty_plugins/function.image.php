@@ -15,12 +15,15 @@
  */
 function smarty_function_image($params, $template) {
     
-	if (!isset ($params['id']))
-		return null;
+    // default params
+	$default_params = array(
+		'id' => null
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 	
 	global $CP_Image;
 	
 	return $CP_Image->image($params);
-	
-    
 }

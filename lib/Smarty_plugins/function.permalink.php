@@ -15,9 +15,13 @@
  */
 function smarty_function_permalink($params, $template) {
     
-	if (isset ($params['id']))
-		return get_permalink($params['id']);
-	
-	return get_permalink();
+    // default params
+	$default_params = array(
+		'id' => null
+	);
     
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
+
+	return get_permalink($params['id']);
 }

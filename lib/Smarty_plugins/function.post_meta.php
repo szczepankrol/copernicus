@@ -16,48 +16,45 @@
  */
 function smarty_function_post_meta($params, $template) {
 
-	if (isset($params['id'])) {
-		$the_id = $params['id'];
-	} else {
-		$the_id = @get_the_ID();
-	}
+	// default params
+	$default_params = array(
+		'id' => get_the_ID(),
+		'key' => '',
+		'html' => false,
+		'shortcode' => false,
+		'more' => false
+	);
 
-	if (!$the_id) {
-		return null;
-	}
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 
 	$post_meta = '';
 
 	if (LANGUAGE_SUFFIX != '') {
-		$post_meta = get_post_meta($the_id, $params['key'] . LANGUAGE_SUFFIX);
+		$post_meta = get_post_meta($params['id'], $params['key'] . LANGUAGE_SUFFIX);
 	}
 
 	if (!$post_meta) {
-		$post_meta = get_post_meta($the_id, $params['key']);
+		$post_meta = get_post_meta($params['id'], $params['key']);
 	}
 
 	$post_meta = maybe_unserialize($post_meta);
 	$post_meta = strip_array($post_meta);
 
-	if (isset($params['html']) && $params['html']) {
+	if ($params['html']) {
 		$post_meta = apply_filters('the_content', $post_meta);
 	}
 
-	if (isset($params['out'])) {
-		$template->assign($params['out'], $post_meta);
-		return;
-	}
-	
-	if (isset($params['shortcode']) && $params['shortcode']) {
+	if ($params['shortcode']) {
 		$post_meta = do_shortcode($post_meta);
 	}
 	
-	if (isset($params['more']) && $params['more']) {
+	if ($params['more']) {
 		global $more;
 		$more = 1;
 		$post_parts = preg_split('/<!--more(.*?)?-->/', $post_meta) ;
 		$post_meta = $post_parts[0];
-		$post_meta.= ' <a href="'.get_permalink($the_id).'" class=more-link>'.$params['more'].'</a>';
+		$post_meta.= ' <a href="'.get_permalink($params['id']).'" class=more-link>'.$params['more'].'</a>';
 	}
 	
 	return $post_meta;

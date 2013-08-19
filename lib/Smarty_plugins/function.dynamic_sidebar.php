@@ -14,8 +14,14 @@
  *
  */
 function smarty_function_dynamic_sidebar($params, $template) {
+
+	// default params
+	$default_params = array(
+		'index' => 1
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 	
-	if (isset($params['id'])) {
-    	dynamic_sidebar( $params['id'] );
-    }
+    dynamic_sidebar( $params['index'] );
 }

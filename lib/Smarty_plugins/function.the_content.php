@@ -15,19 +15,16 @@
  *
  */
 function smarty_function_the_content( $params, $template ) {
-	$more_link_text = '';
-	$stripteaser = false;
-
-	if (isset($params['more_link_text'])) {
-		$more_link_text = $params['more_link_text'];
-	}
-
-	if (isset($params['stripteaser'])) {
-		$stripteaser = $params['stripteaser'];
-	}
 	
-	$content = get_the_content($more_link_text, $stripteaser);
-	$content = apply_filters('the_content', $content);
+	// default params
+	$default_params = array(
+		'more_link_text' => null,
+		'stripteaser' => false
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 	
-    return $content;
+	$content = get_the_content($params['more_link_text'], $params['stripteaser']);
+	return apply_filters('the_content', $content);
 }

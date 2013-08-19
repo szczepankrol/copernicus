@@ -15,7 +15,5 @@
  */
 function smarty_function_the_id($params, $template) {
 	
-    $the_id = get_the_ID();
-	
-    return $the_id;
+    return get_the_ID();
 }

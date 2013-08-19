@@ -9,22 +9,19 @@
  * WP get_the_content function
  *
  * Type:     function
- * Name:     get_the_content
- * Purpose:  print out a bloginfo information
+ * Name:     get_the_title
+ * Purpose:  print out a title
  *
  */
 function smarty_function_the_title($params, $template) {
+
+	// default params
+	$default_params = array(
+		'id' => get_the_ID()
+	);
+    
+    // merge default params with the provided ones
+	$params = array_merge($default_params, $params);
 	
-	if (isset($params['parent']) && $params['parent']) {
-		global $post;
-		if ($post->post_parent) {
-			$parent_post = get_post($post->post_parent); 
-			$title = $parent_post->post_title;
-			return $title;
-		}	
-	}
-	
-    $title = get_the_title();
-	
-    return $title;
+    return get_the_title($params['id']);
 }
