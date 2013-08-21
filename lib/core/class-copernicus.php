@@ -35,9 +35,6 @@ class CP {
 		// load phpThumb
 		self::phpthumb_init();
 		
-		// load SwiftMailer
-		self::load_library(CP_PATH.'/lib/SwiftMailer/swift_required.php');
-		
 		// load & init cleanup class
 		if (self::load_class('cleanup'))
 			$CP_Cleanup = new CP_Cleanup;
