@@ -325,10 +325,10 @@ class CP {
 		
 		if (is_child_theme()) {
 			$template_dirs[] = get_stylesheet_directory() . '/templates/';
-			$plugins_dirs[] = get_stylesheet_directory() . '/lib/Smarty_plugins/';
+			$plugins_dirs[] = get_stylesheet_directory() . '/lib/smarty_plugins/';
 		}
 		$template_dirs[] = CP_PATH . '/templates/';
-		$plugins_dirs[] = CP_PATH.'/lib/Smarty_plugins/';
+		$plugins_dirs[] = CP_PATH.'/lib/smarty_plugins/';
 		
 		self::$smarty = new Smarty();
 		self::$smarty->addPluginsDir($plugins_dirs);
