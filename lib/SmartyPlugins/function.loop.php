@@ -14,7 +14,7 @@
  *
  */
 function smarty_function_loop($params, $template) {
-	global $CP_Loop;
+	global $CP_Loop, $CP_Smarty;
 	global $post;
 	global $pages;
 	$main_post = $post;
@@ -55,8 +55,8 @@ function smarty_function_loop($params, $template) {
 		//	new dBug($WP_loop);
 
 			while ( $WP_loop->have_posts() ) : $WP_loop->the_post();
-				CP::$smarty->assign('key', $key);
-				$return.= CP::$smarty->fetch($loop['template']);;
+				$CP_Smarty->smarty->assign('key', $key);
+				$return.= $CP_Smarty->smarty->fetch($loop['template']);;
 				$key++;
 			endwhile;
 
@@ -70,9 +70,9 @@ function smarty_function_loop($params, $template) {
 	else {
 		rewind_posts();
 		while ( have_posts() ) : the_post();
-			CP::$smarty->assign('key', $key);
-			CP::$smarty->assign('post', $post);
-			$return.= CP::$smarty->fetch($params['template']);
+			$CP_Smarty->smarty->assign('key', $key);
+			$CP_Smarty->smarty->assign('post', $post);
+			$return.= $CP_Smarty->smarty->fetch($params['template']);
 			$key++;
 		endwhile;
 
