@@ -17,6 +17,8 @@
  */
 class CP_Image {
 
+	public $phpThumb;
+
 	var $cleanup = array();
 
 	/**
@@ -40,7 +42,10 @@ class CP_Image {
 	 * @author Piotr Soluch
 	 */
 	public function _init() {
-
+		// load phpThumb
+		CP::load_library(CP_PATH.'/lib/phpThumb/phpthumb.class.php');
+		
+		$this->phpThumb = new phpThumb();
 	}
 	
 	public function image($params) {
@@ -86,19 +91,19 @@ class CP_Image {
 			
 			$newfilename = wp_unique_filename( $upload_dir['basedir'].'/'.dirname($attachment['file']), basename($attachment['file']) );
 
-			CP::$phpThumb->resetObject();
+			$this->phpThumb->resetObject();
 			// set data source -- do this first, any settings must be made AFTER this call
-			CP::$phpThumb->setSourceFilename($upload_dir['basedir'].'/'.$attachment['file']);
+			$this->phpThumb->setSourceFilename($upload_dir['basedir'].'/'.$attachment['file']);
 			
 			$output_filename = dirname($attachment['file']) . '/' . $newfilename;
 			
 			foreach ($img['attributes'] as $key => $attr) {
-				CP::$phpThumb->setParameter($key, $attr);
+				$this->phpThumb->setParameter($key, $attr);
 			}
 			
-			if (CP::$phpThumb->GenerateThumbnail()) {
+			if ($this->phpThumb->GenerateThumbnail()) {
 
-				if (CP::$phpThumb->RenderToFile($upload_dir['basedir'].'/'.$output_filename)) {
+				if ($this->phpThumb->RenderToFile($upload_dir['basedir'].'/'.$output_filename)) {
 					// do something on success
 					$img['file'] = $output_filename;
 					$meta_data[] = $img;
@@ -107,12 +112,12 @@ class CP_Image {
 					
 				} else {
 					// do something with debug/error messages
-					//echo 'Failed:<pre>'.implode("\n\n", CP::$phpThumb->debugmessages).'</pre>';
+					//echo 'Failed:<pre>'.implode("\n\n", $this->phpThumb->debugmessages).'</pre>';
 				}
-				CP::$phpThumb->purgeTempFiles();
+				$this->phpThumb->purgeTempFiles();
 			} else {
 				// do something with debug/error messages
-				//echo 'Failed:<pre>'.CP::$phpThumb->fatalerror."\n\n".implode("\n\n", CP::$phpThumb->debugmessages).'</pre>';
+				//echo 'Failed:<pre>'.$this->phpThumb->fatalerror."\n\n".implode("\n\n", $this->phpThumb->debugmessages).'</pre>';
 			}
 		}
 		

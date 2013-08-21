@@ -42,13 +42,10 @@ class CP_Loop {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['loop'])) {
+		if (isset (CP::$config['loop'])) {
 			
 			// get meta box configuration
-			$this->loop = $config['loop'];
+			$this->loop = CP::$config['loop'];
 		}
 	}
 

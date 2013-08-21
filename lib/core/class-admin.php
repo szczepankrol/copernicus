@@ -21,13 +21,10 @@ class CP_Admin {
 	
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['theme'])) {
+		if (isset (CP::$config['theme'])) {
 			
 			// get meta box configuration
-			$this->theme = $config['theme'];
+			$this->theme = CP::$config['theme'];
 		}
 		
 		// add js files in admin panel

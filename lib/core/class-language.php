@@ -47,13 +47,10 @@ class CP_Language {
 			$this->change_language($_GET['lang']);
 		}
 		
-		// get config
-		$config = CP::get_config();
-
-		if (isset ($config['language'])) {
+		if (isset (CP::$config['language'])) {
 			
 			// get meta box configuration
-			$this->language = $config['language'];
+			$this->language = CP::$config['language'];
 		}
 		
 		$this->set_current_language();

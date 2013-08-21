@@ -42,13 +42,10 @@ class CP_Mb {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['mb'])) {
+		if (isset (CP::$config['mb'])) {
 			
 			// get meta box configuration
-			$this->mb = $config['mb'];
+			$this->mb = CP::$config['mb'];
 
 			// add meta boxes
 			add_action('admin_init', array($this, 'add_meta_boxes'));

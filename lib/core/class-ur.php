@@ -45,11 +45,8 @@ class CP_Ur {
 	 */
 	public function _init() {
 		
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['ur'])) {
-			$this->ur = $config['ur'];
+		if (isset (CP::$config['ur'])) {
+			$this->ur = CP::$config['ur'];
 		}
 		
 		$wp_roles = new WP_Roles();

@@ -43,13 +43,10 @@ class CP_Menu {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['menu'])) {
+		if (isset (CP::$config['menu'])) {
 			
 			// get meta box configuration
-			$this->menu = $config['menu'];
+			$this->menu = CP::$config['menu'];
 		}
 	}
 

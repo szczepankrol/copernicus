@@ -40,11 +40,9 @@ class CP_Umb {
 	 * @author Piotr Soluch
 	 */
 	public function _init() {
-		// get config
-		$config = CP::get_config();
 		
-		if (isset ($config['umb'])) {
-			$this->umb = $config['umb'];
+		if (isset (CP::$config['umb'])) {
+			$this->umb = CP::$config['umb'];
 			
 			// create taxonomies
 			add_action('edit_user_profile', array($this, 'add_user_meta_boxes'));
