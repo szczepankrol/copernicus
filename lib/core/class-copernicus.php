@@ -34,108 +34,13 @@ class CP {
 		
 		// load phpThumb
 		self::phpthumb_init();
-		
-		// load & init cleanup class
-		if (self::load_class('cleanup'))
-			$CP_Cleanup = new CP_Cleanup;
-		
-		// load & init language class
-		if (self::load_class('language')) {
-			global $CP_Language;
-			$CP_Language = new CP_Language;
-		}
-		
-		// load & init language class
-		if (self::load_class('location'))
-			$CP_Location = new CP_Location;
-		
-		// load & init language class
-		if (self::load_class('translation')) {
-			global $CP_Translation;
-			$CP_Translation = new CP_Translation;
-		}
-		
-		// load & init custom post types class
-		if (self::load_class('cpt')) {
-			global $CP_Cpt;
-			$CP_Cpt = new CP_Cpt;
-		}
-		
-		// load & init custom post types class
-		if (self::load_class('mb')) {
-			global $CP_Mb;
-			$CP_Mb = new CP_Mb;
-		}
-		
-		// load & init admin list view class
-		if (self::load_class('alv'))
-			$CP_Alv = new CP_Alv;
-		
-		// load & init taxonomy class
-		if (self::load_class('taxonomy'))
-			$CP_Taxonomy = new CP_Taxonomy;
-		
-		// load & init user role class
-		if (self::load_class('ur'))
-			$CP_Ur = new CP_Ur;
-		
-		// load & init user meta boxes class
-		if (self::load_class('umb'))
-			$CP_Umb = new CP_Umb;
-		
-		// load & init user meta boxes class
-		if (self::load_class('permalink'))
-			$CP_Permalink = new CP_Permalink;
-		
-		// load & init user meta boxes class
-		if (self::load_class('menu')) {
-			global $CP_Menu;
-			$CP_Menu = new CP_Menu;
-		}
-		
-		// load & init search class
-		if (self::load_class('search')) {
-			global $CP_Search;
-			$CP_Search = new CP_Search;
-		}
-		
-		// load & init loop class
-		if (self::load_class('loop')) {
-			global $CP_Loop;
-			$CP_Loop = new CP_Loop;
-		}
-		
-		// load & init loop class
-		if (self::load_class('image')) {
-			global $CP_Image;
-			$CP_Image = new CP_Image;
-		}
-		
-		// load & init shortcodes class
-		if (self::load_class('sc')) {
-			$CP_Sc = new CP_Sc;
-		}
-		
-		// load & init sidebar class
-		if (self::load_class('sidebar')) {
-			$CP_Sidebar = new CP_Sidebar;
-		}
-		
-		// load & init widget class
-		if (self::load_class('widget')) {
-			$CP_Widget = new CP_Widget;
-		}
-		
-		if (is_admin()) {
-			// load & init admin class
-			if (self::load_class('admin')) {
-				global $CP_Admin;
-				$CP_Admin = new CP_Admin;
-			}
-		}
-		
-		self::load_child_lib();
-		
+
+		// autoload copernicus classes
+		self::autoload_classes(get_template_directory().'/lib/core');
+
+		// autoload child theme classes
+		self::autoload_classes(get_theme_root().'/'.get_stylesheet().'/lib');
+
 		// theme support
 		self::theme_support();
 		
@@ -271,22 +176,6 @@ class CP {
 		}
 	}
 	
-	private static function load_class($class_name) {
-		
-		// define class file path
-		$class_file = CP_PATH . '/lib/core/class-'.$class_name.'.php';
-
-		// check if class file exists and return true if it does
-		if (file_exists($class_file)) {
-			include_once $class_file;
-			return true;
-		}
-		
-		echo $class_file . " doesn't exist";
-		// if class doesn't exists
-		return false;
-	}
-	
 	private static function load_library($library_file) {
 		
 		// check if class file exists and return true if it does
@@ -366,15 +255,18 @@ class CP {
 		return $title;
 	}
 	
-	private function load_child_lib() {
-		$folder = get_theme_root().'/'.get_stylesheet().'/lib';
-		
-		if (file_exists($folder)) {
-			$handle = opendir($folder);
+	/**
+	 * autoload and init all classes in a specific folder
+	 * @param  string $folder_name folder name
+	 * @return none
+	 */
+	private function autoload_classes($folder_name) {
+		if (file_exists($folder_name)) {
+			$handle = opendir($folder_name);
 			
 			while (false !== ($entry = readdir($handle))) {
-				if (preg_match('/^class-([a-z]+).php/', $entry, $matches)) {
-					$file = $folder.'/'.$matches[0];
+				if (preg_match('/^class-((?!copernicus).*).php/', $entry, $matches)) {
+					$file = $folder_name.'/'.$matches[0];
 					$class = 'CP_'.ucfirst($matches[1]);
 					
 					if (file_exists($file)) {
@@ -385,9 +277,6 @@ class CP {
 					}
 				}
 			}
-			
-			closedir($handle);
 		}
 	}
-	
 }
