@@ -48,16 +48,13 @@ class CP_Alv {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-
-		if (isset($config['alv'])) {
-			$this->alv = $config['alv'];
+		if (isset(CP::$config['alv'])) {
+			$this->alv = CP::$config['alv'];
 			
-			if (isset ($config['mb'])) {
+			if (isset (CP::$config['mb'])) {
 			
 				// get meta box configuration
-				$this->mb = $config['mb'];
+				$this->mb = CP::$config['mb'];
 			}
 			
 			// Modify the title bars
