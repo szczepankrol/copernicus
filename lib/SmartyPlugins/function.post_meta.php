@@ -22,7 +22,8 @@ function smarty_function_post_meta($params, $template) {
 		'key' => '',
 		'html' => false,
 		'shortcode' => false,
-		'more' => false
+		'more' => false,
+		'out' => null
 	);
 
     // merge default params with the provided ones
@@ -55,6 +56,11 @@ function smarty_function_post_meta($params, $template) {
 		$post_parts = preg_split('/<!--more(.*?)?-->/', $post_meta) ;
 		$post_meta = $post_parts[0];
 		$post_meta.= ' <a href="'.get_permalink($params['id']).'" class=more-link>'.$params['more'].'</a>';
+	}
+
+	if ($params['out']) {
+		$template->assign($params['out'], $post_meta);
+		return;
 	}
 	
 	return $post_meta;
