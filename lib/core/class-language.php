@@ -17,8 +17,6 @@
  */
 class CP_Language {
 
-	// all meta boxes
-	private $language = array();
 	private $current_language = array();
 
 	/**
@@ -46,53 +44,15 @@ class CP_Language {
 		if (isset($_GET['lang'])) {
 			$this->change_language($_GET['lang']);
 		}
-		
-		// get config
-		$config = CP::get_config();
 
-		if (isset ($config['language'])) {
-			
-			// get meta box configuration
-			$this->language = $config['language'];
-		}
-		
-		$this->set_current_language();
-	}
-	
-	public function set_current_language() {
-		if (isset($_SESSION['language'])) {
-			$current_language = $this->get_language($_SESSION['language']);
-		}
-		else if (isset ($_COOKIE['language'])) {
-			$current_language = $this->get_language($_COOKIE['language']);
-		}
-		else {
-			$current_language = $this->get_language();
-		}
-		$_SESSION['language'] = $current_language['code'];
-		$expire = 60 * 60 * 24 * 31; // a month
-		setcookie('language', $current_language['code'], time() + $expire);
-		define('LANGUAGE', $current_language['code']);
-		define('LANGUAGE_SUFFIX', $current_language['postmeta_suffix']);
-	}
-	
-	public function get_language($code = '') {
-		foreach ($this->language as $language) {
-			if ($code) {
-				if ($code == $language['code']) {
-					return $language;
-				}
-			}
-			else {
-				if ($language['default']) {
-					return $language;
-				}
-			}
-		}
+		// get current language
+		$current_language = $this->get_current_language();
+
+		$this->define_current_language($current_language);
 	}
 
 	public function get_languages($status = 1) {
-		$languages = $this->language;
+		$languages = CP::$config['language'];
 		
 		if ($status != 'all') {
 			
@@ -102,16 +62,74 @@ class CP_Language {
 				}
 			}
 		}
+
 		return $languages;
 	}
 	
-	private function change_language($lang) {
-		$_SESSION['language'] = $lang;
-		$home = get_home_url();
+	public function get_language($code = '') {
+		foreach (CP::$config['language'] as $language) {
+			if ($code) {
+				if ($code == $language['code']) {
+					return $language;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public function get_current_language() {
+		if (isset($_SESSION['language'])) {
+			return $this->get_language($_SESSION['language']);
+		}
+		
+		if (isset ($_COOKIE['language'])) {
+			return $this->get_language($_COOKIE['language']);
+		}
+
+		return $this->get_default_language();
+	} 
+
+	public function get_default_language() {
+		if ($this->language) {
+			foreach ($this->language as $language) {
+				if ($language['default']) {
+					return $language;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private function set_current_language($current_language, $remember = true) {
+		//
+		$_SESSION['language'] = $current_language['code'];
+	
+		if ($remember) {
+			$expire = 60 * 60 * 24 * 31; // a month
+
+			// set cookie for current language
+			setcookie('language', $current_language['code'], time() + $expire);
+		}
+		
+	}
+
+	private function define_current_language($current_language) {
+		define('LANGUAGE', $current_language['code']);
+		define('LANGUAGE_SUFFIX', $current_language['postmeta_suffix']);
+	}
+	
+	/**
+	 * change language and redirecto to a previous page
+	 * 
+	 * @param  string $language language code
+	 * @return none
+	 */
+	private function change_language($language) {
+		$_SESSION['language'] = $language;
 		
 		wp_redirect($_SERVER['HTTP_REFERER']);
-		
-//		wp_redirect($home);
 		exit;
 	}
 }
