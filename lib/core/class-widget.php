@@ -39,11 +39,8 @@ class CP_Widget {
 	 */
 	public function _init() {
 		
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['widget'])) {
-			$this->widgets = $config['widget'];
+		if (isset (CP::$config['widget'])) {
+			$this->widgets = CP::$config['widget'];
 		}
 		
 		// create user roles

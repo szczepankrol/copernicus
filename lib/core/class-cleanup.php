@@ -41,11 +41,8 @@ class CP_Cleanup {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['cleanup'])) {
-			$this->cleanup = $config['cleanup'];
+		if (isset (CP::$config['cleanup'])) {
+			$this->cleanup = CP::$config['cleanup'];
 
 			$this->admin_bar();
 			

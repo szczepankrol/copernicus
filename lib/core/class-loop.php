@@ -42,13 +42,10 @@ class CP_Loop {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['loop'])) {
+		if (isset (CP::$config['loop'])) {
 			
 			// get meta box configuration
-			$this->loop = $config['loop'];
+			$this->loop = CP::$config['loop'];
 		}
 	}
 
@@ -62,7 +59,7 @@ class CP_Loop {
 	}
 	
 	public function show_loop($loop) {
-		global $post, $pages;
+		global $post, $pages, $CP_Smarty;
 		
 		$main_post = $post;
 		$main_pages = $pages;
@@ -96,8 +93,8 @@ class CP_Loop {
 		$key = 0;
 		
 		while ( $WP_loop->have_posts() ) : $WP_loop->the_post();
-			CP::$smarty->assign('key', $key);
-			$return.= CP::$smarty->fetch($loop['template']);;
+			$CP_Smarty->smarty->assign('key', $key);
+			$return.= $CP_Smarty->smarty->fetch($loop['template']);;
 			$key++;
 		endwhile;
 		

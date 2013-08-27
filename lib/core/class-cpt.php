@@ -42,11 +42,8 @@ class CP_Cpt {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-
-		if (isset($config['cpt'])) {
-			$this->cpt = $config['cpt'];
+		if (isset(CP::$config['cpt'])) {
+			$this->cpt = CP::$config['cpt'];
 
 			// create custom post type
 			add_action('init', array($this, 'create_post_types'));

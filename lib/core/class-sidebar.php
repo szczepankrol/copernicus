@@ -42,11 +42,8 @@ class CP_Sidebar {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-
-		if (isset($config['sidebar'])) {
-			$this->sidebars = $config['sidebar'];
+		if (isset(CP::$config['sidebar'])) {
+			$this->sidebars = CP::$config['sidebar'];
 		}
 		
 		add_action( 'widgets_init', array($this,'register_sidebars') );

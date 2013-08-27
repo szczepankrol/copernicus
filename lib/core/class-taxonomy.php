@@ -41,11 +41,8 @@ class CP_Taxonomy {
 	 */
 	public function _init() {
 
-		// get config
-		$config = CP::get_config();
-		
-		if (isset ($config['taxonomy'])) {
-			$this->taxonomy = $config['taxonomy'];
+		if (isset (CP::$config['taxonomy'])) {
+			$this->taxonomy = CP::$config['taxonomy'];
 			
 			// create taxonomies
 			add_action('after_setup_theme', array($this, 'create_taxonomies'));
